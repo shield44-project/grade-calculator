@@ -1,11 +1,42 @@
 // components/SgpaCalculator.js
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import CourseCard from './CourseCard';
 import { calculateSGPA } from '../lib/calculator';
 
+const STORAGE_KEY = 'rvce-grade-calculator-courses';
+
 export default function SgpaCalculator() {
-  const [courses, setCourses] = useState([{ id: 1, courseDetails: null, cieMarks: {}, seeMarks: {}, results: {} }]);
+  // Initialize courses from localStorage or use default
+  const [courses, setCourses] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          // Validate the data structure
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return parsed;
+          }
+        }
+      } catch (error) {
+        console.error('Error loading courses from localStorage:', error);
+      }
+    }
+    return [{ id: 1, courseDetails: null, cieMarks: {}, seeMarks: {}, results: {} }];
+  });
+  
   const sgpa = useMemo(() => calculateSGPA(courses), [courses]);
+
+  // Save courses to localStorage whenever they change
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(courses));
+      } catch (error) {
+        console.error('Error saving courses to localStorage:', error);
+      }
+    }
+  }, [courses]);
 
   const addCourse = () => {
     setCourses([...courses, { id: Date.now(), courseDetails: null, cieMarks: {}, seeMarks: {}, results: {} }]);
@@ -18,6 +49,15 @@ export default function SgpaCalculator() {
   const updateCourse = useCallback((id, data) => {
     setCourses(courses => courses.map(course => (course.id === id ? { ...course, ...data } : course)));
   }, []);
+
+  const clearAllData = () => {
+    if (confirm('Are you sure you want to clear all your saved data? This cannot be undone.')) {
+      setCourses([{ id: Date.now(), courseDetails: null, cieMarks: {}, seeMarks: {}, results: {} }]);
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+  };
 
   return (
     <div className="w-full max-w-4xl mx-auto">
@@ -37,6 +77,9 @@ export default function SgpaCalculator() {
       <div className="mt-8 text-center">
         <button onClick={addCourse} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition-colors">
           + Add Another Course
+        </button>
+        <button onClick={clearAllData} className="ml-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-6 rounded-lg transition-colors">
+          Clear All Data
         </button>
       </div>
 
