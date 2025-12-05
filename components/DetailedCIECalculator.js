@@ -67,7 +67,6 @@ export default function DetailedCIECalculator({ courseType, cieMarks, handleMark
             
             <h4 className="col-span-full mt-4 text-lg font-semibold text-blue-300">Additional Components</h4>
             <InputField name="labRecord" label="Lab Record" placeholder="Out of 80" value={cieMarks.labRecord} onChange={handleMarkChange} />
-            <InputField name="labTest" label="Lab Test" placeholder="Combined in CIE above" value={cieMarks.labTest} onChange={handleMarkChange} />
             <InputField name="expLearning" label="Experiential Learning" placeholder="Out of 20" value={cieMarks.expLearning} onChange={handleMarkChange} />
         </>
     );
