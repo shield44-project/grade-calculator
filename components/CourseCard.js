@@ -1,5 +1,5 @@
 // components/CourseCard.js
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { courses } from '../lib/data';
 import { calculateTheoryCIE, calculateLabCIE, calculateIntegratedCIE, calculateFinalScore, getGradeDetails, checkPassStatus } from '../lib/calculator';
 import DetailedCIECalculator from './DetailedCIECalculator';
@@ -8,13 +8,15 @@ export default function CourseCard({ id, onUpdate, onRemove, initialCourseData }
   const [selectedCourseCode, setSelectedCourseCode] = useState(initialCourseData.courseDetails?.code || 'SELECT');
   const [cieMarks, setCieMarks] = useState(initialCourseData.cieMarks || {});
   const [seeMarks, setSeeMarks] = useState(initialCourseData.seeMarks || {});
-  const [results, setResults] = useState(initialCourseData.results || {});
+  
+  // Use ref to store the previous results to avoid infinite loops
+  const prevResultsRef = useRef();
 
   const courseDetails = courses.find(c => c.code === selectedCourseCode) || courses[0];
   // Hack to handle courses like CS222IA which are labeled "Theory+Lab" but categorized as "Lab" in PDF
   const isEffectivelyIntegrated = courseDetails.type === 'Integrated' || courseDetails.cieMax === 150;
 
-  useEffect(() => {
+  const results = useMemo(() => {
     let totalCie = 0;
     let finalScore = 0;
     let passCheckMarks = {};
@@ -38,11 +40,17 @@ export default function CourseCard({ id, onUpdate, onRemove, initialCourseData }
     const isPass = checkPassStatus(courseDetails, passCheckMarks);
     const { grade, points } = getGradeDetails(finalScore, isPass);
 
-    const newResults = { score: finalScore.toFixed(2), grade, points, isPass, totalCie: totalCie.toFixed(2) };
-    setResults(newResults);
-    onUpdate(id, { courseDetails, cieMarks, seeMarks, results: newResults });
+    return { score: finalScore.toFixed(2), grade, points, isPass, totalCie: totalCie.toFixed(2) };
+  }, [cieMarks, seeMarks, courseDetails, isEffectivelyIntegrated]);
 
-  }, [cieMarks, seeMarks, selectedCourseCode]);
+  useEffect(() => {
+    // Only call onUpdate if results have actually changed
+    const resultsString = JSON.stringify(results);
+    if (prevResultsRef.current !== resultsString) {
+      prevResultsRef.current = resultsString;
+      onUpdate(id, { courseDetails, cieMarks, seeMarks, results });
+    }
+  }, [id, courseDetails, cieMarks, seeMarks, results, onUpdate]);
 
   const handleCourseChange = (e) => {
     setSelectedCourseCode(e.target.value);
@@ -52,9 +60,11 @@ export default function CourseCard({ id, onUpdate, onRemove, initialCourseData }
 
   const handleCieMarkChange = (e) => {
     // A special flag for our DetailedCIECalculator component logic
-    if(isEffectivelyIntegrated) cieMarks.isIntegratedLab = true;
-    else cieMarks.isIntegratedLab = false;
-    setCieMarks(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setCieMarks(prev => ({ 
+      ...prev, 
+      [e.target.name]: e.target.value,
+      isIntegratedLab: isEffectivelyIntegrated 
+    }));
   };
 
   const handleSeeMarkChange = (e) => {
