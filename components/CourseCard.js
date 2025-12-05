@@ -44,10 +44,17 @@ export default function CourseCard({ id, onUpdate, onRemove, initialCourseData }
   }, [cieMarks, seeMarks, courseDetails, isEffectivelyIntegrated]);
 
   useEffect(() => {
-    // Only call onUpdate if results have actually changed
-    const resultsString = JSON.stringify(results);
-    if (prevResultsRef.current !== resultsString) {
-      prevResultsRef.current = resultsString;
+    // Only call onUpdate if results have actually changed (compare values, not references)
+    const hasChanged = 
+      !prevResultsRef.current ||
+      prevResultsRef.current.score !== results.score ||
+      prevResultsRef.current.grade !== results.grade ||
+      prevResultsRef.current.points !== results.points ||
+      prevResultsRef.current.isPass !== results.isPass ||
+      prevResultsRef.current.totalCie !== results.totalCie;
+    
+    if (hasChanged) {
+      prevResultsRef.current = results;
       onUpdate(id, { courseDetails, cieMarks, seeMarks, results });
     }
   }, [id, courseDetails, cieMarks, seeMarks, results, onUpdate]);
