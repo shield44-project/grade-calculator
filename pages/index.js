@@ -8,7 +8,7 @@ export default function Home() {
       <Head>
         <title>RVCE Grade & SGPA Calculator | 2025 Scheme</title>
         <meta name="description" content="An accurate RVCE grade and SGPA calculator for the 2025 scheme, based on the official syllabus document." />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </Head>
 
       <main className="flex flex-col items-center justify-center">
