@@ -1,7 +1,20 @@
 // components/CourseCard.js
 import { useState, useEffect, useMemo, useRef } from 'react';
 import { courses } from '../lib/data';
-import { calculateTheoryCIE, calculateLabCIE, calculateIntegratedCIE, calculateFinalScore, getGradeDetails, checkPassStatus } from '../lib/calculator';
+import { 
+  calculateTheoryCIE, 
+  calculateLabCIE, 
+  calculateIntegratedCIE, 
+  calculateEnglishCIE,
+  calculateCAEGCIE,
+  calculateFOICCIE,
+  calculateYogaCIE,
+  calculateMathsCIE,
+  calculateFinalScore, 
+  getGradeDetails, 
+  checkPassStatus,
+  calculateRequiredSEE
+} from '../lib/calculator';
 import DetailedCIECalculator from './DetailedCIECalculator';
 
 export default function CourseCard({ id, onUpdate, onRemove, initialCourseData }) {
@@ -23,6 +36,26 @@ export default function CourseCard({ id, onUpdate, onRemove, initialCourseData }
 
     if (courseDetails.type === 'Theory') {
         totalCie = calculateTheoryCIE(cieMarks);
+        passCheckMarks = { totalCie, see: seeMarks.see };
+        finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
+    } else if (courseDetails.type === 'English') {
+        totalCie = calculateEnglishCIE(cieMarks);
+        passCheckMarks = { totalCie, see: seeMarks.see };
+        finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
+    } else if (courseDetails.type === 'CAEG') {
+        totalCie = calculateCAEGCIE(cieMarks);
+        passCheckMarks = { totalCie, see: seeMarks.see };
+        finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
+    } else if (courseDetails.type === 'FOIC') {
+        totalCie = calculateFOICCIE(cieMarks);
+        passCheckMarks = { totalCie, see: seeMarks.see };
+        finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
+    } else if (courseDetails.type === 'Yoga') {
+        totalCie = calculateYogaCIE(cieMarks);
+        passCheckMarks = { totalCie, see: seeMarks.see };
+        finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
+    } else if (courseDetails.type === 'Maths') {
+        totalCie = calculateMathsCIE(cieMarks);
         passCheckMarks = { totalCie, see: seeMarks.see };
         finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
     } else if (courseDetails.type === 'Lab' && !isEffectivelyIntegrated) {
@@ -96,6 +129,16 @@ export default function CourseCard({ id, onUpdate, onRemove, initialCourseData }
         <>
           <DetailedCIECalculator courseType={courseDetails.type} cieMarks={cieMarks} handleMarkChange={handleCieMarkChange} />
           
+          {/* Show required SEE marks if CIE is entered but SEE is not */}
+          {results.totalCie > 0 && !isEffectivelyIntegrated && (
+            <RequiredSEEDisplay 
+              totalCie={parseFloat(results.totalCie)} 
+              cieMax={courseDetails.cieMax} 
+              seeMax={courseDetails.seeMax}
+              hasSeeMarks={!!seeMarks.see}
+            />
+          )}
+          
           <div className="p-4 mt-4 bg-gray-800/50 rounded-lg">
             <h3 className="text-xl font-bold text-white mb-4">Semester End Examination (SEE)</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -136,3 +179,29 @@ const ResultDisplay = ({ label, value, color }) => (
         <p className={`font-bold text-lg ${color}`}>{value ?? '-'}</p>
     </div>
 );
+
+const RequiredSEEDisplay = ({ totalCie, cieMax, seeMax, hasSeeMarks }) => {
+    if (hasSeeMarks) return null; // Don't show if SEE marks are already entered
+    
+    const requiredSEE = calculateRequiredSEE(totalCie, cieMax, seeMax);
+    if (!requiredSEE) return null;
+    
+    return (
+        <div className="p-4 mt-4 bg-gradient-to-r from-purple-900/30 to-blue-900/30 border border-purple-500/30 rounded-lg">
+            <h3 className="text-lg font-bold text-purple-300 mb-3">📊 Required SEE Marks for Grades</h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {Object.entries(requiredSEE).map(([grade, info]) => (
+                    <div key={grade} className={`p-2 rounded ${info.achievable ? 'bg-gray-800/50' : 'bg-red-900/20'}`}>
+                        <div className="text-center">
+                            <p className="text-xs text-gray-400 mb-1">Grade {grade}</p>
+                            <p className={`font-bold text-lg ${info.achievable ? 'text-green-400' : 'text-red-400'}`}>
+                                {info.required}/{seeMax}
+                            </p>
+                            {info.note && <p className="text-xs text-gray-500 mt-1">{info.note}</p>}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+};
