@@ -135,7 +135,7 @@ export default function CourseCard({ id, onUpdate, onRemove, initialCourseData }
               totalCie={parseFloat(results.totalCie)} 
               cieMax={courseDetails.cieMax} 
               seeMax={courseDetails.seeMax}
-              hasSeeMarks={!!seeMarks.see}
+              hasSeeMarks={seeMarks.see !== undefined && seeMarks.see !== null && seeMarks.see !== ''}
             />
           )}
           
