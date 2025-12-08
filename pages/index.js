@@ -20,9 +20,6 @@ export default function Home() {
         <SgpaCalculator />
       </main>
       
-      <footer className="text-center mt-12 text-gray-500">
-        <p>Built by Gemini based on the official 2025 scheme syllabus.</p>
-      </footer>
     </div>
   );
 }
