@@ -25,7 +25,12 @@ export default function SgpaCalculator() {
         if (savedCourses) {
           const parsed = JSON.parse(savedCourses);
           if (Array.isArray(parsed) && parsed.length > 0) {
-            setCourses(parsed);
+            // Migrate old data: add cycle property if missing
+            const migratedCourses = parsed.map(course => ({
+              ...course,
+              cycle: course.cycle || course.courseDetails?.cycle || 'C'
+            }));
+            setCourses(migratedCourses);
           }
         }
       } catch (error) {
@@ -69,7 +74,15 @@ export default function SgpaCalculator() {
   }, [activeCycle]);
 
   const addCourse = () => {
-    setCourses([...courses, { id: Date.now(), courseDetails: null, cieMarks: {}, seeMarks: {}, results: {}, cycle: activeCycle }]);
+    const newCourse = { 
+      id: Date.now(), 
+      courseDetails: null, 
+      cieMarks: {}, 
+      seeMarks: {}, 
+      results: {}, 
+      cycle: activeCycle 
+    };
+    setCourses([...courses, newCourse]);
   };
 
   const removeCourse = (id) => {
@@ -82,7 +95,15 @@ export default function SgpaCalculator() {
 
   const clearAllData = () => {
     if (confirm('Are you sure you want to clear all your saved data? This cannot be undone.')) {
-      setCourses([{ id: Date.now(), courseDetails: null, cieMarks: {}, seeMarks: {}, results: {}, cycle: activeCycle }]);
+      const initialCourse = { 
+        id: Date.now(), 
+        courseDetails: null, 
+        cieMarks: {}, 
+        seeMarks: {}, 
+        results: {}, 
+        cycle: activeCycle 
+      };
+      setCourses([initialCourse]);
       if (typeof window !== 'undefined') {
         localStorage.removeItem(STORAGE_KEY);
       }
@@ -91,7 +112,13 @@ export default function SgpaCalculator() {
 
   // Get courses to display based on active cycle
   const displayCourses = useMemo(() => {
-    return courses.filter(c => !c.courseDetails || c.courseDetails.cycle === activeCycle || c.courseDetails.cycle === 'none');
+    return courses.filter(c => {
+      // Only show courses that match the active cycle or haven't selected a course yet
+      if (!c.courseDetails || c.courseDetails.code === 'SELECT') {
+        return c.cycle === activeCycle;
+      }
+      return c.courseDetails.cycle === activeCycle;
+    });
   }, [courses, activeCycle]);
 
   return (

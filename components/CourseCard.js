@@ -30,7 +30,7 @@ export default function CourseCard({ id, onUpdate, onRemove, initialCourseData, 
     return courses.filter(c => c.cycle === activeCycle || c.cycle === 'none');
   }, [activeCycle]);
 
-  const courseDetails = availableCourses.find(c => c.code === selectedCourseCode) || courses[0];
+  const courseDetails = availableCourses.find(c => c.code === selectedCourseCode) || availableCourses[0] || courses[0];
   // Hack to handle courses like CS222IA which are labeled "Theory+Lab" but categorized as "Lab" in PDF
   const isEffectivelyIntegrated = courseDetails.type === 'Integrated' || courseDetails.cieMax === 150;
 
