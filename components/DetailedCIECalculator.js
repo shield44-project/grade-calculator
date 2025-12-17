@@ -2,14 +2,14 @@
 
 const InputField = ({ name, label, placeholder, value, onChange }) => (
     <div>
-        <label className="block text-sm font-medium text-gray-400">{label}</label>
+        <label className="block text-sm font-medium text-gray-300 mb-1">{label}</label>
         <input
             type="number"
             name={name}
             placeholder={placeholder}
             value={value || ''}
             onChange={onChange}
-            className="w-full p-2 mt-1 bg-gray-700 border border-gray-600 rounded-md text-white focus:ring-blue-500 focus:border-blue-500"
+            className="w-full p-3 bg-gradient-to-r from-gray-700 to-gray-800 border-2 border-gray-600 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-200"
         />
     </div>
 );
@@ -19,16 +19,16 @@ export default function DetailedCIECalculator({ courseType, cieMarks, handleMark
 
     const renderTheoryInputs = () => (
         <>
-            <h4 className="col-span-full text-lg font-semibold text-blue-300">Quizzes (Total 20 Marks)</h4>
+            <h4 className="col-span-full text-lg font-semibold text-blue-400 bg-blue-500/10 p-3 rounded-lg border border-blue-500/30">📝 Quizzes (Total 20 Marks)</h4>
             <InputField name="quiz1" label="Quiz 1" placeholder="Out of 10" value={cieMarks.quiz1} onChange={handleMarkChange} />
             <InputField name="quiz2" label="Quiz 2" placeholder="Out of 10" value={cieMarks.quiz2} onChange={handleMarkChange} />
             
-            <h4 className="col-span-full mt-4 text-lg font-semibold text-blue-300">Tests (Best 2 of 3, reduced to 40 Marks)</h4>
+            <h4 className="col-span-full mt-4 text-lg font-semibold text-purple-400 bg-purple-500/10 p-3 rounded-lg border border-purple-500/30">📊 Tests (Best 2 of 3, reduced to 40 Marks)</h4>
             <InputField name="test1" label="Test 1" placeholder="Out of 50" value={cieMarks.test1} onChange={handleMarkChange} />
             <InputField name="test2" label="Test 2" placeholder="Out of 50" value={cieMarks.test2} onChange={handleMarkChange} />
             <InputField name="test3" label="Test 3" placeholder="Out of 50" value={cieMarks.test3} onChange={handleMarkChange} />
 
-            <h4 className="col-span-full mt-4 text-lg font-semibold text-blue-300">Experiential Learning (Total 40 Marks)</h4>
+            <h4 className="col-span-full mt-4 text-lg font-semibold text-green-400 bg-green-500/10 p-3 rounded-lg border border-green-500/30">🎯 Experiential Learning (Total 40 Marks)</h4>
             <InputField name="expLearning" label="Program/Seminar/MATLAB etc." placeholder="Out of 40" value={cieMarks.expLearning} onChange={handleMarkChange} />
         </>
     );
@@ -142,8 +142,10 @@ export default function DetailedCIECalculator({ courseType, cieMarks, handleMark
     const isEffectivelyIntegrated = courseType === 'Integrated' || (courseType === 'Lab' && cieMarks.isIntegratedLab);
 
     return (
-        <div className="p-4 mt-4 bg-gray-800/50 rounded-lg">
-            <h3 className="text-xl font-bold text-white mb-4">Continuous Internal Evaluation (CIE)</h3>
+        <div className="p-5 mt-4 bg-gradient-to-r from-gray-800/70 to-gray-900/70 rounded-xl border border-gray-700">
+            <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                <span>📚</span> Continuous Internal Evaluation (CIE)
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {courseType === 'Theory' && renderTheoryInputs()}
                 {courseType === 'Lab' && renderLabInputs()}
