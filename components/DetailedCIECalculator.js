@@ -165,16 +165,17 @@ export default function DetailedCIECalculator({ courseType, cieMarks, handleMark
         <>
             <h4 className="col-span-full text-lg font-semibold text-blue-400 flex items-center gap-2 border-b border-blue-500/30 pb-2">
                 <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
-                Quiz (5 Marks)
+                Quizzes (Total 5 Marks)
             </h4>
-            <InputField name="quiz" label="Quiz" placeholder="Out of 5" value={cieMarks.quiz} onChange={handleMarkChange} />
+            <InputField name="quiz1" label="Quiz 1" placeholder="Quiz marks" value={cieMarks.quiz1} onChange={handleMarkChange} />
+            <InputField name="quiz2" label="Quiz 2" placeholder="Quiz marks" value={cieMarks.quiz2} onChange={handleMarkChange} />
             
             <h4 className="col-span-full mt-4 text-lg font-semibold text-blue-400 flex items-center gap-2 border-b border-blue-500/30 pb-2">
                 <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
-                Tests (Total 25 Marks)
+                Tests (50 reduced to 25 Marks)
             </h4>
-            <InputField name="test1" label="Test 1" placeholder="Enter marks (total of both tests = 25)" value={cieMarks.test1} onChange={handleMarkChange} />
-            <InputField name="test2" label="Test 2" placeholder="Enter marks (total of both tests = 25)" value={cieMarks.test2} onChange={handleMarkChange} />
+            <InputField name="test1" label="Test 1" placeholder="Out of 25" value={cieMarks.test1} onChange={handleMarkChange} />
+            <InputField name="test2" label="Test 2" placeholder="Out of 25" value={cieMarks.test2} onChange={handleMarkChange} />
 
             <h4 className="col-span-full mt-4 text-lg font-semibold text-blue-400 flex items-center gap-2 border-b border-blue-500/30 pb-2">
                 <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
