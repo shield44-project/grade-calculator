@@ -173,8 +173,8 @@ export default function DetailedCIECalculator({ courseType, cieMarks, handleMark
                 <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
                 Tests (Total 25 Marks)
             </h4>
-            <InputField name="test1" label="Test 1" placeholder="Test marks" value={cieMarks.test1} onChange={handleMarkChange} />
-            <InputField name="test2" label="Test 2" placeholder="Test marks" value={cieMarks.test2} onChange={handleMarkChange} />
+            <InputField name="test1" label="Test 1" placeholder="Enter marks (total of both tests = 25)" value={cieMarks.test1} onChange={handleMarkChange} />
+            <InputField name="test2" label="Test 2" placeholder="Enter marks (total of both tests = 25)" value={cieMarks.test2} onChange={handleMarkChange} />
 
             <h4 className="col-span-full mt-4 text-lg font-semibold text-blue-400 flex items-center gap-2 border-b border-blue-500/30 pb-2">
                 <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
