@@ -10,6 +10,7 @@ import {
   calculateFOICCIE,
   calculateYogaCIE,
   calculateMathsCIE,
+  calculateKannadaCIE,
   calculateFinalScore, 
   getGradeDetails, 
   checkPassStatus,
@@ -56,6 +57,10 @@ export default function CourseCard({ id, onUpdate, onRemove, initialCourseData }
         finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
     } else if (courseDetails.type === 'Maths') {
         totalCie = calculateMathsCIE(cieMarks);
+        passCheckMarks = { totalCie, see: seeMarks.see };
+        finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
+    } else if (courseDetails.type === 'Kannada') {
+        totalCie = calculateKannadaCIE(cieMarks);
         passCheckMarks = { totalCie, see: seeMarks.see };
         finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
     } else if (courseDetails.type === 'Lab' && !isEffectivelyIntegrated) {

@@ -160,6 +160,31 @@ export default function DetailedCIECalculator({ courseType, cieMarks, handleMark
         </>
     );
 
+    // For Kannada course (HS12XKB)
+    const renderKannadaInputs = () => (
+        <>
+            <h4 className="col-span-full text-lg font-semibold text-blue-400 flex items-center gap-2 border-b border-blue-500/30 pb-2">
+                <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
+                Quizzes (Total 5 Marks)
+            </h4>
+            <InputField name="quiz1" label="Quiz 1" placeholder="Quiz marks" value={cieMarks.quiz1} onChange={handleMarkChange} />
+            <InputField name="quiz2" label="Quiz 2" placeholder="Quiz marks" value={cieMarks.quiz2} onChange={handleMarkChange} />
+            
+            <h4 className="col-span-full mt-4 text-lg font-semibold text-blue-400 flex items-center gap-2 border-b border-blue-500/30 pb-2">
+                <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
+                Tests (50 reduced to 25 Marks)
+            </h4>
+            <InputField name="test1" label="Test 1" placeholder="Out of 25" value={cieMarks.test1} onChange={handleMarkChange} />
+            <InputField name="test2" label="Test 2" placeholder="Out of 25" value={cieMarks.test2} onChange={handleMarkChange} />
+
+            <h4 className="col-span-full mt-4 text-lg font-semibold text-blue-400 flex items-center gap-2 border-b border-blue-500/30 pb-2">
+                <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
+                Experiential Learning (20 Marks)
+            </h4>
+            <InputField name="expLearning" label="Experiential Learning" placeholder="Out of 20" value={cieMarks.expLearning} onChange={handleMarkChange} />
+        </>
+    );
+
     // For the Lab part of Integrated courses (pg 31)
     const renderIntegratedLabInputs = () => (
          <div className='col-span-full p-4 border border-purple-500/30 rounded-xl bg-purple-900/10'>
@@ -212,6 +237,7 @@ export default function DetailedCIECalculator({ courseType, cieMarks, handleMark
                 {courseType === 'FOIC' && renderFOICInputs()}
                 {courseType === 'Yoga' && renderYogaInputs()}
                 {courseType === 'Maths' && renderMathsInputs()}
+                {courseType === 'Kannada' && renderKannadaInputs()}
                 {isEffectivelyIntegrated && renderIntegratedInputs()}
             </div>
         </div>
