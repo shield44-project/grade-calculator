@@ -1,8 +1,7 @@
 // API endpoint to collect user-entered grade data
 // This data is stored and can be accessed by the website owner
 
-import fs from 'fs';
-import path from 'path';
+import { addSubmission, isServerlessEnvironment } from '../../lib/storage';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -19,36 +18,27 @@ export default async function handler(req, res) {
       data: data
     };
 
-    // Store data in a JSON file (in production, use a proper database)
-    const dataDir = path.join(process.cwd(), 'data');
-    const dataFile = path.join(dataDir, 'user-submissions.json');
-
-    // Create data directory if it doesn't exist
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true });
-    }
-
-    // Read existing data
-    let submissions = [];
-    if (fs.existsSync(dataFile)) {
-      const fileContent = fs.readFileSync(dataFile, 'utf8');
-      submissions = JSON.parse(fileContent);
-    }
-
-    // Add new submission
-    submissions.push(submission);
-
-    // Write back to file
-    fs.writeFileSync(dataFile, JSON.stringify(submissions, null, 2));
-
-    res.status(200).json({ 
+    const result = await addSubmission(submission);
+    
+    const response = { 
       success: true, 
       message: 'Data submitted successfully',
-      // Hint for website owner in DevTools
+      storage: result.storage,
       _dev: 'Admin access: /api/admin-data?key=shield44-admin-2025-rvce-calculator'
-    });
+    };
+
+    if (result.storage === 'in-memory') {
+      response._note = 'Using temporary in-memory storage. Data persists within the same instance but resets on cold starts. Configure REDIS_URL environment variable for persistent storage.';
+    } else if (result.storage === 'redis') {
+      response._note = 'Using Redis for persistent storage. Your data is safely stored.';
+    }
+
+    res.status(200).json(response);
   } catch (error) {
     console.error('Error saving data:', error);
-    res.status(500).json({ error: 'Failed to save data' });
+    res.status(500).json({ 
+      error: 'Failed to save data',
+      details: error.message 
+    });
   }
 }
