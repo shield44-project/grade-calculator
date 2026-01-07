@@ -8,40 +8,40 @@ When users enter their grade data on the website, it is automatically submitted 
 
 ## Accessing Collected Data
 
-### Method 1: Direct File Access
+### Method 1: Direct Browser Access
+Simply visit this URL in your browser:
+```
+https://your-domain.com/api/admin-data?key=shield44-admin-2025-rvce-calculator
+```
+
+Or use the Network tab in browser DevTools to see the admin key in any API response.
+
+### Method 2: Using curl
+```bash
+curl "https://your-domain.com/api/admin-data?key=shield44-admin-2025-rvce-calculator"
+```
+
+Or with header:
+```bash
+curl -H "x-admin-key: shield44-admin-2025-rvce-calculator" https://your-domain.com/api/admin-data
+```
+
+### Method 3: Direct File Access
 If you have server access, the data is stored in:
 ```
 /data/user-submissions.json
 ```
 
-### Method 2: API Endpoint
-Access the admin API endpoint with your admin key:
+## Admin Key
 
-```bash
-# Replace YOUR_ADMIN_KEY with your actual key
-curl -H "x-admin-key: YOUR_ADMIN_KEY" https://your-domain.com/api/admin-data
-```
+**Current Admin Key:** `shield44-admin-2025-rvce-calculator`
 
-Or visit in browser:
-```
-https://your-domain.com/api/admin-data?key=YOUR_ADMIN_KEY
-```
+This key is hardcoded in the API endpoint and can be found by:
+- Inspecting the source code
+- Checking browser DevTools Network tab
+- Looking at the API response when accessing the admin endpoint
 
-## Setting Up Admin Key
-
-### For Development
-The default admin key is: `your-secret-admin-key-change-this`
-
-### For Production
-Set the `ADMIN_KEY` environment variable:
-
-**Vercel:**
-1. Go to your project settings
-2. Navigate to Environment Variables
-3. Add `ADMIN_KEY` with a strong secret value
-
-**Other Platforms:**
-Set the environment variable according to your hosting platform's documentation.
+**Security Note:** This approach is simple but NOT secure for production environments. Anyone with developer knowledge can find the admin key by inspecting the code or network requests. For production use, consider implementing proper authentication with environment variables, OAuth, or JWT tokens.
 
 ## Data Format
 

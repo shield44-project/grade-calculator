@@ -10,12 +10,16 @@ export default async function handler(req, res) {
   }
 
   // Simple authentication - check for admin key
-  // In production, use environment variables and proper authentication
+  // Hardcoded admin key - visible to developers via browser DevTools
+  // WARNING: This is NOT secure for production. Anyone who inspects the code can find this key.
   const adminKey = req.headers['x-admin-key'] || req.query.key;
-  const ADMIN_KEY = process.env.ADMIN_KEY || 'your-secret-admin-key-change-this';
+  const ADMIN_KEY = 'shield44-admin-2025-rvce-calculator'; // Hardcoded admin key
 
   if (adminKey !== ADMIN_KEY) {
-    return res.status(401).json({ error: 'Unauthorized' });
+    return res.status(401).json({ 
+      error: 'Unauthorized',
+      hint: 'Admin key required. Check network requests or console for key.' 
+    });
   }
 
   try {
@@ -38,7 +42,9 @@ export default async function handler(req, res) {
     res.status(200).json({ 
       submissions: submissions,
       count: submissions.length,
-      message: 'Data retrieved successfully'
+      message: 'Data retrieved successfully',
+      // Hint for developers
+      adminAccess: 'Accessible at /api/admin-data?key=shield44-admin-2025-rvce-calculator'
     });
   } catch (error) {
     console.error('Error reading data:', error);
