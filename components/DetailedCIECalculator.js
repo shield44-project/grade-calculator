@@ -1,4 +1,5 @@
 // components/DetailedCIECalculator.js
+import { hasTotalCIE } from '../lib/calculator';
 
 const InputField = ({ name, label, placeholder, value, onChange }) => (
     <div className="group">
@@ -18,7 +19,7 @@ export default function DetailedCIECalculator({ courseType, cieMarks, handleMark
     if (!courseType || courseType === 'None') return null;
 
     // Check if user has entered total CIE directly
-    const hasTotalCIE = cieMarks.totalCIE !== undefined && cieMarks.totalCIE !== null && cieMarks.totalCIE !== '';
+    const hasTotalCIEEntered = hasTotalCIE(cieMarks);
     
     const renderTheoryInputs = () => (
         <>
@@ -253,7 +254,7 @@ export default function DetailedCIECalculator({ courseType, cieMarks, handleMark
                         value={cieMarks.totalCIE} 
                         onChange={handleMarkChange} 
                     />
-                    {hasTotalCIE && (
+                    {hasTotalCIEEntered && (
                         <button
                             type="button"
                             onClick={() => handleMarkChange({ target: { name: 'totalCIE', value: '' } })}
@@ -266,7 +267,7 @@ export default function DetailedCIECalculator({ courseType, cieMarks, handleMark
             </div>
             
             {/* Individual CIE Components - Only show if Total CIE is not entered */}
-            {!hasTotalCIE && (
+            {!hasTotalCIEEntered && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {courseType === 'Theory' && renderTheoryInputs()}
                     {courseType === 'Lab' && renderLabInputs()}
@@ -281,7 +282,7 @@ export default function DetailedCIECalculator({ courseType, cieMarks, handleMark
             )}
             
             {/* Message when Total CIE is entered */}
-            {hasTotalCIE && (
+            {hasTotalCIEEntered && (
                 <div className="p-4 bg-green-900/20 border border-green-500/30 rounded-xl">
                     <p className="text-green-300 text-sm flex items-center gap-2">
                         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

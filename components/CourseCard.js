@@ -13,7 +13,8 @@ import {
   calculateFinalScore, 
   getGradeDetails, 
   checkPassStatus,
-  calculateRequiredSEE
+  calculateRequiredSEE,
+  hasTotalCIE
 } from '../lib/calculator';
 import DetailedCIECalculator from './DetailedCIECalculator';
 
@@ -40,7 +41,7 @@ export default function CourseCard({ id, onUpdate, initialCourseData }) {
     let passCheckMarks = {};
 
     // Check if user entered total CIE directly
-    if (cieMarks.totalCIE !== undefined && cieMarks.totalCIE !== null && cieMarks.totalCIE !== '') {
+    if (hasTotalCIE(cieMarks)) {
         totalCie = Number(cieMarks.totalCIE) || 0;
         
         // For integrated courses, we need to handle pass check differently
