@@ -85,7 +85,7 @@ export default function LoginButton() {
       ) : (
         <button
           onClick={() => setShowModal(true)}
-          className="px-6 py-2 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-medium text-sm transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+          className="px-6 py-2.5 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold text-sm transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl border border-purple-400/30"
         >
           Login
         </button>

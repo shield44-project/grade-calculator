@@ -22,8 +22,8 @@ export default function Home() {
       {/* Header */}
       <header className="relative z-10 py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          {/* Login Button */}
-          <div className="flex justify-end mb-6">
+          {/* Login Button - Fixed positioning for better visibility */}
+          <div className="flex justify-end mb-8">
             <LoginButton />
           </div>
           
