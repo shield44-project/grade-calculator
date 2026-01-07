@@ -268,17 +268,7 @@ export default function SgpaCalculator() {
         </div>
       </div>
 
-      {/* Current Cycle Info */}
-      <div className="mb-8 text-center">
-        <div className="inline-block px-6 py-3 rounded-2xl bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30">
-          <p className="text-sm text-gray-300">
-            <span className="font-bold text-purple-300">
-              {selectedCycle === 'C' ? 'Chemistry Cycle (Semester I)' : 'Physics Cycle (Semester II)'}
-            </span>
-            {' '}- CSE/CS Cluster
-          </p>
-        </div>
-      </div>
+
 
       {/* SGPA/CGPA Display Card - Redesigned */}
       <div className="sticky top-4 z-20 mb-12">
@@ -296,7 +286,6 @@ export default function SgpaCalculator() {
                   <div className="text-center md:text-left">
                     <p className="text-blue-200 text-sm font-medium uppercase tracking-wider mb-2">Your Overall</p>
                     <h2 className="text-3xl font-bold text-white">CGPA Score</h2>
-                    <p className="text-blue-300 text-xs mt-1">(Average of Sem I & Sem II)</p>
                   </div>
                   
                   <div className="relative">
@@ -319,7 +308,6 @@ export default function SgpaCalculator() {
                   <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-blue-200 text-xs font-medium uppercase tracking-wider mb-1">Semester I</p>
                         <p className="text-white text-sm font-semibold">C Cycle SGPA</p>
                       </div>
                       <div className="text-3xl font-bold text-white">{cCycleSGPA}</div>
@@ -328,7 +316,6 @@ export default function SgpaCalculator() {
                   <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-blue-200 text-xs font-medium uppercase tracking-wider mb-1">Semester II</p>
                         <p className="text-white text-sm font-semibold">P Cycle SGPA</p>
                       </div>
                       <div className="text-3xl font-bold text-white">{pCycleSGPA}</div>
@@ -342,7 +329,7 @@ export default function SgpaCalculator() {
                 <div className="text-center md:text-left">
                   <p className="text-blue-200 text-sm font-medium uppercase tracking-wider mb-2">Your Current</p>
                   <h2 className="text-3xl font-bold text-white">SGPA Score</h2>
-                  <p className="text-blue-300 text-xs mt-1">({selectedCycle === 'C' ? 'Semester I - C Cycle' : 'Semester II - P Cycle'})</p>
+                  <p className="text-blue-300 text-xs mt-1">({selectedCycle === 'C' ? 'C Cycle' : 'P Cycle'})</p>
                 </div>
                 
                 <div className="relative">
