@@ -13,7 +13,8 @@ import {
   calculateFinalScore, 
   getGradeDetails, 
   checkPassStatus,
-  calculateRequiredSEE
+  calculateRequiredSEE,
+  hasTotalCIE
 } from '../lib/calculator';
 import DetailedCIECalculator from './DetailedCIECalculator';
 
@@ -39,44 +40,62 @@ export default function CourseCard({ id, onUpdate, initialCourseData }) {
     let finalScore = 0;
     let passCheckMarks = {};
 
-    if (courseDetails.type === 'Theory') {
-        totalCie = calculateTheoryCIE(cieMarks);
-        passCheckMarks = { totalCie, see: seeMarks.see };
-        finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
-    } else if (courseDetails.type === 'English') {
-        totalCie = calculateEnglishCIE(cieMarks);
-        passCheckMarks = { totalCie, see: seeMarks.see };
-        finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
-    } else if (courseDetails.type === 'CAEG') {
-        totalCie = calculateCAEGCIE(cieMarks);
-        passCheckMarks = { totalCie, see: seeMarks.see };
-        finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
-    } else if (courseDetails.type === 'FOIC') {
-        totalCie = calculateFOICCIE(cieMarks);
-        passCheckMarks = { totalCie, see: seeMarks.see };
-        finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
-    } else if (courseDetails.type === 'Yoga') {
-        totalCie = calculateYogaCIE(cieMarks);
-        passCheckMarks = { totalCie, see: seeMarks.see };
-        finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
-    } else if (courseDetails.type === 'Maths') {
-        totalCie = calculateMathsCIE(cieMarks);
-        passCheckMarks = { totalCie, see: seeMarks.see };
-        finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
-    } else if (courseDetails.type === 'Kannada') {
-        totalCie = calculateKannadaCIE(cieMarks);
-        passCheckMarks = { totalCie, see: seeMarks.see };
-        finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
-    } else if (courseDetails.type === 'Lab' && !isEffectivelyIntegrated) {
-        totalCie = calculateLabCIE(cieMarks);
-        passCheckMarks = { totalCie, see: seeMarks.see };
-        finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
-    } else if (isEffectivelyIntegrated) {
-        const { cieTheory, cieLab } = calculateIntegratedCIE(cieMarks);
-        totalCie = cieTheory + cieLab;
-        passCheckMarks = { cieTheory, cieLab, seeTheory: seeMarks.seeTheory, seeLab: seeMarks.seeLab };
-        const totalSEE = (Number(seeMarks.seeTheory) || 0) + (Number(seeMarks.seeLab) || 0);
-        finalScore = calculateFinalScore(totalCie, totalSEE, courseDetails.cieMax, courseDetails.seeMax);
+    // Check if user entered total CIE directly
+    if (hasTotalCIE(cieMarks)) {
+        totalCie = Number(cieMarks.totalCIE) || 0;
+        
+        // For integrated courses, we need to handle pass check differently
+        if (isEffectivelyIntegrated) {
+            // When using total CIE for integrated, we can't verify individual theory/lab pass requirements
+            // So we'll use aggregate calculation only
+            const totalSEE = (Number(seeMarks.seeTheory) || 0) + (Number(seeMarks.seeLab) || 0);
+            finalScore = calculateFinalScore(totalCie, totalSEE, courseDetails.cieMax, courseDetails.seeMax);
+            passCheckMarks = { totalCie, see: totalSEE };
+        } else {
+            passCheckMarks = { totalCie, see: seeMarks.see };
+            finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
+        }
+    } else {
+        // Original calculation logic using individual components
+        if (courseDetails.type === 'Theory') {
+            totalCie = calculateTheoryCIE(cieMarks);
+            passCheckMarks = { totalCie, see: seeMarks.see };
+            finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
+        } else if (courseDetails.type === 'English') {
+            totalCie = calculateEnglishCIE(cieMarks);
+            passCheckMarks = { totalCie, see: seeMarks.see };
+            finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
+        } else if (courseDetails.type === 'CAEG') {
+            totalCie = calculateCAEGCIE(cieMarks);
+            passCheckMarks = { totalCie, see: seeMarks.see };
+            finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
+        } else if (courseDetails.type === 'FOIC') {
+            totalCie = calculateFOICCIE(cieMarks);
+            passCheckMarks = { totalCie, see: seeMarks.see };
+            finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
+        } else if (courseDetails.type === 'Yoga') {
+            totalCie = calculateYogaCIE(cieMarks);
+            passCheckMarks = { totalCie, see: seeMarks.see };
+            finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
+        } else if (courseDetails.type === 'Maths') {
+            totalCie = calculateMathsCIE(cieMarks);
+            passCheckMarks = { totalCie, see: seeMarks.see };
+            finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
+        } else if (courseDetails.type === 'Kannada') {
+            totalCie = calculateKannadaCIE(cieMarks);
+            passCheckMarks = { totalCie, see: seeMarks.see };
+            finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
+        } else if (courseDetails.type === 'Lab' && !isEffectivelyIntegrated) {
+            totalCie = calculateLabCIE(cieMarks);
+            passCheckMarks = { totalCie, see: seeMarks.see };
+            finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
+        } else if (isEffectivelyIntegrated) {
+            const { cieTheory, cieLab } = calculateIntegratedCIE(cieMarks);
+            totalCie = cieTheory + cieLab;
+            passCheckMarks = { cieTheory, cieLab, seeTheory: seeMarks.seeTheory, seeLab: seeMarks.seeLab };
+            const totalSEE = (Number(seeMarks.seeTheory) || 0) + (Number(seeMarks.seeLab) || 0);
+            finalScore = calculateFinalScore(totalCie, totalSEE, courseDetails.cieMax, courseDetails.seeMax);
+        }
     }
     
     const isPass = checkPassStatus(courseDetails, passCheckMarks);
@@ -102,12 +121,32 @@ export default function CourseCard({ id, onUpdate, initialCourseData }) {
   }, [id, courseDetails, cieMarks, seeMarks, results, onUpdate]);
 
   const handleCieMarkChange = (e) => {
-    // A special flag for our DetailedCIECalculator component logic
-    setCieMarks(prev => ({ 
-      ...prev, 
-      [e.target.name]: e.target.value,
-      isIntegratedLab: isEffectivelyIntegrated 
-    }));
+    const { name, value } = e.target;
+    
+    // If totalCIE is being entered, clear all individual components but preserve isIntegratedLab
+    if (name === 'totalCIE' && value !== '') {
+      setCieMarks({ 
+        totalCIE: value,
+        isIntegratedLab: isEffectivelyIntegrated 
+      });
+    } 
+    // If totalCIE is being cleared, set it to undefined
+    else if (name === 'totalCIE' && value === '') {
+      setCieMarks(prev => ({
+        ...prev,
+        totalCIE: undefined,
+        isIntegratedLab: isEffectivelyIntegrated
+      }));
+    }
+    // For other fields, update normally and clear totalCIE if it exists
+    else {
+      setCieMarks(prev => ({
+        ...prev,
+        [name]: value,
+        totalCIE: undefined,
+        isIntegratedLab: isEffectivelyIntegrated
+      }));
+    }
   };
 
   const handleSeeMarkChange = (e) => {
