@@ -93,38 +93,37 @@ export default function LoginButton() {
 
       {/* Login Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fadeIn" onClick={(e) => {
+        <div className="fixed inset-0 z-[9999] flex items-start justify-center pt-12 sm:pt-20 p-4 bg-black/70 backdrop-blur-sm animate-fadeIn" onClick={(e) => {
           if (e.target === e.currentTarget) setShowModal(false);
         }}>
-          <div className="relative bg-gray-900 rounded-2xl shadow-2xl border border-gray-800 p-8 max-w-md w-full animate-slideUp" onClick={(e) => e.stopPropagation()}>
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">
+          <div className="relative bg-gray-900 rounded-xl shadow-2xl border border-gray-800 p-5 max-w-sm w-full animate-slideUp" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">
                 Login
               </h2>
               <button
                 onClick={() => setShowModal(false)}
                 className="text-gray-400 hover:text-white transition-colors"
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
             </div>
 
-            <p className="text-gray-400 text-sm mb-6">
+            <p className="text-gray-400 text-xs mb-4">
               Login is optional. Enter your credentials to personalize your experience.
-              New users will have an account created automatically.
             </p>
 
             {error && (
-              <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
-                <p className="text-red-400 text-sm">{error}</p>
+              <div className="mb-3 p-2 bg-red-500/10 border border-red-500/30 rounded-lg">
+                <p className="text-red-400 text-xs">{error}</p>
               </div>
             )}
 
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={handleLogin} className="space-y-3">
               <div>
-                <label htmlFor="username" className="block text-sm font-medium text-gray-300 mb-2">
+                <label htmlFor="username" className="block text-xs font-medium text-gray-300 mb-1">
                   Username
                 </label>
                 <input
@@ -132,14 +131,14 @@ export default function LoginButton() {
                   id="username"
                   value={loginForm.username}
                   onChange={(e) => setLoginForm({ ...loginForm, username: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-500"
+                  className="w-full px-3 py-2 text-sm bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-500"
                   placeholder="Enter your username"
                   required
                 />
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
+                <label htmlFor="password" className="block text-xs font-medium text-gray-300 mb-1">
                   Password
                 </label>
                 <input
@@ -147,23 +146,23 @@ export default function LoginButton() {
                   id="password"
                   value={loginForm.password}
                   onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
-                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-500"
+                  className="w-full px-3 py-2 text-sm bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-500"
                   placeholder="Enter your password"
                   required
                 />
               </div>
 
-              <div className="flex gap-3 pt-4">
+              <div className="flex gap-2 pt-3">
                 <button
                   type="submit"
-                  className="flex-1 px-6 py-3 rounded-lg bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-medium transition-all duration-200 transform hover:scale-105"
+                  className="flex-1 px-4 py-2 text-sm rounded-lg bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-medium transition-all duration-200 transform hover:scale-105"
                 >
                   Login
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-6 py-3 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium transition-colors duration-200"
+                  className="px-4 py-2 text-sm rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium transition-colors duration-200"
                 >
                   Cancel
                 </button>
