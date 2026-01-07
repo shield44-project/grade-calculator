@@ -123,30 +123,29 @@ export default function CourseCard({ id, onUpdate, initialCourseData }) {
   const handleCieMarkChange = (e) => {
     const { name, value } = e.target;
     
-    // If totalCIE is being entered, clear all individual components
+    // If totalCIE is being entered, clear all individual components but preserve isIntegratedLab
     if (name === 'totalCIE' && value !== '') {
       setCieMarks({ 
         totalCIE: value,
         isIntegratedLab: isEffectivelyIntegrated 
       });
     } 
-    // If totalCIE is being cleared, just clear it but keep the flag
+    // If totalCIE is being cleared, set it to undefined
     else if (name === 'totalCIE' && value === '') {
-      setCieMarks(prev => {
-        const { totalCIE, ...rest } = prev;
-        return { ...rest, isIntegratedLab: isEffectivelyIntegrated };
-      });
+      setCieMarks(prev => ({
+        ...prev,
+        totalCIE: undefined,
+        isIntegratedLab: isEffectivelyIntegrated
+      }));
     }
-    // For other fields, update normally but clear totalCIE if it exists
+    // For other fields, update normally and clear totalCIE if it exists
     else {
-      setCieMarks(prev => {
-        const { totalCIE, ...rest } = prev;
-        return { 
-          ...rest, 
-          [name]: value,
-          isIntegratedLab: isEffectivelyIntegrated 
-        };
-      });
+      setCieMarks(prev => ({
+        ...prev,
+        [name]: value,
+        totalCIE: undefined,
+        isIntegratedLab: isEffectivelyIntegrated
+      }));
     }
   };
 
