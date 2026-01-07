@@ -1,6 +1,7 @@
 // pages/index.js
 import Head from 'next/head';
 import SgpaCalculator from '../components/SgpaCalculator';
+import LoginButton from '../components/LoginButton';
 
 export default function Home() {
   return (
@@ -21,6 +22,11 @@ export default function Home() {
       {/* Header */}
       <header className="relative z-10 py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
+          {/* Login Button - Fixed positioning for better visibility */}
+          <div className="flex justify-end mb-8">
+            <LoginButton />
+          </div>
+          
           <div className="text-center space-y-4 animate-fadeIn">
             <div className="inline-block mb-4">
               <span className="px-4 py-2 rounded-full bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30 text-sm font-medium text-purple-300">

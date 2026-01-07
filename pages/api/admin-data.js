@@ -1,8 +1,7 @@
 // Admin endpoint to retrieve all collected user data
 // Protected by admin key - only accessible by website owner
 
-import fs from 'fs';
-import path from 'path';
+import { getSubmissions, isServerlessEnvironment } from '../../lib/storage';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {
@@ -23,31 +22,28 @@ export default async function handler(req, res) {
   }
 
   try {
-    const dataDir = path.join(process.cwd(), 'data');
-    const dataFile = path.join(dataDir, 'user-submissions.json');
+    const { submissions, count, storage } = await getSubmissions();
+    
+    const response = { 
+      submissions: submissions,
+      count: count,
+      message: count > 0 ? 'Data retrieved successfully' : 'No submissions yet',
+      storage: storage,
+      adminAccess: 'Accessible at /api/admin-data?key=shield44-admin-2025-rvce-calculator'
+    };
 
-    // Check if data file exists
-    if (!fs.existsSync(dataFile)) {
-      return res.status(200).json({ 
-        submissions: [], 
-        count: 0,
-        message: 'No submissions yet' 
-      });
+    if (storage === 'in-memory') {
+      response.note = 'Using in-memory storage. Data persists within the same instance but resets on cold starts. Configure REDIS_URL environment variable for persistent storage.';
+    } else if (storage === 'redis') {
+      response.note = 'Using Redis for persistent storage.';
     }
 
-    // Read and return all submissions
-    const fileContent = fs.readFileSync(dataFile, 'utf8');
-    const submissions = JSON.parse(fileContent);
-
-    res.status(200).json({ 
-      submissions: submissions,
-      count: submissions.length,
-      message: 'Data retrieved successfully',
-      // Hint for developers
-      adminAccess: 'Accessible at /api/admin-data?key=shield44-admin-2025-rvce-calculator'
-    });
+    res.status(200).json(response);
   } catch (error) {
     console.error('Error reading data:', error);
-    res.status(500).json({ error: 'Failed to retrieve data' });
+    res.status(500).json({ 
+      error: 'Failed to retrieve data',
+      details: error.message 
+    });
   }
 }
