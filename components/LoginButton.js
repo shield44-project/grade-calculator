@@ -1,22 +1,24 @@
 // components/LoginButton.js
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 export default function LoginButton() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState('');
+  // Initialize state from localStorage
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return !!localStorage.getItem('rvce-calculator-username');
+    }
+    return false;
+  });
+  
+  const [username, setUsername] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('rvce-calculator-username') || '';
+    }
+    return '';
+  });
+  
   const [showModal, setShowModal] = useState(false);
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
-
-  // Check login status on mount
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const savedUsername = localStorage.getItem('rvce-calculator-username');
-      if (savedUsername) {
-        setIsLoggedIn(true);
-        setUsername(savedUsername);
-      }
-    }
-  }, []);
 
   const handleLogin = (e) => {
     e.preventDefault();
