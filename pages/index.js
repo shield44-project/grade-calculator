@@ -54,7 +54,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="border-t border-gray-800 pt-8">
             <p className="text-center text-gray-500 text-sm">
-              Made with ❤️ for RVCE Students | An unofficial tool for educational purposes
+              Made for RVCE Students | An unofficial tool for educational purposes
             </p>
             <div className="flex items-center justify-center gap-6 mt-4">
               <a 
