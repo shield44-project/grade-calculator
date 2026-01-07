@@ -108,7 +108,7 @@ export default function LoginButton() {
 
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
-                  Password (Optional)
+                  Password (Optional - Not Used)
                 </label>
                 <input
                   type="password"
@@ -116,8 +116,11 @@ export default function LoginButton() {
                   value={loginForm.password}
                   onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
                   className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-500"
-                  placeholder="Enter your password (not required)"
+                  placeholder="Not required - this is a demo"
                 />
+                <p className="text-xs text-gray-500 mt-1">
+                  This field is for demonstration purposes only. No authentication is performed.
+                </p>
               </div>
 
               <div className="flex gap-3 pt-4">
