@@ -134,14 +134,6 @@ export default function SgpaCalculator() {
     }
   };
 
-  const addCourse = () => {
-    setCourses([...courses, { id: Date.now(), courseDetails: null, cieMarks: {}, seeMarks: {}, results: {} }]);
-  };
-
-  const removeCourse = (id) => {
-    setCourses(courses.filter(course => course.id !== id));
-  };
-
   const updateCourse = useCallback((id, data) => {
     setCourses(courses => courses.map(course => (course.id === id ? { ...course, ...data } : course)));
   }, []);
@@ -258,7 +250,7 @@ export default function SgpaCalculator() {
       <div className="space-y-6">
         {courses.map((course, index) => (
           <div key={course.id} className="animate-slideInLeft" style={{animationDelay: `${index * 0.1}s`}}>
-            <CourseCard id={course.id} initialCourseData={course} onUpdate={updateCourse} onRemove={removeCourse} />
+            <CourseCard id={course.id} initialCourseData={course} onUpdate={updateCourse} />
           </div>
         ))}
       </div>

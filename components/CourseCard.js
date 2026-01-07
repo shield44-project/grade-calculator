@@ -17,7 +17,7 @@ import {
 } from '../lib/calculator';
 import DetailedCIECalculator from './DetailedCIECalculator';
 
-export default function CourseCard({ id, onUpdate, onRemove, initialCourseData }) {
+export default function CourseCard({ id, onUpdate, initialCourseData }) {
   const [cieMarks, setCieMarks] = useState(initialCourseData.cieMarks || {});
   const [seeMarks, setSeeMarks] = useState(initialCourseData.seeMarks || {});
   
@@ -25,6 +25,12 @@ export default function CourseCard({ id, onUpdate, onRemove, initialCourseData }
   const prevResultsRef = useRef();
 
   const courseDetails = initialCourseData.courseDetails;
+  
+  // Safety check - should not happen with fixed cycle courses, but prevents runtime errors
+  if (!courseDetails) {
+    return null;
+  }
+  
   // Hack to handle courses like CS222IA which are labeled "Theory+Lab" but categorized as "Lab" in PDF
   const isEffectivelyIntegrated = courseDetails.type === 'Integrated' || courseDetails.cieMax === 150;
 
