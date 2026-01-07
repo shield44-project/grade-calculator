@@ -17,6 +17,9 @@ const InputField = ({ name, label, placeholder, value, onChange }) => (
 export default function DetailedCIECalculator({ courseType, cieMarks, handleMarkChange }) {
     if (!courseType || courseType === 'None') return null;
 
+    // Check if user has entered total CIE directly
+    const hasTotalCIE = cieMarks.totalCIE !== undefined && cieMarks.totalCIE !== null && cieMarks.totalCIE !== '';
+    
     const renderTheoryInputs = () => (
         <>
             <h4 className="col-span-full text-lg font-semibold text-blue-400 flex items-center gap-2 border-b border-blue-500/30 pb-2">
@@ -213,6 +216,13 @@ export default function DetailedCIECalculator({ courseType, cieMarks, handleMark
     
     // Some "Lab" courses like CS222IA follow the Integrated marking scheme
     const isEffectivelyIntegrated = courseType === 'Integrated' || (courseType === 'Lab' && cieMarks.isIntegratedLab);
+    
+    // Determine the max CIE value based on course type
+    const getCIEMax = () => {
+        if (isEffectivelyIntegrated) return 150;
+        if (courseType === 'Theory' || courseType === 'Maths') return 100;
+        return 50; // Lab, English, CAEG, FOIC, Yoga, Kannada
+    };
 
     return (
         <div className="p-5 mt-4 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl border border-gray-700/50">
@@ -222,17 +232,65 @@ export default function DetailedCIECalculator({ courseType, cieMarks, handleMark
                 </svg>
                 Continuous Internal Evaluation (CIE)
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {courseType === 'Theory' && renderTheoryInputs()}
-                {courseType === 'Lab' && renderLabInputs()}
-                {courseType === 'English' && renderEnglishInputs()}
-                {courseType === 'CAEG' && renderCAEGInputs()}
-                {courseType === 'FOIC' && renderFOICInputs()}
-                {courseType === 'Yoga' && renderYogaInputs()}
-                {courseType === 'Maths' && renderMathsInputs()}
-                {courseType === 'Kannada' && renderKannadaInputs()}
-                {isEffectivelyIntegrated && renderIntegratedInputs()}
+            
+            {/* Total CIE Input Section */}
+            <div className="mb-6 p-4 bg-gradient-to-r from-purple-900/30 to-blue-900/30 rounded-xl border border-purple-500/30">
+                <h4 className="text-lg font-semibold text-purple-300 mb-3 flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
+                        <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
+                    </svg>
+                    Total CIE Marks (Optional)
+                </h4>
+                <p className="text-sm text-gray-400 mb-3">
+                    Enter your total CIE marks here to skip individual component entry. Once entered, individual fields will be hidden.
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <InputField 
+                        name="totalCIE" 
+                        label="Total CIE Marks" 
+                        placeholder={`Out of ${getCIEMax()}`} 
+                        value={cieMarks.totalCIE} 
+                        onChange={handleMarkChange} 
+                    />
+                    {hasTotalCIE && (
+                        <button
+                            type="button"
+                            onClick={() => handleMarkChange({ target: { name: 'totalCIE', value: '' } })}
+                            className="self-end px-4 py-3 bg-red-500/20 border border-red-500/30 rounded-xl text-red-300 hover:bg-red-500/30 transition-all duration-300"
+                        >
+                            Clear & Enter Individual Components
+                        </button>
+                    )}
+                </div>
             </div>
+            
+            {/* Individual CIE Components - Only show if Total CIE is not entered */}
+            {!hasTotalCIE && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {courseType === 'Theory' && renderTheoryInputs()}
+                    {courseType === 'Lab' && renderLabInputs()}
+                    {courseType === 'English' && renderEnglishInputs()}
+                    {courseType === 'CAEG' && renderCAEGInputs()}
+                    {courseType === 'FOIC' && renderFOICInputs()}
+                    {courseType === 'Yoga' && renderYogaInputs()}
+                    {courseType === 'Maths' && renderMathsInputs()}
+                    {courseType === 'Kannada' && renderKannadaInputs()}
+                    {isEffectivelyIntegrated && renderIntegratedInputs()}
+                </div>
+            )}
+            
+            {/* Message when Total CIE is entered */}
+            {hasTotalCIE && (
+                <div className="p-4 bg-green-900/20 border border-green-500/30 rounded-xl">
+                    <p className="text-green-300 text-sm flex items-center gap-2">
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        Total CIE marks entered. Individual components are hidden. Click the button above to clear and enter individual components.
+                    </p>
+                </div>
+            )}
         </div>
     );
 }
