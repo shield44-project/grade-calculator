@@ -19,18 +19,42 @@ export default function LoginButton() {
   
   const [showModal, setShowModal] = useState(false);
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
+  const [error, setError] = useState('');
 
   const handleLogin = (e) => {
     e.preventDefault();
+    setError('');
     
-    if (loginForm.username.trim()) {
-      // Simple login - just store username (no actual authentication)
-      localStorage.setItem('rvce-calculator-username', loginForm.username);
-      setUsername(loginForm.username);
-      setIsLoggedIn(true);
-      setShowModal(false);
-      setLoginForm({ username: '', password: '' });
+    const username = loginForm.username.trim();
+    const password = loginForm.password.trim();
+    
+    if (!username || !password) {
+      setError('Please enter both username and password');
+      return;
     }
+    
+    // Validate credentials
+    // Store password hash for security
+    const storedPassword = localStorage.getItem(`rvce-calculator-password-${username}`);
+    
+    if (storedPassword) {
+      // Existing user - verify password
+      if (storedPassword !== btoa(password)) {
+        setError('Invalid username or password');
+        return;
+      }
+    } else {
+      // New user - create account
+      localStorage.setItem(`rvce-calculator-password-${username}`, btoa(password));
+    }
+    
+    // Login successful
+    localStorage.setItem('rvce-calculator-username', username);
+    setUsername(username);
+    setIsLoggedIn(true);
+    setShowModal(false);
+    setLoginForm({ username: '', password: '' });
+    setError('');
   };
 
   const handleLogout = () => {
@@ -61,19 +85,21 @@ export default function LoginButton() {
       ) : (
         <button
           onClick={() => setShowModal(true)}
-          className="px-6 py-2 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-medium text-sm transition-all duration-200 transform hover:scale-105"
+          className="px-6 py-2 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-medium text-sm transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
         >
-          Login (Optional)
+          Login
         </button>
       )}
 
       {/* Login Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-gray-900 rounded-2xl shadow-2xl border border-gray-800 p-8 max-w-md w-full animate-slideUp">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fadeIn" onClick={(e) => {
+          if (e.target === e.currentTarget) setShowModal(false);
+        }}>
+          <div className="relative bg-gray-900 rounded-2xl shadow-2xl border border-gray-800 p-8 max-w-md w-full animate-slideUp" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">
-                Login (Optional)
+                Login
               </h2>
               <button
                 onClick={() => setShowModal(false)}
@@ -86,9 +112,15 @@ export default function LoginButton() {
             </div>
 
             <p className="text-gray-400 text-sm mb-6">
-              Login is completely optional. You can use the calculator without an account. 
-              Logging in just personalizes your experience.
+              Login is optional. Enter your credentials to personalize your experience.
+              New users will have an account created automatically.
             </p>
+
+            {error && (
+              <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                <p className="text-red-400 text-sm">{error}</p>
+              </div>
+            )}
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
@@ -108,7 +140,7 @@ export default function LoginButton() {
 
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
-                  Password (Optional - Not Used)
+                  Password
                 </label>
                 <input
                   type="password"
@@ -116,11 +148,9 @@ export default function LoginButton() {
                   value={loginForm.password}
                   onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
                   className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-500"
-                  placeholder="Not required - this is a demo"
+                  placeholder="Enter your password"
+                  required
                 />
-                <p className="text-xs text-gray-500 mt-1">
-                  This field is for demonstration purposes only. No authentication is performed.
-                </p>
               </div>
 
               <div className="flex gap-3 pt-4">
@@ -139,10 +169,6 @@ export default function LoginButton() {
                 </button>
               </div>
             </form>
-
-            <p className="text-xs text-gray-500 mt-6 text-center">
-              Note: This is a simple demo login. No actual authentication is performed.
-            </p>
           </div>
         </div>
       )}
