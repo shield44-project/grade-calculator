@@ -6,6 +6,8 @@ import { cCycleCourses, pCycleCourses } from '../lib/data';
 
 const STORAGE_KEY = 'rvce-grade-calculator-courses';
 const CYCLE_KEY = 'rvce-grade-calculator-cycle';
+const C_CYCLE_DATA_KEY = 'rvce-grade-calculator-c-cycle-data';
+const P_CYCLE_DATA_KEY = 'rvce-grade-calculator-p-cycle-data';
 
 export default function SgpaCalculator() {
   // Initialize selected cycle from localStorage or use default 'C'
@@ -26,16 +28,15 @@ export default function SgpaCalculator() {
   // Get courses based on selected cycle
   const cycleCourses = selectedCycle === 'C' ? cCycleCourses : pCycleCourses;
 
-  // Initialize courses from localStorage or use default from selected cycle
+  // Initialize courses from localStorage for the selected cycle
   const [courses, setCourses] = useState(() => {
     if (typeof window !== 'undefined') {
       try {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        const savedCycle = localStorage.getItem(CYCLE_KEY);
-        if (saved && savedCycle) {
+        const storageKey = selectedCycle === 'C' ? C_CYCLE_DATA_KEY : P_CYCLE_DATA_KEY;
+        const saved = localStorage.getItem(storageKey);
+        if (saved) {
           const parsed = JSON.parse(saved);
-          // Validate the data structure and check if it matches current cycle
-          if (Array.isArray(parsed) && parsed.length > 0 && savedCycle === selectedCycle) {
+          if (Array.isArray(parsed) && parsed.length > 0) {
             return parsed;
           }
         }
@@ -54,6 +55,47 @@ export default function SgpaCalculator() {
   });
   
   const sgpa = useMemo(() => calculateSGPA(courses), [courses]);
+  
+  // Load both cycle SGPAs for CGPA calculation
+  const [cCycleSGPA, setCCycleSGPA] = useState(0);
+  const [pCycleSGPA, setPCycleSGPA] = useState(0);
+  
+  // Calculate SGPA for both cycles
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        // Get C Cycle SGPA
+        const cCycleData = localStorage.getItem(C_CYCLE_DATA_KEY);
+        if (cCycleData) {
+          const parsed = JSON.parse(cCycleData);
+          const cSgpa = calculateSGPA(parsed);
+          setCCycleSGPA(cSgpa);
+        } else {
+          setCCycleSGPA(0);
+        }
+        
+        // Get P Cycle SGPA
+        const pCycleData = localStorage.getItem(P_CYCLE_DATA_KEY);
+        if (pCycleData) {
+          const parsed = JSON.parse(pCycleData);
+          const pSgpa = calculateSGPA(parsed);
+          setPCycleSGPA(pSgpa);
+        } else {
+          setPCycleSGPA(0);
+        }
+      } catch (error) {
+        console.error('Error calculating cycle SGPAs:', error);
+      }
+    }
+  }, [courses, selectedCycle]);
+  
+  // Calculate CGPA if both cycles have data
+  const cgpa = useMemo(() => {
+    if (cCycleSGPA > 0 && pCycleSGPA > 0) {
+      return ((parseFloat(cCycleSGPA) + parseFloat(pCycleSGPA)) / 2).toFixed(2);
+    }
+    return null;
+  }, [cCycleSGPA, pCycleSGPA]);
 
   // Save cycle to localStorage whenever it changes
   useEffect(() => {
@@ -66,16 +108,17 @@ export default function SgpaCalculator() {
     }
   }, [selectedCycle]);
 
-  // Save courses to localStorage whenever they change
+  // Save courses to cycle-specific localStorage whenever they change
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(courses));
+        const storageKey = selectedCycle === 'C' ? C_CYCLE_DATA_KEY : P_CYCLE_DATA_KEY;
+        localStorage.setItem(storageKey, JSON.stringify(courses));
       } catch (error) {
         console.error('Error saving courses to localStorage:', error);
       }
     }
-  }, [courses]);
+  }, [courses, selectedCycle]);
 
   // Submit data to backend for owner to collect
   useEffect(() => {
@@ -122,8 +165,26 @@ export default function SgpaCalculator() {
   const handleCycleChange = (cycle) => {
     if (cycle !== selectedCycle) {
       setSelectedCycle(cycle);
-      // Reset courses to the new cycle's courses
+      // Load saved data for the new cycle, or initialize with default courses
+      const storageKey = cycle === 'C' ? C_CYCLE_DATA_KEY : P_CYCLE_DATA_KEY;
       const newCycleCourses = cycle === 'C' ? cCycleCourses : pCycleCourses;
+      
+      if (typeof window !== 'undefined') {
+        try {
+          const saved = localStorage.getItem(storageKey);
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed) && parsed.length > 0) {
+              setCourses(parsed);
+              return;
+            }
+          }
+        } catch (error) {
+          console.error('Error loading cycle data:', error);
+        }
+      }
+      
+      // If no saved data, initialize with default courses
       setCourses(newCycleCourses.map((course, index) => ({
         id: index + 1,
         courseDetails: course,
@@ -139,8 +200,8 @@ export default function SgpaCalculator() {
   }, []);
 
   const clearAllData = () => {
-    if (confirm('Are you sure you want to clear all your saved data? This cannot be undone.')) {
-      // Reset courses to current cycle's default courses
+    if (confirm('Are you sure you want to clear all your saved data for BOTH semesters? This cannot be undone.')) {
+      // Reset current cycle courses
       const newCycleCourses = selectedCycle === 'C' ? cCycleCourses : pCycleCourses;
       setCourses(newCycleCourses.map((course, index) => ({
         id: index + 1,
@@ -149,8 +210,15 @@ export default function SgpaCalculator() {
         seeMarks: {},
         results: {}
       })));
+      
+      // Clear all localStorage data for both cycles
       if (typeof window !== 'undefined') {
         localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(C_CYCLE_DATA_KEY);
+        localStorage.removeItem(P_CYCLE_DATA_KEY);
+        // Reset the SGPAs
+        setCCycleSGPA(0);
+        setPCycleSGPA(0);
       }
     }
   };
@@ -211,7 +279,7 @@ export default function SgpaCalculator() {
         </div>
       </div>
 
-      {/* SGPA Display Card - Redesigned */}
+      {/* SGPA/CGPA Display Card - Redesigned */}
       <div className="sticky top-4 z-20 mb-12">
         <div className="relative overflow-hidden rounded-3xl shadow-2xl">
           {/* Gradient background */}
@@ -219,26 +287,78 @@ export default function SgpaCalculator() {
           
           {/* Glass morphism overlay */}
           <div className="relative backdrop-blur-xl bg-white/10 border border-white/20 p-8">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-              <div className="text-center md:text-left">
-                <p className="text-blue-200 text-sm font-medium uppercase tracking-wider mb-2">Your Current</p>
-                <h2 className="text-3xl font-bold text-white">SGPA Score</h2>
-              </div>
-              
-              <div className="relative">
-                <div className="absolute inset-0 bg-white/20 rounded-full blur-xl"></div>
-                <div className="relative bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-md rounded-full p-8 border-4 border-white/30">
-                  <div className="text-6xl font-extrabold text-white drop-shadow-lg">
-                    {sgpa}
+            {cgpa ? (
+              // Show CGPA when both cycles have data
+              <div className="space-y-6">
+                {/* CGPA Display */}
+                <div className="flex flex-col md:flex-row justify-between items-center gap-6 pb-6 border-b border-white/20">
+                  <div className="text-center md:text-left">
+                    <p className="text-blue-200 text-sm font-medium uppercase tracking-wider mb-2">Your Overall</p>
+                    <h2 className="text-3xl font-bold text-white">CGPA Score</h2>
+                    <p className="text-blue-300 text-xs mt-1">(Average of Sem I & Sem II)</p>
+                  </div>
+                  
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-white/20 rounded-full blur-xl"></div>
+                    <div className="relative bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-md rounded-full p-8 border-4 border-white/30">
+                      <div className="text-6xl font-extrabold text-white drop-shadow-lg">
+                        {cgpa}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="text-center md:text-right">
+                    <p className="text-sm text-blue-100 mb-2">Out of</p>
+                    <p className="text-4xl font-bold text-white">10.0</p>
+                  </div>
+                </div>
+                
+                {/* Individual Semester SGPAs */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-blue-200 text-xs font-medium uppercase tracking-wider mb-1">Semester I</p>
+                        <p className="text-white text-sm font-semibold">C Cycle SGPA</p>
+                      </div>
+                      <div className="text-3xl font-bold text-white">{cCycleSGPA}</div>
+                    </div>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-blue-200 text-xs font-medium uppercase tracking-wider mb-1">Semester II</p>
+                        <p className="text-white text-sm font-semibold">P Cycle SGPA</p>
+                      </div>
+                      <div className="text-3xl font-bold text-white">{pCycleSGPA}</div>
+                    </div>
                   </div>
                 </div>
               </div>
-              
-              <div className="text-center md:text-right">
-                <p className="text-sm text-blue-100 mb-2">Out of</p>
-                <p className="text-4xl font-bold text-white">10.0</p>
+            ) : (
+              // Show only SGPA when only one cycle has data
+              <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div className="text-center md:text-left">
+                  <p className="text-blue-200 text-sm font-medium uppercase tracking-wider mb-2">Your Current</p>
+                  <h2 className="text-3xl font-bold text-white">SGPA Score</h2>
+                  <p className="text-blue-300 text-xs mt-1">({selectedCycle === 'C' ? 'Semester I - C Cycle' : 'Semester II - P Cycle'})</p>
+                </div>
+                
+                <div className="relative">
+                  <div className="absolute inset-0 bg-white/20 rounded-full blur-xl"></div>
+                  <div className="relative bg-gradient-to-br from-white/30 to-white/10 backdrop-blur-md rounded-full p-8 border-4 border-white/30">
+                    <div className="text-6xl font-extrabold text-white drop-shadow-lg">
+                      {sgpa}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="text-center md:text-right">
+                  <p className="text-sm text-blue-100 mb-2">Out of</p>
+                  <p className="text-4xl font-bold text-white">10.0</p>
+                </div>
               </div>
-            </div>
+            )}
           </div>
           
           {/* Animated border */}
