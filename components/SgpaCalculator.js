@@ -2,19 +2,40 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import CourseCard from './CourseCard';
 import { calculateSGPA } from '../lib/calculator';
+import { cCycleCourses, pCycleCourses } from '../lib/data';
 
 const STORAGE_KEY = 'rvce-grade-calculator-courses';
+const CYCLE_KEY = 'rvce-grade-calculator-cycle';
 
 export default function SgpaCalculator() {
-  // Initialize courses from localStorage or use default
+  // Initialize selected cycle from localStorage or use default 'C'
+  const [selectedCycle, setSelectedCycle] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem(CYCLE_KEY);
+        if (saved && (saved === 'C' || saved === 'P')) {
+          return saved;
+        }
+      } catch (error) {
+        console.error('Error loading cycle from localStorage:', error);
+      }
+    }
+    return 'C';
+  });
+
+  // Get courses based on selected cycle
+  const cycleCourses = selectedCycle === 'C' ? cCycleCourses : pCycleCourses;
+
+  // Initialize courses from localStorage or use default from selected cycle
   const [courses, setCourses] = useState(() => {
     if (typeof window !== 'undefined') {
       try {
         const saved = localStorage.getItem(STORAGE_KEY);
-        if (saved) {
+        const savedCycle = localStorage.getItem(CYCLE_KEY);
+        if (saved && savedCycle) {
           const parsed = JSON.parse(saved);
-          // Validate the data structure
-          if (Array.isArray(parsed) && parsed.length > 0) {
+          // Validate the data structure and check if it matches current cycle
+          if (Array.isArray(parsed) && parsed.length > 0 && savedCycle === selectedCycle) {
             return parsed;
           }
         }
@@ -22,10 +43,28 @@ export default function SgpaCalculator() {
         console.error('Error loading courses from localStorage:', error);
       }
     }
-    return [{ id: 1, courseDetails: null, cieMarks: {}, seeMarks: {}, results: {} }];
+    // Initialize with all courses from the selected cycle
+    return cycleCourses.map((course, index) => ({
+      id: index + 1,
+      courseDetails: course,
+      cieMarks: {},
+      seeMarks: {},
+      results: {}
+    }));
   });
   
   const sgpa = useMemo(() => calculateSGPA(courses), [courses]);
+
+  // Save cycle to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.setItem(CYCLE_KEY, selectedCycle);
+      } catch (error) {
+        console.error('Error saving cycle to localStorage:', error);
+      }
+    }
+  }, [selectedCycle]);
 
   // Save courses to localStorage whenever they change
   useEffect(() => {
@@ -80,6 +119,21 @@ export default function SgpaCalculator() {
     }
   }, [courses, sgpa]);
 
+  const handleCycleChange = (cycle) => {
+    if (cycle !== selectedCycle) {
+      setSelectedCycle(cycle);
+      // Reset courses to the new cycle's courses
+      const newCycleCourses = cycle === 'C' ? cCycleCourses : pCycleCourses;
+      setCourses(newCycleCourses.map((course, index) => ({
+        id: index + 1,
+        courseDetails: course,
+        cieMarks: {},
+        seeMarks: {},
+        results: {}
+      })));
+    }
+  };
+
   const addCourse = () => {
     setCourses([...courses, { id: Date.now(), courseDetails: null, cieMarks: {}, seeMarks: {}, results: {} }]);
   };
@@ -94,7 +148,15 @@ export default function SgpaCalculator() {
 
   const clearAllData = () => {
     if (confirm('Are you sure you want to clear all your saved data? This cannot be undone.')) {
-      setCourses([{ id: Date.now(), courseDetails: null, cieMarks: {}, seeMarks: {}, results: {} }]);
+      // Reset courses to current cycle's default courses
+      const newCycleCourses = selectedCycle === 'C' ? cCycleCourses : pCycleCourses;
+      setCourses(newCycleCourses.map((course, index) => ({
+        id: index + 1,
+        courseDetails: course,
+        cieMarks: {},
+        seeMarks: {},
+        results: {}
+      })));
       if (typeof window !== 'undefined') {
         localStorage.removeItem(STORAGE_KEY);
       }
@@ -103,6 +165,60 @@ export default function SgpaCalculator() {
 
   return (
     <div className="w-full mx-auto animate-fadeIn">
+      {/* Cycle Selector */}
+      <div className="mb-8 flex justify-center">
+        <div className="inline-flex rounded-2xl bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-xl border border-gray-700/50 p-2 shadow-2xl">
+          <button
+            onClick={() => handleCycleChange('C')}
+            className={`relative px-8 py-4 rounded-xl font-bold transition-all duration-300 ${
+              selectedCycle === 'C'
+                ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105'
+                : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
+            }`}
+          >
+            <span className="relative z-10 flex items-center gap-2">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
+              </svg>
+              C Cycle (Chemistry)
+            </span>
+            {selectedCycle === 'C' && (
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+            )}
+          </button>
+          <button
+            onClick={() => handleCycleChange('P')}
+            className={`relative px-8 py-4 rounded-xl font-bold transition-all duration-300 ${
+              selectedCycle === 'P'
+                ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105'
+                : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
+            }`}
+          >
+            <span className="relative z-10 flex items-center gap-2">
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
+              </svg>
+              P Cycle (Physics)
+            </span>
+            {selectedCycle === 'P' && (
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Current Cycle Info */}
+      <div className="mb-8 text-center">
+        <div className="inline-block px-6 py-3 rounded-2xl bg-gradient-to-r from-purple-500/20 to-blue-500/20 border border-purple-500/30">
+          <p className="text-sm text-gray-300">
+            <span className="font-bold text-purple-300">
+              {selectedCycle === 'C' ? 'Chemistry Cycle (Semester I)' : 'Physics Cycle (Semester II)'}
+            </span>
+            {' '}- CSE/CS Cluster
+          </p>
+        </div>
+      </div>
+
       {/* SGPA Display Card - Redesigned */}
       <div className="sticky top-4 z-20 mb-12">
         <div className="relative overflow-hidden rounded-3xl shadow-2xl">
@@ -149,19 +265,6 @@ export default function SgpaCalculator() {
 
       {/* Action Buttons - Redesigned */}
       <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
-        <button 
-          onClick={addCourse} 
-          className="group relative overflow-hidden bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-2xl hover:scale-105 transform"
-        >
-          <span className="relative z-10 flex items-center justify-center gap-2">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-            Add Another Course
-          </span>
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        </button>
-        
         <button 
           onClick={clearAllData} 
           className="group relative overflow-hidden bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white font-bold py-4 px-8 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-2xl hover:scale-105 transform"
