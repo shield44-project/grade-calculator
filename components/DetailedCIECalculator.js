@@ -60,17 +60,10 @@ export default function DetailedCIECalculator({ courseType, cieMarks, handleMark
         <>
             <h4 className="col-span-full text-lg font-semibold text-blue-400 flex items-center gap-2 border-b border-blue-500/30 pb-2">
                 <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
-                CIEs (Best 2 of 3, each out of 12)
-            </h4>
-            <InputField name="cie1" label="CIE 1" placeholder="Out of 12" value={cieMarks.cie1} onChange={handleMarkChange} />
-            <InputField name="cie2" label="CIE 2" placeholder="Out of 12" value={cieMarks.cie2} onChange={handleMarkChange} />
-            <InputField name="cie3" label="CIE 3" placeholder="Out of 12" value={cieMarks.cie3} onChange={handleMarkChange} />
-            
-            <h4 className="col-span-full mt-4 text-lg font-semibold text-blue-400 flex items-center gap-2 border-b border-blue-500/30 pb-2">
-                <span className="w-2 h-2 bg-blue-400 rounded-full"></span>
-                Additional Components
+                Assessment Components
             </h4>
             <InputField name="modules" label="Modules" placeholder="Out of 10" value={cieMarks.modules} onChange={handleMarkChange} />
+            <InputField name="labTest" label="Lab Test" placeholder="Out of 20" value={cieMarks.labTest} onChange={handleMarkChange} />
             <InputField name="expLearning" label="Experiential Learning" placeholder="Out of 20" value={cieMarks.expLearning} onChange={handleMarkChange} />
         </>
     );

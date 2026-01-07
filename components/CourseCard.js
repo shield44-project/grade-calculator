@@ -1,6 +1,5 @@
 // components/CourseCard.js
 import { useState, useEffect, useMemo, useRef } from 'react';
-import { courses } from '../lib/data';
 import { 
   calculateTheoryCIE, 
   calculateLabCIE, 
@@ -18,15 +17,20 @@ import {
 } from '../lib/calculator';
 import DetailedCIECalculator from './DetailedCIECalculator';
 
-export default function CourseCard({ id, onUpdate, onRemove, initialCourseData }) {
-  const [selectedCourseCode, setSelectedCourseCode] = useState(initialCourseData.courseDetails?.code || 'SELECT');
+export default function CourseCard({ id, onUpdate, initialCourseData }) {
   const [cieMarks, setCieMarks] = useState(initialCourseData.cieMarks || {});
   const [seeMarks, setSeeMarks] = useState(initialCourseData.seeMarks || {});
   
   // Use ref to store the previous results to avoid infinite loops
   const prevResultsRef = useRef();
 
-  const courseDetails = courses.find(c => c.code === selectedCourseCode) || courses[0];
+  const courseDetails = initialCourseData.courseDetails;
+  
+  // Safety check - should not happen with fixed cycle courses, but prevents runtime errors
+  if (!courseDetails) {
+    return null;
+  }
+  
   // Hack to handle courses like CS222IA which are labeled "Theory+Lab" but categorized as "Lab" in PDF
   const isEffectivelyIntegrated = courseDetails.type === 'Integrated' || courseDetails.cieMax === 150;
 
@@ -97,12 +101,6 @@ export default function CourseCard({ id, onUpdate, onRemove, initialCourseData }
     }
   }, [id, courseDetails, cieMarks, seeMarks, results, onUpdate]);
 
-  const handleCourseChange = (e) => {
-    setSelectedCourseCode(e.target.value);
-    setCieMarks({});
-    setSeeMarks({});
-  };
-
   const handleCieMarkChange = (e) => {
     // A special flag for our DetailedCIECalculator component logic
     setCieMarks(prev => ({ 
@@ -122,20 +120,13 @@ export default function CourseCard({ id, onUpdate, onRemove, initialCourseData }
       <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 via-blue-500/20 to-pink-500/20 rounded-2xl blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       
       <div className="relative bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-xl border border-gray-700/50 p-6 rounded-2xl shadow-2xl">
-        <div className="flex justify-between items-start mb-6">
-          <div className="flex-grow pr-4">
-            <label className="block text-sm font-medium text-gray-400 mb-2">Select Course</label>
-            <select 
-              onChange={handleCourseChange} 
-              value={selectedCourseCode} 
-              className="w-full p-3 bg-gray-900/50 backdrop-blur-sm rounded-xl text-white border border-gray-600/50 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300 cursor-pointer hover:border-blue-500/50"
-            >
-              {courses.map(course => (
-                <option key={course.code} value={course.code}>{course.code} - {course.title}</option>
-              ))}
-            </select>
-            {courseDetails.code !== 'SELECT' && (
-              <div className="mt-3 flex gap-3">
+        {/* Course Header */}
+        <div className="mb-6">
+          <div className="flex justify-between items-start">
+            <div className="flex-grow">
+              <h3 className="text-xl font-bold text-white mb-2">{courseDetails.code}</h3>
+              <p className="text-gray-400 mb-3">{courseDetails.title}</p>
+              <div className="flex gap-3">
                 <span className="px-3 py-1 rounded-full bg-blue-500/20 border border-blue-500/30 text-xs font-medium text-blue-300">
                   Credits: {courseDetails.credits}
                 </span>
@@ -143,21 +134,11 @@ export default function CourseCard({ id, onUpdate, onRemove, initialCourseData }
                   {courseDetails.type}
                 </span>
               </div>
-            )}
+            </div>
           </div>
-          <button 
-            onClick={() => onRemove(id)} 
-            className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-red-500/20 hover:bg-red-500/30 text-red-400 hover:text-red-300 transition-all duration-300 border border-red-500/30 hover:border-red-500/50 hover:scale-110"
-            title="Remove Course"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
         </div>
 
-      {courseDetails.code !== 'SELECT' && (
-        <>
+      <>
           <DetailedCIECalculator courseType={courseDetails.type} cieMarks={cieMarks} handleMarkChange={handleCieMarkChange} />
           
           {/* Show required SEE marks if CIE is entered but SEE is not */}
@@ -210,7 +191,6 @@ export default function CourseCard({ id, onUpdate, onRemove, initialCourseData }
             </div>
           </div>
         </>
-      )}
       </div>
     </div>
   );
