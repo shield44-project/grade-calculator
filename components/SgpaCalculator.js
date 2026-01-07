@@ -91,8 +91,10 @@ export default function SgpaCalculator() {
   
   // Calculate CGPA if both cycles have data
   const cgpa = useMemo(() => {
-    if (cCycleSGPA > 0 && pCycleSGPA > 0) {
-      return ((parseFloat(cCycleSGPA) + parseFloat(pCycleSGPA)) / 2).toFixed(2);
+    const cSgpa = parseFloat(cCycleSGPA);
+    const pSgpa = parseFloat(pCycleSGPA);
+    if (cSgpa > 0 && pSgpa > 0) {
+      return ((cSgpa + pSgpa) / 2).toFixed(2);
     }
     return null;
   }, [cCycleSGPA, pCycleSGPA]);
@@ -213,7 +215,6 @@ export default function SgpaCalculator() {
       
       // Clear all localStorage data for both cycles
       if (typeof window !== 'undefined') {
-        localStorage.removeItem(STORAGE_KEY);
         localStorage.removeItem(C_CYCLE_DATA_KEY);
         localStorage.removeItem(P_CYCLE_DATA_KEY);
         // Reset the SGPAs
@@ -230,7 +231,7 @@ export default function SgpaCalculator() {
         <div className="inline-flex rounded-2xl bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-xl border border-gray-700/50 p-2 shadow-2xl">
           <button
             onClick={() => handleCycleChange('C')}
-            className={`relative px-8 py-4 rounded-xl font-bold transition-all duration-300 ${
+            className={`group relative px-8 py-4 rounded-xl font-bold transition-all duration-300 ${
               selectedCycle === 'C'
                 ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105'
                 : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
@@ -248,7 +249,7 @@ export default function SgpaCalculator() {
           </button>
           <button
             onClick={() => handleCycleChange('P')}
-            className={`relative px-8 py-4 rounded-xl font-bold transition-all duration-300 ${
+            className={`group relative px-8 py-4 rounded-xl font-bold transition-all duration-300 ${
               selectedCycle === 'P'
                 ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105'
                 : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
