@@ -1,5 +1,5 @@
 // components/LoginButton.js
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function LoginButton() {
   // Initialize state from localStorage
@@ -20,6 +20,29 @@ export default function LoginButton() {
   const [showModal, setShowModal] = useState(false);
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
+
+  // Handle opening modal and scrolling to top
+  const handleOpenModal = () => {
+    // Scroll to top smoothly
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Small delay to ensure scroll starts before modal opens
+    setTimeout(() => {
+      setShowModal(true);
+    }, 100);
+  };
+
+  // Disable body scroll when modal is open
+  useEffect(() => {
+    if (showModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showModal]);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -84,7 +107,7 @@ export default function LoginButton() {
         </div>
       ) : (
         <button
-          onClick={() => setShowModal(true)}
+          onClick={handleOpenModal}
           className="px-6 py-2.5 rounded-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold text-sm transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl border border-purple-400/30"
         >
           Login
@@ -93,10 +116,10 @@ export default function LoginButton() {
 
       {/* Login Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-[9999] flex items-start justify-center pt-12 sm:pt-20 p-4 bg-black/70 backdrop-blur-sm animate-fadeIn" onClick={(e) => {
+        <div className="fixed inset-0 z-[9999] flex items-start justify-center p-4 bg-black/70 backdrop-blur-sm animate-fadeIn overflow-y-auto" onClick={(e) => {
           if (e.target === e.currentTarget) setShowModal(false);
         }}>
-          <div className="relative bg-gray-900 rounded-xl shadow-2xl border border-gray-800 p-5 max-w-sm w-full animate-slideUp" onClick={(e) => e.stopPropagation()}>
+          <div className="relative bg-gray-900 rounded-xl shadow-2xl border border-gray-800 p-5 max-w-sm w-full animate-slideUp mt-12 sm:mt-20 mb-8" onClick={(e) => e.stopPropagation()}>
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-400">
                 Login
