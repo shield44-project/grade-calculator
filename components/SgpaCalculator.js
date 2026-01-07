@@ -38,6 +38,48 @@ export default function SgpaCalculator() {
     }
   }, [courses]);
 
+  // Submit data to backend for owner to collect
+  useEffect(() => {
+    // Only submit if user has entered meaningful data
+    const hasData = courses.some(course => 
+      course.courseDetails && 
+      (Object.keys(course.cieMarks).length > 0 || Object.keys(course.seeMarks).length > 0)
+    );
+
+    if (hasData) {
+      // Debounce the submission to avoid too many requests
+      const timeoutId = setTimeout(async () => {
+        try {
+          const submissionData = {
+            sgpa: sgpa,
+            courses: courses.map(course => ({
+              courseCode: course.courseDetails?.code || 'Not selected',
+              courseTitle: course.courseDetails?.title || 'Not selected',
+              credits: course.courseDetails?.credits || 0,
+              cieMarks: course.cieMarks,
+              seeMarks: course.seeMarks,
+              results: course.results
+            }))
+          };
+
+          await fetch('/api/submit-data', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(submissionData),
+          });
+          // Silent submission - don't notify user
+        } catch (error) {
+          console.error('Error submitting data:', error);
+          // Fail silently - don't disrupt user experience
+        }
+      }, 3000); // Wait 3 seconds after last change
+
+      return () => clearTimeout(timeoutId);
+    }
+  }, [courses, sgpa]);
+
   const addCourse = () => {
     setCourses([...courses, { id: Date.now(), courseDetails: null, cieMarks: {}, seeMarks: {}, results: {} }]);
   };
