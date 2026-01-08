@@ -10,6 +10,7 @@ export default function AdminPage() {
   const [error, setError] = useState('');
   const [storageType, setStorageType] = useState('');
   const [count, setCount] = useState(0);
+  const [expandedRow, setExpandedRow] = useState(null);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -79,6 +80,10 @@ export default function AdminPage() {
   const getDeviceDisplay = (deviceInfo) => {
     if (!deviceInfo) return 'Unknown';
     return `${deviceInfo.os} - ${deviceInfo.browser} (${deviceInfo.device})`;
+  };
+
+  const toggleRowExpansion = (index) => {
+    setExpandedRow(expandedRow === index ? null : index);
   };
 
   const exportToCSV = () => {
@@ -213,6 +218,9 @@ export default function AdminPage() {
                 <thead className="bg-gray-900">
                   <tr>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                      Details
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                       Username
                     </th>
                     <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
@@ -234,44 +242,154 @@ export default function AdminPage() {
                 </thead>
                 <tbody className="divide-y divide-gray-700">
                   {submissions.map((submission, index) => (
-                    <tr key={index} className="hover:bg-gray-700/50 transition-colors">
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        <div className="flex items-center gap-2">
-                          {submission.username ? (
-                            <>
-                              <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
-                                <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
-                              </svg>
-                              <span className="text-white font-medium">{submission.username}</span>
-                            </>
-                          ) : (
-                            <>
-                              <svg className="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
-                              </svg>
-                              <span className="text-gray-500">Guest</span>
-                            </>
-                          )}
-                        </div>
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm font-semibold">
-                          {submission.data?.sgpa || 'N/A'}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-300">
-                        {submission.loginTime ? formatDate(submission.loginTime) : 'N/A'}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-300">
-                        {formatDate(submission.timestamp)}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-300">
-                        {getDeviceDisplay(submission.deviceInfo)}
-                      </td>
-                      <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-400 font-mono">
-                        {submission.ipAddress || 'N/A'}
-                      </td>
-                    </tr>
+                    <>
+                      <tr key={index} className="hover:bg-gray-700/50 transition-colors">
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <button
+                            onClick={() => toggleRowExpansion(index)}
+                            className="text-purple-400 hover:text-purple-300 focus:outline-none"
+                            title="View course details"
+                          >
+                            <svg
+                              className={`w-5 h-5 transform transition-transform ${expandedRow === index ? 'rotate-90' : ''}`}
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </button>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <div className="flex items-center gap-2">
+                            {submission.username ? (
+                              <>
+                                <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                  <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
+                                </svg>
+                                <span className="text-white font-medium">{submission.username}</span>
+                              </>
+                            ) : (
+                              <>
+                                <svg className="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" />
+                                </svg>
+                                <span className="text-gray-500">Guest</span>
+                              </>
+                            )}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm font-semibold">
+                            {submission.data?.sgpa || 'N/A'}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-300">
+                          {submission.loginTime ? formatDate(submission.loginTime) : 'N/A'}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-300">
+                          {formatDate(submission.timestamp)}
+                        </td>
+                        <td className="px-4 py-3 text-sm text-gray-300">
+                          {getDeviceDisplay(submission.deviceInfo)}
+                        </td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-400 font-mono">
+                          {submission.ipAddress || 'N/A'}
+                        </td>
+                      </tr>
+                      {expandedRow === index && submission.data?.courses && (
+                        <tr key={`${index}-detail`}>
+                          <td colSpan="7" className="px-4 py-4 bg-gray-900/50">
+                            <div className="space-y-3">
+                              <h4 className="text-lg font-semibold text-white mb-3">Course Details</h4>
+                              <div className="grid gap-3">
+                                {submission.data.courses.map((course, courseIdx) => {
+                                  if (!course.courseDetails) return null;
+                                  const hasCIE = course.results?.totalCie > 0;
+                                  const hasSEE = course.results?.see !== undefined && course.results?.see !== null;
+                                  
+                                  return (
+                                    <div key={courseIdx} className="bg-gray-800/50 rounded-lg p-4 border border-gray-700">
+                                      <div className="flex justify-between items-start mb-3">
+                                        <div>
+                                          <h5 className="text-white font-medium">
+                                            {course.courseDetails.code} - {course.courseDetails.title}
+                                          </h5>
+                                          <p className="text-sm text-gray-400">
+                                            Credits: {course.courseDetails.credits} | Type: {course.courseDetails.type}
+                                          </p>
+                                        </div>
+                                        {course.results?.grade && (
+                                          <span className={`px-3 py-1 rounded-full text-sm font-bold ${
+                                            course.results.grade === 'O' ? 'bg-green-500/20 text-green-300' :
+                                            course.results.grade === 'A+' ? 'bg-blue-500/20 text-blue-300' :
+                                            course.results.grade === 'A' ? 'bg-purple-500/20 text-purple-300' :
+                                            course.results.grade === 'F' ? 'bg-red-500/20 text-red-300' :
+                                            'bg-yellow-500/20 text-yellow-300'
+                                          }`}>
+                                            {course.results.grade} ({course.results.points} pts)
+                                          </span>
+                                        )}
+                                      </div>
+                                      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                                        {hasCIE && (
+                                          <div className="bg-gray-900/50 rounded p-2">
+                                            <p className="text-gray-400 text-xs mb-1">CIE Marks</p>
+                                            <p className="text-white font-semibold">
+                                              {course.results.totalCie}/{course.courseDetails.cieMax}
+                                              <span className="text-gray-400 text-xs ml-1">
+                                                ({((course.results.totalCie / course.courseDetails.cieMax) * 100).toFixed(1)}%)
+                                              </span>
+                                            </p>
+                                          </div>
+                                        )}
+                                        {hasSEE && (
+                                          <div className="bg-gray-900/50 rounded p-2">
+                                            <p className="text-gray-400 text-xs mb-1">SEE Marks</p>
+                                            <p className="text-white font-semibold">
+                                              {course.results.see}/{course.courseDetails.seeMax}
+                                              <span className="text-gray-400 text-xs ml-1">
+                                                ({((course.results.see / course.courseDetails.seeMax) * 100).toFixed(1)}%)
+                                              </span>
+                                            </p>
+                                          </div>
+                                        )}
+                                        {course.results?.finalScore !== undefined && (
+                                          <div className="bg-gray-900/50 rounded p-2">
+                                            <p className="text-gray-400 text-xs mb-1">Final Score</p>
+                                            <p className="text-white font-semibold">{course.results.finalScore.toFixed(2)}/100</p>
+                                          </div>
+                                        )}
+                                        {course.results?.isPass !== undefined && (
+                                          <div className="bg-gray-900/50 rounded p-2">
+                                            <p className="text-gray-400 text-xs mb-1">Status</p>
+                                            <p className={`font-semibold ${course.results.isPass ? 'text-green-400' : 'text-red-400'}`}>
+                                              {course.results.isPass ? 'Pass' : 'Fail'}
+                                            </p>
+                                          </div>
+                                        )}
+                                      </div>
+                                      {course.cieMarks && Object.keys(course.cieMarks).length > 0 && (
+                                        <div className="mt-3 pt-3 border-t border-gray-700">
+                                          <p className="text-xs text-gray-400 mb-2">CIE Components:</p>
+                                          <div className="flex flex-wrap gap-2">
+                                            {Object.entries(course.cieMarks).map(([key, value]) => (
+                                              <span key={key} className="text-xs bg-gray-900/50 px-2 py-1 rounded text-gray-300">
+                                                {key}: {value}
+                                              </span>
+                                            ))}
+                                          </div>
+                                        </div>
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </>
                   ))}
                 </tbody>
               </table>
