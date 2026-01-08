@@ -318,15 +318,17 @@ const RequiredSEEIntegratedDisplay = ({ cieMarks, courseDetails, seeMarks, resul
     // Calculate CIE values
     let cieTheory = 0;
     let cieLab = 0;
+    let isEstimated = false;
     
     if (hasTotalCIE(cieMarks)) {
-        // If total CIE is entered, we can't break it down accurately for pass/fail,
-        // but we can still show required total SEE
+        // If total CIE is entered, we estimate the breakdown proportionally
+        // Note: This is an estimate and may not reflect actual theory/lab split
         const totalCie = Number(cieMarks.totalCIE) || 0;
         const theoryRatio = courseDetails.cieBreakdown.theory / courseDetails.cieMax;
         const labRatio = courseDetails.cieBreakdown.lab / courseDetails.cieMax;
         cieTheory = totalCie * theoryRatio;
         cieLab = totalCie * labRatio;
+        isEstimated = true;
     } else {
         // Calculate from individual components
         const integrated = calculateIntegratedCIE(cieMarks);
@@ -355,9 +357,26 @@ const RequiredSEEIntegratedDisplay = ({ cieMarks, courseDetails, seeMarks, resul
                     </svg>
                     Required SEE Marks for Grades (Theory + Lab)
                 </h3>
+                {isEstimated && (
+                    <div className="mb-4 p-3 bg-yellow-900/20 border border-yellow-500/30 rounded-lg">
+                        <p className="text-xs text-yellow-300 flex items-center gap-2">
+                            <svg className="w-4 h-4 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                            </svg>
+                            Note: Theory/Lab breakdown is estimated based on total CIE. For more accurate requirements, enter individual CIE components.
+                        </p>
+                    </div>
+                )}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-                    {Object.entries(requiredSEE).map(([grade, info]) => (
-                        <div key={grade} className={`p-4 rounded-lg backdrop-blur-sm transition-all duration-300 hover:scale-105 ${info.achievable ? 'bg-gray-800/50 border border-green-500/30' : 'bg-red-900/20 border border-red-500/30'}`}>
+                    {Object.entries(requiredSEE).map(([grade, info]) => {
+                        const cardClassName = `p-4 rounded-lg backdrop-blur-sm transition-all duration-300 hover:scale-105 ${
+                            info.achievable 
+                                ? 'bg-gray-800/50 border border-green-500/30' 
+                                : 'bg-red-900/20 border border-red-500/30'
+                        }`;
+                        
+                        return (
+                        <div key={grade} className={cardClassName}>
                             <div className="text-center">
                                 <p className="text-xs text-gray-400 uppercase tracking-wider mb-2 font-semibold">Grade {grade}</p>
                                 
@@ -391,7 +410,8 @@ const RequiredSEEIntegratedDisplay = ({ cieMarks, courseDetails, seeMarks, resul
                                 )}
                             </div>
                         </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </div>
         </div>
