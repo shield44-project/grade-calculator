@@ -4,7 +4,7 @@ import Head from 'next/head';
 
 export default function AdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [adminKey, setAdminKey] = useState('');
+  const [adminPassword, setAdminPassword] = useState('');
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -18,7 +18,7 @@ export default function AdminPage() {
     setLoading(true);
 
     try {
-      const response = await fetch(`/api/admin-data?key=${encodeURIComponent(adminKey)}`);
+      const response = await fetch(`/api/admin-data?password=${encodeURIComponent(adminPassword)}`);
       const data = await response.json();
 
       if (response.ok) {
@@ -26,7 +26,7 @@ export default function AdminPage() {
         setSubmissions(data.submissions || []);
         setCount(data.count || 0);
         setStorageType(data.storage || 'unknown');
-        localStorage.setItem('admin-key', adminKey);
+        localStorage.setItem('admin-password', adminPassword);
       } else {
         setError(data.error || 'Authentication failed');
       }
@@ -38,12 +38,12 @@ export default function AdminPage() {
   };
 
   const loadData = async () => {
-    const savedKey = localStorage.getItem('admin-key');
-    if (!savedKey) return;
+    const savedPassword = localStorage.getItem('admin-password');
+    if (!savedPassword) return;
 
     setLoading(true);
     try {
-      const response = await fetch(`/api/admin-data?key=${encodeURIComponent(savedKey)}`);
+      const response = await fetch(`/api/admin-data?password=${encodeURIComponent(savedPassword)}`);
       const data = await response.json();
 
       if (response.ok) {
@@ -51,7 +51,7 @@ export default function AdminPage() {
         setSubmissions(data.submissions || []);
         setCount(data.count || 0);
         setStorageType(data.storage || 'unknown');
-        setAdminKey(savedKey);
+        setAdminPassword(savedPassword);
       }
     } catch (err) {
       console.error('Failed to load data:', err);
@@ -66,9 +66,9 @@ export default function AdminPage() {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    setAdminKey('');
+    setAdminPassword('');
     setSubmissions([]);
-    localStorage.removeItem('admin-key');
+    localStorage.removeItem('admin-password');
   };
 
   const formatDate = (isoString) => {
@@ -132,18 +132,21 @@ export default function AdminPage() {
 
           <form onSubmit={handleLogin}>
             <div className="mb-6">
-              <label htmlFor="adminKey" className="block text-gray-300 text-sm font-medium mb-2">
-                Admin Key
+              <label htmlFor="adminPassword" className="block text-gray-300 text-sm font-medium mb-2">
+                Admin Password
               </label>
               <input
                 type="password"
-                id="adminKey"
-                value={adminKey}
-                onChange={(e) => setAdminKey(e.target.value)}
+                id="adminPassword"
+                value={adminPassword}
+                onChange={(e) => setAdminPassword(e.target.value)}
                 className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white"
-                placeholder="Enter admin key"
+                placeholder="Enter admin password"
                 required
               />
+              <p className="mt-2 text-sm text-gray-400">
+                Default password: <span className="text-purple-400 font-mono">bozgors</span>
+              </p>
             </div>
 
             <button
