@@ -146,9 +146,7 @@ export default function SgpaCalculator() {
             loginTime: loginTime,
             sgpa: sgpa,
             courses: courses.map(course => ({
-              courseCode: course.courseDetails?.code || 'Not selected',
-              courseTitle: course.courseDetails?.title || 'Not selected',
-              credits: course.courseDetails?.credits || 0,
+              courseDetails: course.courseDetails,
               cieMarks: course.cieMarks,
               seeMarks: course.seeMarks,
               results: course.results
