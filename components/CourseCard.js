@@ -14,6 +14,7 @@ import {
   getGradeDetails, 
   checkPassStatus,
   calculateRequiredSEE,
+  calculateRequiredSEEIntegrated,
   hasTotalCIE
 } from '../lib/calculator';
 import DetailedCIECalculator from './DetailedCIECalculator';
@@ -195,6 +196,16 @@ export default function CourseCard({ id, onUpdate, initialCourseData }) {
             />
           )}
           
+          {/* Show required SEE marks for integrated courses */}
+          {results.totalCie > 0 && isEffectivelyIntegrated && (
+            <RequiredSEEIntegratedDisplay 
+              cieMarks={cieMarks}
+              courseDetails={courseDetails}
+              seeMarks={seeMarks}
+              results={results}
+            />
+          )}
+          
           <div className="p-5 mt-4 bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-xl border border-gray-700/50">
             <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
               <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
@@ -287,6 +298,97 @@ const RequiredSEEDisplay = ({ totalCie, cieMax, seeMax, hasSeeMarks }) => {
                                 </p>
                                 <p className="text-xs text-gray-500 mt-1">out of {seeMax}</p>
                                 {info.note && <p className="text-xs text-gray-500 mt-1 italic">{info.note}</p>}
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const RequiredSEEIntegratedDisplay = ({ cieMarks, courseDetails, seeMarks, results }) => {
+    // Check if SEE marks are already entered
+    const hasSeeTheory = seeMarks.seeTheory !== undefined && seeMarks.seeTheory !== null && seeMarks.seeTheory !== '';
+    const hasSeeLab = seeMarks.seeLab !== undefined && seeMarks.seeLab !== null && seeMarks.seeLab !== '';
+    
+    // Don't show if both SEE marks are already entered
+    if (hasSeeTheory && hasSeeLab) return null;
+    
+    // Calculate CIE values
+    let cieTheory = 0;
+    let cieLab = 0;
+    
+    if (hasTotalCIE(cieMarks)) {
+        // If total CIE is entered, we can't break it down accurately for pass/fail,
+        // but we can still show required total SEE
+        const totalCie = Number(cieMarks.totalCIE) || 0;
+        const theoryRatio = courseDetails.cieBreakdown.theory / courseDetails.cieMax;
+        const labRatio = courseDetails.cieBreakdown.lab / courseDetails.cieMax;
+        cieTheory = totalCie * theoryRatio;
+        cieLab = totalCie * labRatio;
+    } else {
+        // Calculate from individual components
+        const integrated = calculateIntegratedCIE(cieMarks);
+        cieTheory = integrated.cieTheory;
+        cieLab = integrated.cieLab;
+    }
+    
+    const requiredSEE = calculateRequiredSEEIntegrated(
+        cieTheory, 
+        cieLab, 
+        courseDetails.cieBreakdown, 
+        courseDetails.seeBreakdown,
+        courseDetails.cieMax,
+        courseDetails.seeMax
+    );
+    
+    if (!requiredSEE) return null;
+    
+    return (
+        <div className="p-5 mt-4 relative overflow-hidden rounded-xl border border-purple-500/30">
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-900/30 to-blue-900/30"></div>
+            <div className="relative">
+                <h3 className="text-lg font-bold text-purple-300 mb-4 flex items-center gap-2">
+                    <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+                    </svg>
+                    Required SEE Marks for Grades (Theory + Lab)
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+                    {Object.entries(requiredSEE).map(([grade, info]) => (
+                        <div key={grade} className={`p-4 rounded-lg backdrop-blur-sm transition-all duration-300 hover:scale-105 ${info.achievable ? 'bg-gray-800/50 border border-green-500/30' : 'bg-red-900/20 border border-red-500/30'}`}>
+                            <div className="text-center">
+                                <p className="text-xs text-gray-400 uppercase tracking-wider mb-2 font-semibold">Grade {grade}</p>
+                                
+                                {/* Total Required */}
+                                <div className="mb-3 pb-3 border-b border-gray-700/50">
+                                    <p className="text-xs text-gray-500 mb-1">Total SEE</p>
+                                    <p className={`font-bold text-xl ${info.achievable ? 'text-green-400' : 'text-red-400'} drop-shadow-lg`}>
+                                        {info.required}
+                                    </p>
+                                    <p className="text-xs text-gray-500 mt-1">out of {courseDetails.seeMax}</p>
+                                </div>
+                                
+                                {/* Theory Required */}
+                                <div className="mb-2">
+                                    <p className="text-xs text-blue-400 mb-1">Theory</p>
+                                    <p className={`font-semibold text-sm ${info.achievable ? 'text-blue-300' : 'text-red-300'}`}>
+                                        {info.requiredTheory} / {info.theoryMax}
+                                    </p>
+                                </div>
+                                
+                                {/* Lab Required */}
+                                <div className="mb-2">
+                                    <p className="text-xs text-purple-400 mb-1">Lab</p>
+                                    <p className={`font-semibold text-sm ${info.achievable ? 'text-purple-300' : 'text-red-300'}`}>
+                                        {info.requiredLab} / {info.labMax}
+                                    </p>
+                                </div>
+                                
+                                {info.note && (
+                                    <p className="text-xs text-gray-500 mt-2 italic">{info.note}</p>
+                                )}
                             </div>
                         </div>
                     ))}
