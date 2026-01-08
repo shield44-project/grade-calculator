@@ -1,6 +1,7 @@
 // components/SgpaCalculator.js
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import CourseCard from './CourseCard';
+import SGPAProbabilityPredictor from './SGPAProbabilityPredictor';
 import { calculateSGPA } from '../lib/calculator';
 import { cCycleCourses, pCycleCourses } from '../lib/data';
 
@@ -361,6 +362,9 @@ export default function SgpaCalculator() {
           <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-50 blur-sm -z-10"></div>
         </div>
       </div>
+
+      {/* SGPA Probability Predictor */}
+      <SGPAProbabilityPredictor courses={courses} />
       
       {/* Courses Section */}
       <div className="space-y-6">
