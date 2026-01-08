@@ -8,16 +8,16 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Simple authentication - check for admin key
-  // Hardcoded admin key - visible to developers via browser DevTools
-  // WARNING: This is NOT secure for production. Anyone who inspects the code can find this key.
-  const adminKey = req.headers['x-admin-key'] || req.query.key;
-  const ADMIN_KEY = 'shield44-admin-2025-rvce-calculator'; // Hardcoded admin key
+  // Simple authentication - check for admin password
+  // Hardcoded password - simple and easy to remember
+  // WARNING: This is NOT secure for production. Anyone who inspects the code can find this password.
+  const adminPassword = req.headers['x-admin-password'] || req.query.password;
+  const ADMIN_PASSWORD = 'bozgors'; // Hardcoded admin password
 
-  if (adminKey !== ADMIN_KEY) {
+  if (adminPassword !== ADMIN_PASSWORD) {
     return res.status(401).json({ 
       error: 'Unauthorized',
-      hint: 'Admin key required. Check network requests or console for key.' 
+      hint: 'Admin password required. Use password: bozgors' 
     });
   }
 
@@ -29,7 +29,7 @@ export default async function handler(req, res) {
       count: count,
       message: count > 0 ? 'Data retrieved successfully' : 'No submissions yet',
       storage: storage,
-      adminAccess: 'Accessible at /api/admin-data?key=shield44-admin-2025-rvce-calculator'
+      adminAccess: 'Accessible at /api/admin-data?password=bozgors'
     };
 
     if (storage === 'in-memory') {

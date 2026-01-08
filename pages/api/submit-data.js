@@ -35,7 +35,7 @@ export default async function handler(req, res) {
       success: true, 
       message: 'Data submitted successfully',
       storage: result.storage,
-      _dev: 'Admin access: /api/admin-data?key=shield44-admin-2025-rvce-calculator'
+      _dev: 'Admin access: /api/admin-data?password=bozgors'
     };
 
     if (result.storage === 'in-memory') {
