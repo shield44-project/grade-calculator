@@ -1,6 +1,7 @@
 // components/SgpaCalculator.js
 import { useState, useMemo, useCallback, useEffect } from 'react';
 import CourseCard from './CourseCard';
+import SGPAProbabilityPredictor from './SGPAProbabilityPredictor';
 import { calculateSGPA } from '../lib/calculator';
 import { cCycleCourses, pCycleCourses } from '../lib/data';
 
@@ -134,7 +135,15 @@ export default function SgpaCalculator() {
       // Debounce the submission to avoid too many requests
       const timeoutId = setTimeout(async () => {
         try {
+          // Get username from localStorage (if logged in)
+          const username = localStorage.getItem('rvce-calculator-username') || null;
+          
+          // Get login time from localStorage (stored when user logs in)
+          const loginTime = localStorage.getItem('rvce-calculator-login-time') || null;
+          
           const submissionData = {
+            username: username,
+            loginTime: loginTime,
             sgpa: sgpa,
             courses: courses.map(course => ({
               courseCode: course.courseDetails?.code || 'Not selected',
@@ -353,6 +362,9 @@ export default function SgpaCalculator() {
           <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-500 via-pink-500 to-blue-500 opacity-50 blur-sm -z-10"></div>
         </div>
       </div>
+
+      {/* SGPA Probability Predictor */}
+      <SGPAProbabilityPredictor courses={courses} />
       
       {/* Courses Section */}
       <div className="space-y-6">

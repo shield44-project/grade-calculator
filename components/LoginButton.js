@@ -73,6 +73,7 @@ export default function LoginButton() {
     
     // Login successful
     localStorage.setItem('rvce-calculator-username', username);
+    localStorage.setItem('rvce-calculator-login-time', new Date().toISOString());
     setUsername(username);
     setIsLoggedIn(true);
     setShowModal(false);
