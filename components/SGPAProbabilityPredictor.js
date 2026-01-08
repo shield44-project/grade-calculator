@@ -169,7 +169,7 @@ export default function SGPAProbabilityPredictor({ courses }) {
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-              <span>&lt;30% Very Low Probability</span>
+              <span>{'<'}30% Very Low Probability</span>
             </div>
           </div>
         </div>
