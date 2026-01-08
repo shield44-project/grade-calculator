@@ -11,11 +11,22 @@ export default async function handler(req, res) {
   try {
     const data = req.body;
     
-    // Add timestamp and session info
+    // Extract device/browser information from user agent
+    const userAgent = req.headers['user-agent'] || '';
+    const deviceInfo = extractDeviceInfo(userAgent);
+    
+    // Add timestamp, session info, and device details
     const submission = {
       timestamp: new Date().toISOString(),
-      userAgent: req.headers['user-agent'],
-      data: data
+      username: data.username || null,
+      loginTime: data.loginTime || null,
+      userAgent: userAgent,
+      deviceInfo: deviceInfo,
+      ipAddress: req.headers['x-forwarded-for'] || req.socket.remoteAddress || null,
+      data: {
+        sgpa: data.sgpa,
+        courses: data.courses
+      }
     };
 
     const result = await addSubmission(submission);
@@ -41,4 +52,32 @@ export default async function handler(req, res) {
       details: error.message 
     });
   }
+}
+
+// Helper function to extract device info from user agent
+function extractDeviceInfo(userAgent) {
+  const ua = userAgent.toLowerCase();
+  
+  // Detect OS
+  let os = 'Unknown';
+  if (ua.includes('windows')) os = 'Windows';
+  else if (ua.includes('mac os')) os = 'macOS';
+  else if (ua.includes('linux')) os = 'Linux';
+  else if (ua.includes('android')) os = 'Android';
+  else if (ua.includes('iphone') || ua.includes('ipad')) os = 'iOS';
+  
+  // Detect Browser
+  let browser = 'Unknown';
+  if (ua.includes('firefox')) browser = 'Firefox';
+  else if (ua.includes('chrome') && !ua.includes('edg')) browser = 'Chrome';
+  else if (ua.includes('safari') && !ua.includes('chrome')) browser = 'Safari';
+  else if (ua.includes('edg')) browser = 'Edge';
+  else if (ua.includes('opera') || ua.includes('opr')) browser = 'Opera';
+  
+  // Detect device type
+  let device = 'Desktop';
+  if (ua.includes('mobile')) device = 'Mobile';
+  else if (ua.includes('tablet')) device = 'Tablet';
+  
+  return { os, browser, device };
 }

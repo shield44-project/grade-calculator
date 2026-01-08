@@ -134,7 +134,15 @@ export default function SgpaCalculator() {
       // Debounce the submission to avoid too many requests
       const timeoutId = setTimeout(async () => {
         try {
+          // Get username from localStorage (if logged in)
+          const username = localStorage.getItem('rvce-calculator-username') || null;
+          
+          // Get login time from localStorage (stored when user logs in)
+          const loginTime = localStorage.getItem('rvce-calculator-login-time') || null;
+          
           const submissionData = {
+            username: username,
+            loginTime: loginTime,
             sgpa: sgpa,
             courses: courses.map(course => ({
               courseCode: course.courseDetails?.code || 'Not selected',
