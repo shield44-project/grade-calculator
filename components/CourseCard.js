@@ -46,11 +46,16 @@ export default function CourseCard({ id, onUpdate, initialCourseData }) {
         
         // For integrated courses, we need to handle pass check differently
         if (isEffectivelyIntegrated) {
-            // When using total CIE for integrated, we can't verify individual theory/lab pass requirements
-            // So we'll use aggregate calculation only
+            // When using total CIE for integrated, pass it along with SEE marks
             const totalSEE = (Number(seeMarks.seeTheory) || 0) + (Number(seeMarks.seeLab) || 0);
             finalScore = calculateFinalScore(totalCie, totalSEE, courseDetails.cieMax, courseDetails.seeMax);
-            passCheckMarks = { totalCie, see: totalSEE };
+            // Pass totalCie and see breakdown for proper pass/fail check
+            passCheckMarks = { 
+              totalCie, 
+              see: totalSEE,
+              seeTheory: seeMarks.seeTheory, 
+              seeLab: seeMarks.seeLab 
+            };
         } else {
             passCheckMarks = { totalCie, see: seeMarks.see };
             finalScore = calculateFinalScore(totalCie, seeMarks.see || 0, courseDetails.cieMax, courseDetails.seeMax);
