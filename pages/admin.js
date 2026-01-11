@@ -234,7 +234,9 @@ export default function AdminPage() {
   // Helper function to fetch IP location
   const fetchIPLocation = async (ip) => {
     // Skip localhost/private IPs
-    if (ip === '::1' || ip === '127.0.0.1' || ip === 'Unknown' || ip.startsWith('192.168.') || ip.startsWith('10.')) {
+    if (ip === '::1' || ip === '127.0.0.1' || ip === 'Unknown' || 
+        ip.startsWith('192.168.') || ip.startsWith('10.') || 
+        /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(ip)) {
       return 'Local';
     }
 
@@ -245,6 +247,7 @@ export default function AdminPage() {
 
     try {
       // Using ip-api.com free API (no key required, 45 requests per minute)
+      // Note: Using HTTP as HTTPS requires paid plan, but data is non-sensitive (just geolocation)
       const response = await fetch(`http://ip-api.com/json/${ip}?fields=status,country,regionName,city`);
       const data = await response.json();
       
@@ -269,12 +272,14 @@ export default function AdminPage() {
     if (submissions.length > 0) {
       const uniqueIPs = [...new Set(submissions.map(s => s.ipAddress).filter(Boolean))];
       uniqueIPs.forEach(ip => {
-        if (!ipLocations[ip]) {
+        // Only fetch if not already in cache
+        if (!ipLocations[ip] && ip !== 'Unknown') {
           fetchIPLocation(ip);
         }
       });
     }
-  }, [submissions]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [submissions]); // Only re-run when submissions change, not ipLocations
 
 
   const CSV_HEADERS = ['Username', 'Cycle', 'Login Time', 'Submission Time', 'SGPA', 'Device', 'OS', 'Browser', 'IP Address'];
