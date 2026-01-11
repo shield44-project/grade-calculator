@@ -657,22 +657,50 @@ export default function AdminPage() {
                                 </summary>
                                 <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
                                   {scorer.data?.courses?.map((course, courseIdx) => (
-                                    <div key={courseIdx} className="bg-gray-800/50 rounded p-2 text-sm">
-                                      <div className="text-gray-300 font-medium text-xs mb-1">{course.courseDetails?.code}</div>
-                                      <div className="flex justify-between items-center">
-                                        <span className="text-gray-400 text-xs">{course.courseDetails?.title}</span>
-                                        <div className="flex items-center gap-2">
-                                          <span className={`px-2 py-1 rounded text-xs font-bold ${
-                                            course.results?.grade === 'O' ? 'bg-green-500/20 text-green-300' :
-                                            course.results?.grade === 'A+' ? 'bg-blue-500/20 text-blue-300' :
-                                            course.results?.grade === 'A' ? 'bg-purple-500/20 text-purple-300' :
-                                            course.results?.grade === 'F' ? 'bg-red-500/20 text-red-300' :
-                                            'bg-yellow-500/20 text-yellow-300'
-                                          }`}>
-                                            {course.results?.grade || 'N/A'}
-                                          </span>
-                                          <span className="text-purple-300">{course.results?.points || 0} pts</span>
-                                        </div>
+                                    <div key={courseIdx} className="bg-gray-800/50 rounded p-3 text-sm border border-gray-700">
+                                      <div className="text-gray-300 font-medium text-xs mb-2">{course.courseDetails?.code}</div>
+                                      <div className="text-gray-400 text-xs mb-2">{course.courseDetails?.title}</div>
+                                      
+                                      {/* Marks breakdown */}
+                                      <div className="space-y-1 mb-2">
+                                        {course.results?.totalCie !== undefined && (
+                                          <div className="flex justify-between text-xs">
+                                            <span className="text-gray-400">CIE Marks:</span>
+                                            <span className="text-green-300 font-semibold">
+                                              {course.results.totalCie}/{course.courseDetails?.cieMax || 'N/A'}
+                                            </span>
+                                          </div>
+                                        )}
+                                        {course.results?.see !== undefined && (
+                                          <div className="flex justify-between text-xs">
+                                            <span className="text-gray-400">SEE Marks:</span>
+                                            <span className="text-blue-300 font-semibold">
+                                              {course.results.see}/{course.courseDetails?.seeMax || 'N/A'}
+                                            </span>
+                                          </div>
+                                        )}
+                                        {course.results?.finalScore !== undefined && (
+                                          <div className="flex justify-between text-xs">
+                                            <span className="text-gray-400">Final Score:</span>
+                                            <span className="text-white font-semibold">
+                                              {course.results.finalScore.toFixed(2)}%
+                                            </span>
+                                          </div>
+                                        )}
+                                      </div>
+                                      
+                                      {/* Grade and points */}
+                                      <div className="flex justify-between items-center pt-2 border-t border-gray-700">
+                                        <span className={`px-2 py-1 rounded text-xs font-bold ${
+                                          course.results?.grade === 'O' ? 'bg-green-500/20 text-green-300' :
+                                          course.results?.grade === 'A+' ? 'bg-blue-500/20 text-blue-300' :
+                                          course.results?.grade === 'A' ? 'bg-purple-500/20 text-purple-300' :
+                                          course.results?.grade === 'F' ? 'bg-red-500/20 text-red-300' :
+                                          'bg-yellow-500/20 text-yellow-300'
+                                        }`}>
+                                          {course.results?.grade || 'N/A'}
+                                        </span>
+                                        <span className="text-purple-300 font-semibold">{course.results?.points || 0} pts</span>
                                       </div>
                                     </div>
                                   ))}
