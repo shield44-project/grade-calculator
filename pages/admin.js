@@ -16,6 +16,8 @@ export default function AdminPage() {
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [activeTab, setActiveTab] = useState('submissions'); // 'submissions' or 'issues'
   const [sortByIP, setSortByIP] = useState(true); // Enable IP sorting by default
+  const [expandedIPs, setExpandedIPs] = useState({}); // Track which IP sections are expanded
+  const [ipLocations, setIpLocations] = useState({}); // Cache for IP location data
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -111,6 +113,13 @@ export default function AdminPage() {
     setExpandedRow(expandedRow === index ? null : index);
   };
 
+  const toggleIPExpansion = (ip) => {
+    setExpandedIPs(prev => ({
+      ...prev,
+      [ip]: !prev[ip]
+    }));
+  };
+
   const handleDeleteSubmission = async (index) => {
     if (deleteConfirm !== index) {
       setDeleteConfirm(index);
@@ -195,16 +204,94 @@ export default function AdminPage() {
       grouped[ip].push({ ...sub, originalIndex: index });
     });
 
-    return grouped;
+    // Sort IPs alphabetically for consistent display
+    const sortedGrouped = {};
+    Object.keys(grouped).sort().forEach(ip => {
+      sortedGrouped[ip] = grouped[ip];
+    });
+
+    return sortedGrouped;
   };
+
+  // Helper function to get cycle display name
+  const getCycleName = (cycle) => {
+    const cycleMap = {
+      'C': 'C Cycle (Chemistry)',
+      'P': 'P Cycle (Physics)'
+    };
+    return cycleMap[cycle] || 'Unknown Cycle';
+  };
+
+  // Helper function to get cycle badge color
+  const getCycleBadgeColor = (cycle) => {
+    const colorMap = {
+      'C': 'bg-green-500/20 text-green-300',
+      'P': 'bg-blue-500/20 text-blue-300'
+    };
+    return colorMap[cycle] || 'bg-gray-500/20 text-gray-300';
+  };
+
+  // Helper function to fetch IP location
+  const fetchIPLocation = async (ip) => {
+    // Skip localhost/private IPs
+    if (ip === '::1' || ip === '127.0.0.1' || ip === 'Unknown' || 
+        ip.startsWith('192.168.') || ip.startsWith('10.') || 
+        /^172\.(1[6-9]|2[0-9]|3[0-1])\./.test(ip)) {
+      return 'Local';
+    }
+
+    // Check cache first
+    if (ipLocations[ip]) {
+      return ipLocations[ip];
+    }
+
+    try {
+      // Using ip-api.com free API (no key required, 45 requests per minute)
+      // Note: Using HTTP as HTTPS requires paid plan, but data is non-sensitive (just geolocation)
+      const response = await fetch(`http://ip-api.com/json/${ip}?fields=status,country,regionName,city`);
+      const data = await response.json();
+      
+      if (data.status === 'success') {
+        const location = data.city && data.regionName 
+          ? `${data.city}, ${data.regionName}, ${data.country}`
+          : data.country || 'Unknown';
+        
+        // Cache the result
+        setIpLocations(prev => ({ ...prev, [ip]: location }));
+        return location;
+      }
+    } catch (error) {
+      console.error('Failed to fetch IP location:', error);
+    }
+    
+    return 'Unknown';
+  };
+
+  // Fetch locations for all IPs when submissions load
+  useEffect(() => {
+    if (submissions.length > 0) {
+      const uniqueIPs = [...new Set(submissions.map(s => s.ipAddress).filter(Boolean))];
+      uniqueIPs.forEach(ip => {
+        // Only fetch if not already in cache
+        if (!ipLocations[ip] && ip !== 'Unknown') {
+          fetchIPLocation(ip);
+        }
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [submissions]); // Only re-run when submissions change, not ipLocations
+
+
+  const CSV_HEADERS = ['Username', 'Cycle', 'Login Time', 'Submission Time', 'SGPA', 'Device', 'OS', 'Browser', 'IP Address'];
 
   const exportToCSV = () => {
     const csvRows = [];
-    csvRows.push(['Username', 'Login Time', 'Submission Time', 'SGPA', 'Device', 'OS', 'Browser', 'IP Address'].join(','));
+    csvRows.push(CSV_HEADERS.join(','));
 
     submissions.forEach(sub => {
       const row = [
         sub.username || 'Guest',
+        sub.cycle || 'N/A',
         sub.loginTime ? formatDate(sub.loginTime) : 'N/A',
         formatDate(sub.timestamp),
         sub.data?.sgpa || 'N/A',
@@ -346,7 +433,7 @@ export default function AdminPage() {
         {!loading && activeTab === 'submissions' && (
           <>
             {/* Sort Toggle */}
-            <div className="mb-4 flex items-center gap-3">
+            <div className="mb-4 flex items-center justify-between">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
@@ -356,6 +443,36 @@ export default function AdminPage() {
                 />
                 <span className="text-gray-300 font-medium">Group by IP Address</span>
               </label>
+              {sortByIP && (
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => {
+                      const ips = Object.keys(getGroupedSubmissions());
+                      const newExpandedState = {};
+                      ips.forEach(ip => {
+                        newExpandedState[ip] = true;
+                      });
+                      setExpandedIPs(newExpandedState);
+                    }}
+                    className="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm rounded transition-colors"
+                  >
+                    Expand All
+                  </button>
+                  <button
+                    onClick={() => {
+                      const ips = Object.keys(getGroupedSubmissions());
+                      const newExpandedState = {};
+                      ips.forEach(ip => {
+                        newExpandedState[ip] = false;
+                      });
+                      setExpandedIPs(newExpandedState);
+                    }}
+                    className="px-3 py-1 bg-gray-700 hover:bg-gray-600 text-gray-300 text-sm rounded transition-colors"
+                  >
+                    Collapse All
+                  </button>
+                </div>
+              )}
             </div>
 
             {submissions.length === 0 ? (
@@ -365,22 +482,60 @@ export default function AdminPage() {
             ) : sortByIP ? (
               // Grouped by IP view
               <div className="space-y-6">
-                {Object.entries(getGroupedSubmissions()).map(([ip, ipSubmissions]) => (
-                  <div key={ip} className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
-                    <div className="bg-gray-900 px-4 py-3 border-b border-gray-700">
-                      <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                        <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                        </svg>
-                        IP: <span className="font-mono text-purple-300">{ip}</span>
-                        <span className="ml-2 px-2 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
-                          {ipSubmissions.length} submission{ipSubmissions.length !== 1 ? 's' : ''}
-                        </span>
-                      </h3>
+                {Object.entries(getGroupedSubmissions()).map(([ip, ipSubmissions]) => {
+                  const isExpanded = expandedIPs[ip] === true; // Default to collapsed
+                  const cCycleCount = ipSubmissions.filter(s => s.cycle === 'C').length;
+                  const pCycleCount = ipSubmissions.filter(s => s.cycle === 'P').length;
+                  const location = ipLocations[ip] || 'Loading...';
+                  
+                  return (
+                    <div key={ip} className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+                      <button
+                        onClick={() => toggleIPExpansion(ip)}
+                        className="w-full bg-gray-900 px-4 py-3 border-b border-gray-700 hover:bg-gray-800/80 transition-colors cursor-pointer"
+                      >
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-lg font-semibold text-white flex items-center gap-2 flex-wrap">
+                            <svg 
+                              className={`w-5 h-5 text-purple-400 transform transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}
+                              fill="none" 
+                              stroke="currentColor" 
+                              viewBox="0 0 24 24"
+                            >
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                            <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                            </svg>
+                            IP: <span className="font-mono text-purple-300">{ip}</span>
+                            {location !== 'Loading...' && location !== 'Unknown' && (
+                              <span className="text-sm text-gray-400 font-normal">
+                                📍 {location}
+                              </span>
+                            )}
+                            <span className="ml-2 px-2 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
+                              {ipSubmissions.length} submission{ipSubmissions.length !== 1 ? 's' : ''}
+                            </span>
+                            {cCycleCount > 0 && (
+                              <span className="px-2 py-1 bg-green-500/20 text-green-300 rounded-full text-xs">
+                                C: {cCycleCount}
+                              </span>
+                            )}
+                            {pCycleCount > 0 && (
+                              <span className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs">
+                                P: {pCycleCount}
+                              </span>
+                            )}
+                          </h3>
+                          <span className="text-sm text-gray-400">
+                            {isExpanded ? 'Click to collapse' : 'Click to expand'}
+                          </span>
+                        </div>
+                      </button>
+                      {isExpanded && renderSubmissionsTable(ipSubmissions)}
                     </div>
-                    {renderSubmissionsTable(ipSubmissions)}
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             ) : (
               // Regular view
@@ -477,6 +632,9 @@ export default function AdminPage() {
                 Username
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
+                Cycle
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
                 SGPA
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider">
@@ -540,6 +698,15 @@ export default function AdminPage() {
                       </div>
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
+                      {submission.cycle ? (
+                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getCycleBadgeColor(submission.cycle)}`}>
+                          {getCycleName(submission.cycle).split(' (')[0]} {/* Display short form like "C Cycle" or "P Cycle" */}
+                        </span>
+                      ) : (
+                        <span className="text-gray-500 text-xs">N/A</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 whitespace-nowrap">
                       <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm font-semibold">
                         {submission.data?.sgpa || 'N/A'}
                       </span>
@@ -587,7 +754,7 @@ export default function AdminPage() {
                   </tr>
                   {expandedRow === index && (
                     <tr key={`${index}-detail`}>
-                      <td colSpan={sortByIP ? "7" : "8"} className="px-4 py-4 bg-gray-900/50">
+                      <td colSpan={sortByIP ? "8" : "9"} className="px-4 py-4 bg-gray-900/50">
                         <div className="space-y-4">
                           {/* Complete Submission Information */}
                           <div className="bg-gray-800/70 rounded-lg p-4 border border-gray-700">
@@ -598,6 +765,12 @@ export default function AdminPage() {
                               <div className="bg-gray-900/50 rounded p-3">
                                 <p className="text-xs text-gray-400 mb-1">Username</p>
                                 <p className="text-sm text-white font-semibold">{submission.username || 'Guest'}</p>
+                              </div>
+                              <div className="bg-gray-900/50 rounded p-3">
+                                <p className="text-xs text-gray-400 mb-1">Cycle</p>
+                                <p className="text-sm text-white font-semibold">
+                                  {submission.cycle ? getCycleName(submission.cycle) : 'N/A'}
+                                </p>
                               </div>
                               <div className="bg-gray-900/50 rounded p-3">
                                 <p className="text-xs text-gray-400 mb-1">Login Time</p>

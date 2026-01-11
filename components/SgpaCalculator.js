@@ -145,6 +145,7 @@ export default function SgpaCalculator() {
             username: username,
             loginTime: loginTime,
             sgpa: sgpa,
+            cycle: selectedCycle, // 'C' for Chemistry Cycle or 'P' for Physics Cycle
             courses: courses.map(course => ({
               courseDetails: course.courseDetails,
               cieMarks: course.cieMarks,
