@@ -233,24 +233,40 @@ export default function AdminPage() {
     return colorMap[cycle] || 'bg-gray-500/20 text-gray-300';
   };
 
-  // Helper function to calculate total CIE score for a submission
-  const calculateTotalCIE = (submission) => {
-    if (!submission?.data?.courses) return 0;
-    return submission.data.courses.reduce((total, course) => {
-      return total + (course.results?.totalCie || 0);
-    }, 0);
+  // Helper function to calculate CIE percentage for a submission
+  const calculateCIEData = (submission) => {
+    if (!submission?.data?.courses || submission.data.courses.length === 0) {
+      return { totalCIE: 0, maxCIE: 0, percentage: 0 };
+    }
+    
+    let totalCIE = 0;
+    let maxCIE = 0;
+    
+    submission.data.courses.forEach(course => {
+      totalCIE += course.results?.totalCie || 0;
+      maxCIE += course.courseDetails?.cieMax || 0;
+    });
+    
+    const percentage = maxCIE > 0 ? (totalCIE / maxCIE) * 100 : 0;
+    
+    return { totalCIE, maxCIE, percentage };
   };
 
-  // Memoized helper function to get top scorers based on CIE
+  // Memoized helper function to get top scorers based on CIE percentage
   const getTopCIEScorers = useMemo(() => {
     return submissions
-      .map((sub, index) => ({
-        ...sub,
-        originalIndex: index,
-        totalCIE: calculateTotalCIE(sub)
-      }))
-      .filter(sub => sub.totalCIE > 0)
-      .sort((a, b) => b.totalCIE - a.totalCIE)
+      .map((sub, index) => {
+        const cieData = calculateCIEData(sub);
+        return {
+          ...sub,
+          originalIndex: index,
+          totalCIE: cieData.totalCIE,
+          maxCIE: cieData.maxCIE,
+          ciePercentage: cieData.percentage
+        };
+      })
+      .filter(sub => sub.ciePercentage > 0)
+      .sort((a, b) => b.ciePercentage - a.ciePercentage)
       .slice(0, 10);
   }, [submissions]);
 
@@ -487,7 +503,7 @@ export default function AdminPage() {
                         >
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
-                        🏆 Top Scorers - Total CIE Scores
+                        🏆 Top Scorers - CIE Percentage
                         <span className="ml-2 px-2 py-1 bg-green-500/20 text-green-300 rounded-full text-sm">
                           Top {Math.min(10, getTopCIEScorers.length)}
                         </span>
@@ -536,8 +552,8 @@ export default function AdminPage() {
                                   </div>
                                 </div>
                                 <div className="text-right">
-                                  <div className="text-2xl font-bold text-green-400">{scorer.totalCIE}</div>
-                                  <div className="text-xs text-gray-400">Total CIE</div>
+                                  <div className="text-2xl font-bold text-green-400">{scorer.ciePercentage.toFixed(2)}%</div>
+                                  <div className="text-xs text-gray-400">{scorer.totalCIE}/{scorer.maxCIE} CIE</div>
                                 </div>
                               </div>
                               {/* Course-wise CIE breakdown */}
