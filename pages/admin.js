@@ -1,5 +1,5 @@
 // pages/admin.js
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Head from 'next/head';
 
 export default function AdminPage() {
@@ -18,6 +18,8 @@ export default function AdminPage() {
   const [sortByIP, setSortByIP] = useState(true); // Enable IP sorting by default
   const [expandedIPs, setExpandedIPs] = useState({}); // Track which IP sections are expanded
   const [ipLocations, setIpLocations] = useState({}); // Cache for IP location data
+  const [expandedTopCIE, setExpandedTopCIE] = useState(false); // Track if top CIE scorers section is expanded
+  const [expandedTopSGPA, setExpandedTopSGPA] = useState(false); // Track if top SGPA section is expanded
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -204,11 +206,31 @@ export default function AdminPage() {
       grouped[ip].push({ ...sub, originalIndex: index });
     });
 
-    // Sort IPs alphabetically for consistent display
+    // Sort IPs by most recent submission time (newest first)
     const sortedGrouped = {};
-    Object.keys(grouped).sort().forEach(ip => {
-      sortedGrouped[ip] = grouped[ip];
-    });
+    Object.keys(grouped)
+      .sort((ipA, ipB) => {
+        // Get the most recent submission for each IP
+        const mostRecentA = grouped[ipA].reduce((latest, sub) => {
+          const subTime = new Date(sub.timestamp).getTime();
+          return subTime > latest ? subTime : latest;
+        }, 0);
+        
+        const mostRecentB = grouped[ipB].reduce((latest, sub) => {
+          const subTime = new Date(sub.timestamp).getTime();
+          return subTime > latest ? subTime : latest;
+        }, 0);
+        
+        // Sort descending (most recent first)
+        return mostRecentB - mostRecentA;
+      })
+      .forEach(ip => {
+        // Also sort submissions within each IP by most recent first
+        const sortedSubs = grouped[ip].sort((a, b) => {
+          return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+        });
+        sortedGrouped[ip] = sortedSubs;
+      });
 
     return sortedGrouped;
   };
@@ -230,6 +252,53 @@ export default function AdminPage() {
     };
     return colorMap[cycle] || 'bg-gray-500/20 text-gray-300';
   };
+
+  // Helper function to calculate CIE data for a submission
+  const calculateCIEData = (submission) => {
+    if (!submission?.data?.courses || submission.data.courses.length === 0) {
+      return { totalCIE: 0, maxCIE: 0 };
+    }
+    
+    let totalCIE = 0;
+    let maxCIE = 0;
+    
+    submission.data.courses.forEach(course => {
+      totalCIE += course.results?.totalCie || 0;
+      maxCIE += course.courseDetails?.cieMax || 0;
+    });
+    
+    return { totalCIE, maxCIE };
+  };
+
+  // Memoized helper function to get top scorers based on total CIE marks
+  const getTopCIEScorers = useMemo(() => {
+    return submissions
+      .map((sub, index) => {
+        const cieData = calculateCIEData(sub);
+        return {
+          ...sub,
+          originalIndex: index,
+          totalCIE: cieData.totalCIE,
+          maxCIE: cieData.maxCIE
+        };
+      })
+      .filter(sub => sub.totalCIE > 0)
+      .sort((a, b) => b.totalCIE - a.totalCIE)  // Sort by raw total, highest first
+      .slice(0, 10);
+  }, [submissions]);
+
+  // Memoized helper function to get top scorers based on SGPA
+  const getTopSGPAScorers = useMemo(() => {
+    return submissions
+      .map((sub, index) => ({
+        ...sub,
+        originalIndex: index,
+        sgpa: parseFloat(sub.data?.sgpa || 0)
+      }))
+      .filter(sub => sub.sgpa > 0)
+      .sort((a, b) => b.sgpa - a.sgpa)
+      .slice(0, 10);
+  }, [submissions]);
 
   // Helper function to fetch IP location
   const fetchIPLocation = async (ip) => {
@@ -432,6 +501,238 @@ export default function AdminPage() {
         {/* Submissions Tab */}
         {!loading && activeTab === 'submissions' && (
           <>
+            {/* Top Scorers Sections */}
+            {submissions.length > 0 && (
+              <div className="mb-6 space-y-4">
+                {/* Top CIE Scorers */}
+                <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+                  <button
+                    onClick={() => setExpandedTopCIE(!expandedTopCIE)}
+                    className="w-full bg-gradient-to-r from-green-900/40 to-gray-900 px-4 py-3 border-b border-gray-700 hover:from-green-900/60 hover:to-gray-900 transition-colors cursor-pointer"
+                  >
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                        <svg 
+                          className={`w-5 h-5 text-green-400 transform transition-transform duration-200 ${expandedTopCIE ? 'rotate-90' : ''}`}
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                        🏆 Top Scorers - Total CIE Marks
+                        <span className="ml-2 px-2 py-1 bg-green-500/20 text-green-300 rounded-full text-sm">
+                          Top {Math.min(10, getTopCIEScorers.length)}
+                        </span>
+                      </h3>
+                      <span className="text-sm text-gray-400">
+                        {expandedTopCIE ? 'Click to collapse' : 'Click to expand'}
+                      </span>
+                    </div>
+                  </button>
+                  {expandedTopCIE && (
+                    <div className="p-4">
+                      <div className="space-y-3">
+                        {getTopCIEScorers.map((scorer, idx) => {
+                          const location = ipLocations[scorer.ipAddress] || 'Loading...';
+                          return (
+                            <div key={scorer.originalIndex} className="bg-gray-900/50 rounded-lg p-4 border border-gray-700">
+                              <div className="flex items-start justify-between mb-3">
+                                <div className="flex items-center gap-3">
+                                  <div className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm ${
+                                    idx === 0 ? 'bg-yellow-500/20 text-yellow-300' :
+                                    idx === 1 ? 'bg-gray-400/20 text-gray-300' :
+                                    idx === 2 ? 'bg-orange-600/20 text-orange-400' :
+                                    'bg-purple-500/20 text-purple-300'
+                                  }`}>
+                                    {idx + 1}
+                                  </div>
+                                  <div>
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-white font-semibold">{scorer.username || 'Guest'}</span>
+                                      {scorer.cycle && (
+                                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getCycleBadgeColor(scorer.cycle)}`}>
+                                          {scorer.cycle}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <div className="text-xs text-gray-400 mt-1">
+                                      {scorer.ipAddress && (
+                                        <span className="font-mono">
+                                          {scorer.ipAddress}
+                                          {location !== 'Loading...' && location !== 'Unknown' && (
+                                            <span className="text-gray-500"> ({location})</span>
+                                          )}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="text-right">
+                                  <div className="text-2xl font-bold text-green-400">{scorer.totalCIE}</div>
+                                  <div className="text-xs text-gray-400">out of 750</div>
+                                </div>
+                              </div>
+                              {/* Course-wise CIE breakdown */}
+                              <details className="mt-2">
+                                <summary className="cursor-pointer text-sm text-gray-400 hover:text-gray-300 transition-colors">
+                                  View detailed scores ({scorer.data?.courses?.length || 0} courses)
+                                </summary>
+                                <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
+                                  {scorer.data?.courses?.map((course, courseIdx) => (
+                                    <div key={courseIdx} className="bg-gray-800/50 rounded p-2 text-sm">
+                                      <div className="text-gray-300 font-medium text-xs mb-1">{course.courseDetails?.code}</div>
+                                      <div className="flex justify-between items-center">
+                                        <span className="text-gray-400 text-xs">{course.courseDetails?.title}</span>
+                                        <span className="text-green-300 font-semibold">{course.results?.totalCie || 0}</span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </details>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Top SGPA Scorers */}
+                <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+                  <button
+                    onClick={() => setExpandedTopSGPA(!expandedTopSGPA)}
+                    className="w-full bg-gradient-to-r from-purple-900/40 to-gray-900 px-4 py-3 border-b border-gray-700 hover:from-purple-900/60 hover:to-gray-900 transition-colors cursor-pointer"
+                  >
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                        <svg 
+                          className={`w-5 h-5 text-purple-400 transform transition-transform duration-200 ${expandedTopSGPA ? 'rotate-90' : ''}`}
+                          fill="none" 
+                          stroke="currentColor" 
+                          viewBox="0 0 24 24"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                        🏆 Top Scorers - SGPA
+                        <span className="ml-2 px-2 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
+                          Top {Math.min(10, getTopSGPAScorers.length)}
+                        </span>
+                      </h3>
+                      <span className="text-sm text-gray-400">
+                        {expandedTopSGPA ? 'Click to collapse' : 'Click to expand'}
+                      </span>
+                    </div>
+                  </button>
+                  {expandedTopSGPA && (
+                    <div className="p-4">
+                      <div className="space-y-3">
+                        {getTopSGPAScorers.map((scorer, idx) => {
+                          const location = ipLocations[scorer.ipAddress] || 'Loading...';
+                          return (
+                            <div key={scorer.originalIndex} className="bg-gray-900/50 rounded-lg p-4 border border-gray-700">
+                              <div className="flex items-start justify-between mb-3">
+                                <div className="flex items-center gap-3">
+                                  <div className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm ${
+                                    idx === 0 ? 'bg-yellow-500/20 text-yellow-300' :
+                                    idx === 1 ? 'bg-gray-400/20 text-gray-300' :
+                                    idx === 2 ? 'bg-orange-600/20 text-orange-400' :
+                                    'bg-purple-500/20 text-purple-300'
+                                  }`}>
+                                    {idx + 1}
+                                  </div>
+                                  <div>
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-white font-semibold">{scorer.username || 'Guest'}</span>
+                                      {scorer.cycle && (
+                                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getCycleBadgeColor(scorer.cycle)}`}>
+                                          {scorer.cycle}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <div className="text-xs text-gray-400 mt-1">
+                                      {scorer.ipAddress && (
+                                        <span className="font-mono">
+                                          {scorer.ipAddress}
+                                          {location !== 'Loading...' && location !== 'Unknown' && (
+                                            <span className="text-gray-500"> ({location})</span>
+                                          )}
+                                        </span>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                                <div className="text-right">
+                                  <div className="text-2xl font-bold text-purple-400">{scorer.sgpa}</div>
+                                  <div className="text-xs text-gray-400">SGPA</div>
+                                </div>
+                              </div>
+                              {/* Course-wise grade breakdown */}
+                              <details className="mt-2">
+                                <summary className="cursor-pointer text-sm text-gray-400 hover:text-gray-300 transition-colors">
+                                  View detailed scores ({scorer.data?.courses?.length || 0} courses)
+                                </summary>
+                                <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-2">
+                                  {scorer.data?.courses?.map((course, courseIdx) => (
+                                    <div key={courseIdx} className="bg-gray-800/50 rounded p-3 text-sm border border-gray-700">
+                                      <div className="text-gray-300 font-medium text-xs mb-2">{course.courseDetails?.code}</div>
+                                      <div className="text-gray-400 text-xs mb-2">{course.courseDetails?.title}</div>
+                                      
+                                      {/* Marks breakdown */}
+                                      <div className="space-y-1 mb-2">
+                                        {course.results?.totalCie !== undefined && (
+                                          <div className="flex justify-between text-xs">
+                                            <span className="text-gray-400">CIE Marks:</span>
+                                            <span className="text-green-300 font-semibold">
+                                              {course.results.totalCie}/{course.courseDetails?.cieMax || 'N/A'}
+                                            </span>
+                                          </div>
+                                        )}
+                                        {course.results?.see !== undefined && (
+                                          <div className="flex justify-between text-xs">
+                                            <span className="text-gray-400">SEE Marks:</span>
+                                            <span className="text-blue-300 font-semibold">
+                                              {course.results.see}/{course.courseDetails?.seeMax || 'N/A'}
+                                            </span>
+                                          </div>
+                                        )}
+                                        {course.results?.finalScore !== undefined && (
+                                          <div className="flex justify-between text-xs">
+                                            <span className="text-gray-400">Final Score:</span>
+                                            <span className="text-white font-semibold">
+                                              {course.results.finalScore.toFixed(2)}%
+                                            </span>
+                                          </div>
+                                        )}
+                                      </div>
+                                      
+                                      {/* Grade and points */}
+                                      <div className="flex justify-between items-center pt-2 border-t border-gray-700">
+                                        <span className={`px-2 py-1 rounded text-xs font-bold ${
+                                          course.results?.grade === 'O' ? 'bg-green-500/20 text-green-300' :
+                                          course.results?.grade === 'A+' ? 'bg-blue-500/20 text-blue-300' :
+                                          course.results?.grade === 'A' ? 'bg-purple-500/20 text-purple-300' :
+                                          course.results?.grade === 'F' ? 'bg-red-500/20 text-red-300' :
+                                          'bg-yellow-500/20 text-yellow-300'
+                                        }`}>
+                                          {course.results?.grade || 'N/A'}
+                                        </span>
+                                        <span className="text-purple-300 font-semibold">{course.results?.points || 0} pts</span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              </details>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Sort Toggle */}
             <div className="mb-4 flex items-center justify-between">
               <label className="flex items-center gap-2 cursor-pointer">
@@ -722,7 +1023,20 @@ export default function AdminPage() {
                     </td>
                     {!sortByIP && (
                       <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-400 font-mono">
-                        {submission.ipAddress || 'N/A'}
+                        {submission.ipAddress ? (
+                          <>
+                            {submission.ipAddress}
+                            {ipLocations[submission.ipAddress] && 
+                             ipLocations[submission.ipAddress] !== 'Loading...' && 
+                             ipLocations[submission.ipAddress] !== 'Unknown' && (
+                              <span className="text-gray-500 ml-1">
+                                ({ipLocations[submission.ipAddress]})
+                              </span>
+                            )}
+                          </>
+                        ) : (
+                          'N/A'
+                        )}
                       </td>
                     )}
                     <td className="px-4 py-3 whitespace-nowrap">

@@ -17,7 +17,13 @@ export default function LoginButton() {
     return '';
   });
   
-  const [showModal, setShowModal] = useState(false);
+  const [showModal, setShowModal] = useState(() => {
+    // Show modal by default if user is not logged in
+    if (typeof window !== 'undefined') {
+      return !localStorage.getItem('rvce-calculator-username');
+    }
+    return false;
+  });
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
 
