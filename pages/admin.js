@@ -570,7 +570,7 @@ export default function AdminPage() {
                                 </div>
                                 <div className="text-right">
                                   <div className="text-2xl font-bold text-green-400">{scorer.totalCIE}</div>
-                                  <div className="text-xs text-gray-400">out of {scorer.maxCIE}</div>
+                                  <div className="text-xs text-gray-400">out of 750</div>
                                 </div>
                               </div>
                               {/* Course-wise CIE breakdown */}
