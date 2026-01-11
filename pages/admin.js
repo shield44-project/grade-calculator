@@ -17,6 +17,7 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState('submissions'); // 'submissions' or 'issues'
   const [sortByIP, setSortByIP] = useState(true); // Enable IP sorting by default
   const [expandedIPs, setExpandedIPs] = useState({}); // Track which IP sections are expanded
+  const [ipLocations, setIpLocations] = useState({}); // Cache for IP location data
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -230,6 +231,52 @@ export default function AdminPage() {
     return colorMap[cycle] || 'bg-gray-500/20 text-gray-300';
   };
 
+  // Helper function to fetch IP location
+  const fetchIPLocation = async (ip) => {
+    // Skip localhost/private IPs
+    if (ip === '::1' || ip === '127.0.0.1' || ip === 'Unknown' || ip.startsWith('192.168.') || ip.startsWith('10.')) {
+      return 'Local';
+    }
+
+    // Check cache first
+    if (ipLocations[ip]) {
+      return ipLocations[ip];
+    }
+
+    try {
+      // Using ip-api.com free API (no key required, 45 requests per minute)
+      const response = await fetch(`http://ip-api.com/json/${ip}?fields=status,country,regionName,city`);
+      const data = await response.json();
+      
+      if (data.status === 'success') {
+        const location = data.city && data.regionName 
+          ? `${data.city}, ${data.regionName}, ${data.country}`
+          : data.country || 'Unknown';
+        
+        // Cache the result
+        setIpLocations(prev => ({ ...prev, [ip]: location }));
+        return location;
+      }
+    } catch (error) {
+      console.error('Failed to fetch IP location:', error);
+    }
+    
+    return 'Unknown';
+  };
+
+  // Fetch locations for all IPs when submissions load
+  useEffect(() => {
+    if (submissions.length > 0) {
+      const uniqueIPs = [...new Set(submissions.map(s => s.ipAddress).filter(Boolean))];
+      uniqueIPs.forEach(ip => {
+        if (!ipLocations[ip]) {
+          fetchIPLocation(ip);
+        }
+      });
+    }
+  }, [submissions]);
+
+
   const CSV_HEADERS = ['Username', 'Cycle', 'Login Time', 'Submission Time', 'SGPA', 'Device', 'OS', 'Browser', 'IP Address'];
 
   const exportToCSV = () => {
@@ -431,9 +478,10 @@ export default function AdminPage() {
               // Grouped by IP view
               <div className="space-y-6">
                 {Object.entries(getGroupedSubmissions()).map(([ip, ipSubmissions]) => {
-                  const isExpanded = expandedIPs[ip] !== false; // Default to expanded
+                  const isExpanded = expandedIPs[ip] === true; // Default to collapsed
                   const cCycleCount = ipSubmissions.filter(s => s.cycle === 'C').length;
                   const pCycleCount = ipSubmissions.filter(s => s.cycle === 'P').length;
+                  const location = ipLocations[ip] || 'Loading...';
                   
                   return (
                     <div key={ip} className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
@@ -455,6 +503,11 @@ export default function AdminPage() {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                             </svg>
                             IP: <span className="font-mono text-purple-300">{ip}</span>
+                            {location !== 'Loading...' && location !== 'Unknown' && (
+                              <span className="text-sm text-gray-400 font-normal">
+                                📍 {location}
+                              </span>
+                            )}
                             <span className="ml-2 px-2 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
                               {ipSubmissions.length} submission{ipSubmissions.length !== 1 ? 's' : ''}
                             </span>
