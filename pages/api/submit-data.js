@@ -20,6 +20,7 @@ export default async function handler(req, res) {
       timestamp: new Date().toISOString(),
       username: data.username || null,
       loginTime: data.loginTime || null,
+      cycle: data.cycle || null, // 'C' or 'P' cycle
       userAgent: userAgent,
       deviceInfo: deviceInfo,
       ipAddress: req.headers['x-forwarded-for'] || req.socket.remoteAddress || null,
