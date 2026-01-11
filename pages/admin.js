@@ -214,21 +214,27 @@ export default function AdminPage() {
 
   // Helper function to get cycle display name
   const getCycleName = (cycle) => {
-    if (cycle === 'C') return 'C Cycle (Chemistry)';
-    if (cycle === 'P') return 'P Cycle (Physics)';
-    return 'Unknown Cycle';
+    const cycleMap = {
+      'C': 'C Cycle (Chemistry)',
+      'P': 'P Cycle (Physics)'
+    };
+    return cycleMap[cycle] || 'Unknown Cycle';
   };
 
   // Helper function to get cycle badge color
   const getCycleBadgeColor = (cycle) => {
-    if (cycle === 'C') return 'bg-green-500/20 text-green-300';
-    if (cycle === 'P') return 'bg-blue-500/20 text-blue-300';
-    return 'bg-gray-500/20 text-gray-300';
+    const colorMap = {
+      'C': 'bg-green-500/20 text-green-300',
+      'P': 'bg-blue-500/20 text-blue-300'
+    };
+    return colorMap[cycle] || 'bg-gray-500/20 text-gray-300';
   };
+
+  const CSV_HEADERS = ['Username', 'Cycle', 'Login Time', 'Submission Time', 'SGPA', 'Device', 'OS', 'Browser', 'IP Address'];
 
   const exportToCSV = () => {
     const csvRows = [];
-    csvRows.push(['Username', 'Cycle', 'Login Time', 'Submission Time', 'SGPA', 'Device', 'OS', 'Browser', 'IP Address'].join(','));
+    csvRows.push(CSV_HEADERS.join(','));
 
     submissions.forEach(sub => {
       const row = [
@@ -389,9 +395,9 @@ export default function AdminPage() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => {
-                      const grouped = getGroupedSubmissions();
+                      const ips = Object.keys(getGroupedSubmissions());
                       const newExpandedState = {};
-                      Object.keys(grouped).forEach(ip => {
+                      ips.forEach(ip => {
                         newExpandedState[ip] = true;
                       });
                       setExpandedIPs(newExpandedState);
@@ -402,9 +408,9 @@ export default function AdminPage() {
                   </button>
                   <button
                     onClick={() => {
-                      const grouped = getGroupedSubmissions();
+                      const ips = Object.keys(getGroupedSubmissions());
                       const newExpandedState = {};
-                      Object.keys(grouped).forEach(ip => {
+                      ips.forEach(ip => {
                         newExpandedState[ip] = false;
                       });
                       setExpandedIPs(newExpandedState);
@@ -636,7 +642,7 @@ export default function AdminPage() {
                     <td className="px-4 py-3 whitespace-nowrap">
                       {submission.cycle ? (
                         <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getCycleBadgeColor(submission.cycle)}`}>
-                          {submission.cycle === 'C' ? 'C Cycle' : submission.cycle === 'P' ? 'P Cycle' : submission.cycle}
+                          {getCycleName(submission.cycle).split(' (')[0]} {/* Display short form like "C Cycle" or "P Cycle" */}
                         </span>
                       ) : (
                         <span className="text-gray-500 text-xs">N/A</span>
