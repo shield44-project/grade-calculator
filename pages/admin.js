@@ -206,11 +206,31 @@ export default function AdminPage() {
       grouped[ip].push({ ...sub, originalIndex: index });
     });
 
-    // Sort IPs alphabetically for consistent display
+    // Sort IPs by most recent submission time (newest first)
     const sortedGrouped = {};
-    Object.keys(grouped).sort().forEach(ip => {
-      sortedGrouped[ip] = grouped[ip];
-    });
+    Object.keys(grouped)
+      .sort((ipA, ipB) => {
+        // Get the most recent submission for each IP
+        const mostRecentA = grouped[ipA].reduce((latest, sub) => {
+          const subTime = new Date(sub.timestamp).getTime();
+          return subTime > latest ? subTime : latest;
+        }, 0);
+        
+        const mostRecentB = grouped[ipB].reduce((latest, sub) => {
+          const subTime = new Date(sub.timestamp).getTime();
+          return subTime > latest ? subTime : latest;
+        }, 0);
+        
+        // Sort descending (most recent first)
+        return mostRecentB - mostRecentA;
+      })
+      .forEach(ip => {
+        // Also sort submissions within each IP by most recent first
+        const sortedSubs = grouped[ip].sort((a, b) => {
+          return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+        });
+        sortedGrouped[ip] = sortedSubs;
+      });
 
     return sortedGrouped;
   };
