@@ -1,5 +1,5 @@
 // pages/admin.js
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Head from 'next/head';
 
 export default function AdminPage() {
@@ -241,8 +241,8 @@ export default function AdminPage() {
     }, 0);
   };
 
-  // Helper function to get top scorers based on CIE
-  const getTopCIEScorers = (limit = 10) => {
+  // Memoized helper function to get top scorers based on CIE
+  const getTopCIEScorers = useMemo(() => {
     return submissions
       .map((sub, index) => ({
         ...sub,
@@ -251,11 +251,11 @@ export default function AdminPage() {
       }))
       .filter(sub => sub.totalCIE > 0)
       .sort((a, b) => b.totalCIE - a.totalCIE)
-      .slice(0, limit);
-  };
+      .slice(0, 10);
+  }, [submissions]);
 
-  // Helper function to get top scorers based on SGPA
-  const getTopSGPAScorers = (limit = 10) => {
+  // Memoized helper function to get top scorers based on SGPA
+  const getTopSGPAScorers = useMemo(() => {
     return submissions
       .map((sub, index) => ({
         ...sub,
@@ -264,8 +264,8 @@ export default function AdminPage() {
       }))
       .filter(sub => sub.sgpa > 0)
       .sort((a, b) => b.sgpa - a.sgpa)
-      .slice(0, limit);
-  };
+      .slice(0, 10);
+  }, [submissions]);
 
   // Helper function to fetch IP location
   const fetchIPLocation = async (ip) => {
@@ -489,7 +489,7 @@ export default function AdminPage() {
                         </svg>
                         🏆 Top Scorers - Total CIE Scores
                         <span className="ml-2 px-2 py-1 bg-green-500/20 text-green-300 rounded-full text-sm">
-                          Top {Math.min(10, getTopCIEScorers().length)}
+                          Top {Math.min(10, getTopCIEScorers.length)}
                         </span>
                       </h3>
                       <span className="text-sm text-gray-400">
@@ -500,7 +500,7 @@ export default function AdminPage() {
                   {expandedTopCIE && (
                     <div className="p-4">
                       <div className="space-y-3">
-                        {getTopCIEScorers().map((scorer, idx) => {
+                        {getTopCIEScorers.map((scorer, idx) => {
                           const location = ipLocations[scorer.ipAddress] || 'Loading...';
                           return (
                             <div key={scorer.originalIndex} className="bg-gray-900/50 rounded-lg p-4 border border-gray-700">
@@ -583,7 +583,7 @@ export default function AdminPage() {
                         </svg>
                         🏆 Top Scorers - SGPA
                         <span className="ml-2 px-2 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
-                          Top {Math.min(10, getTopSGPAScorers().length)}
+                          Top {Math.min(10, getTopSGPAScorers.length)}
                         </span>
                       </h3>
                       <span className="text-sm text-gray-400">
@@ -594,7 +594,7 @@ export default function AdminPage() {
                   {expandedTopSGPA && (
                     <div className="p-4">
                       <div className="space-y-3">
-                        {getTopSGPAScorers().map((scorer, idx) => {
+                        {getTopSGPAScorers.map((scorer, idx) => {
                           const location = ipLocations[scorer.ipAddress] || 'Loading...';
                           return (
                             <div key={scorer.originalIndex} className="bg-gray-900/50 rounded-lg p-4 border border-gray-700">
