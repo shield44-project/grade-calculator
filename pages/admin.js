@@ -20,6 +20,7 @@ export default function AdminPage() {
   const [ipLocations, setIpLocations] = useState({}); // Cache for IP location data
   const [expandedTopCIE, setExpandedTopCIE] = useState(false); // Track if top CIE scorers section is expanded
   const [expandedTopSGPA, setExpandedTopSGPA] = useState(false); // Track if top SGPA section is expanded
+  const [deleteIPConfirm, setDeleteIPConfirm] = useState(null); // Track which IP is being confirmed for deletion
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -158,6 +159,48 @@ export default function AdminPage() {
 
   const cancelDelete = () => {
     setDeleteConfirm(null);
+  };
+
+  const handleDeleteIPGroup = async (ipAddress) => {
+    if (deleteIPConfirm !== ipAddress) {
+      setDeleteIPConfirm(ipAddress);
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const savedPassword = localStorage.getItem('admin-password');
+      const response = await fetch(`/api/delete-ip-group?password=${encodeURIComponent(savedPassword)}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ipAddress }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Refresh data after deletion
+        await loadData();
+        setDeleteIPConfirm(null);
+        setExpandedIPs(prev => {
+          const newState = { ...prev };
+          delete newState[ipAddress];
+          return newState;
+        });
+      } else {
+        alert(data.error || 'Failed to delete IP group');
+      }
+    } catch (err) {
+      alert('Failed to delete IP group');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const cancelDeleteIPGroup = () => {
+    setDeleteIPConfirm(null);
   };
 
   const handleDeleteIssue = async (index) => {
@@ -791,48 +834,74 @@ export default function AdminPage() {
                   
                   return (
                     <div key={ip} className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
-                      <button
-                        onClick={() => toggleIPExpansion(ip)}
-                        className="w-full bg-gray-900 px-4 py-3 border-b border-gray-700 hover:bg-gray-800/80 transition-colors cursor-pointer"
-                      >
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-lg font-semibold text-white flex items-center gap-2 flex-wrap">
-                            <svg 
-                              className={`w-5 h-5 text-purple-400 transform transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}
-                              fill="none" 
-                              stroke="currentColor" 
-                              viewBox="0 0 24 24"
-                            >
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                            <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                            </svg>
-                            IP: <span className="font-mono text-purple-300">{ip}</span>
-                            {location !== 'Loading...' && location !== 'Unknown' && (
-                              <span className="text-sm text-gray-400 font-normal">
-                                📍 {location}
+                      <div className="w-full bg-gray-900 px-4 py-3 border-b border-gray-700">
+                        <div className="flex items-center justify-between gap-4">
+                          <button
+                            onClick={() => toggleIPExpansion(ip)}
+                            className="flex-1 hover:opacity-80 transition-opacity cursor-pointer text-left"
+                          >
+                            <h3 className="text-lg font-semibold text-white flex items-center gap-2 flex-wrap">
+                              <svg 
+                                className={`w-5 h-5 text-purple-400 transform transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}
+                                fill="none" 
+                                stroke="currentColor" 
+                                viewBox="0 0 24 24"
+                              >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                              <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                              </svg>
+                              IP: <span className="font-mono text-purple-300">{ip}</span>
+                              {location !== 'Loading...' && location !== 'Unknown' && (
+                                <span className="text-sm text-gray-400 font-normal">
+                                  📍 {location}
+                                </span>
+                              )}
+                              <span className="ml-2 px-2 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
+                                {ipSubmissions.length} submission{ipSubmissions.length !== 1 ? 's' : ''}
                               </span>
+                              {cCycleCount > 0 && (
+                                <span className="px-2 py-1 bg-green-500/20 text-green-300 rounded-full text-xs">
+                                  C: {cCycleCount}
+                                </span>
+                              )}
+                              {pCycleCount > 0 && (
+                                <span className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs">
+                                  P: {pCycleCount}
+                                </span>
+                              )}
+                            </h3>
+                          </button>
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            {deleteIPConfirm === ip ? (
+                              <>
+                                <button
+                                  onClick={() => handleDeleteIPGroup(ip)}
+                                  className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded transition-colors"
+                                  title="Confirm deletion"
+                                >
+                                  Confirm
+                                </button>
+                                <button
+                                  onClick={cancelDeleteIPGroup}
+                                  className="px-3 py-1.5 bg-gray-600 hover:bg-gray-700 text-white text-sm font-medium rounded transition-colors"
+                                >
+                                  Cancel
+                                </button>
+                              </>
+                            ) : (
+                              <button
+                                onClick={() => handleDeleteIPGroup(ip)}
+                                className="px-3 py-1.5 bg-red-600/20 hover:bg-red-600/40 text-red-400 text-sm font-medium rounded transition-colors border border-red-600/30"
+                                title={`Delete all ${ipSubmissions.length} submission(s) from this IP`}
+                              >
+                                Delete IP Group
+                              </button>
                             )}
-                            <span className="ml-2 px-2 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
-                              {ipSubmissions.length} submission{ipSubmissions.length !== 1 ? 's' : ''}
-                            </span>
-                            {cCycleCount > 0 && (
-                              <span className="px-2 py-1 bg-green-500/20 text-green-300 rounded-full text-xs">
-                                C: {cCycleCount}
-                              </span>
-                            )}
-                            {pCycleCount > 0 && (
-                              <span className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs">
-                                P: {pCycleCount}
-                              </span>
-                            )}
-                          </h3>
-                          <span className="text-sm text-gray-400">
-                            {isExpanded ? 'Click to collapse' : 'Click to expand'}
-                          </span>
+                          </div>
                         </div>
-                      </button>
+                      </div>
                       {isExpanded && renderSubmissionsTable(ipSubmissions)}
                     </div>
                   );
