@@ -2,17 +2,17 @@
 @import "tailwindcss";
 
 :root {
-  --gradient-primary: linear-gradient(145deg, #00d4ff 0%, #0099ff 100%);
-  --gradient-secondary: linear-gradient(145deg, #ff6b35 0%, #f7931e 100%);
-  --gradient-success: linear-gradient(145deg, #00ffb9 0%, #00d4aa 100%);
+  --gradient-primary: linear-gradient(145deg, #10b981 0%, #14b8a6 100%);
+  --gradient-secondary: linear-gradient(145deg, #f97316 0%, #fb923c 100%);
+  --gradient-success: linear-gradient(145deg, #34d399 0%, #6ee7b7 100%);
   --gradient-dark: linear-gradient(145deg, #0a1929 0%, #1a2332 100%);
   --shadow-neumorphic-inset: inset 8px 8px 16px #070d15, inset -8px -8px 16px #151f2d;
   --shadow-neumorphic: 8px 8px 16px #070d15, -8px -8px 16px #151f2d;
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
   --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.3);
   --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.4);
-  --shadow-glow-cyan: 0 0 30px rgba(0, 212, 255, 0.3);
-  --shadow-glow-orange: 0 0 30px rgba(255, 107, 53, 0.3);
+  --shadow-glow-emerald: 0 0 30px rgba(16, 185, 129, 0.4);
+  --shadow-glow-amber: 0 0 30px rgba(251, 146, 60, 0.4);
 }
 
 * {
@@ -24,9 +24,9 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: #0d1620;
   background-image: 
-    radial-gradient(at 20% 30%, rgba(0, 212, 255, 0.08) 0px, transparent 50%),
-    radial-gradient(at 80% 70%, rgba(255, 107, 53, 0.08) 0px, transparent 50%),
-    radial-gradient(at 50% 50%, rgba(0, 153, 255, 0.05) 0px, transparent 50%);
+    radial-gradient(at 20% 30%, rgba(16, 185, 129, 0.08) 0px, transparent 50%),
+    radial-gradient(at 80% 70%, rgba(249, 115, 22, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(20, 184, 166, 0.05) 0px, transparent 50%);
   min-height: 100vh;
   position: relative;
 }
@@ -39,8 +39,8 @@ body::before {
   right: 0;
   bottom: 0;
   background-image: 
-    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0, 212, 255, 0.02) 2px, rgba(0, 212, 255, 0.02) 4px),
-    repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(255, 107, 53, 0.02) 2px, rgba(255, 107, 53, 0.02) 4px);
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(16, 185, 129, 0.02) 2px, rgba(16, 185, 129, 0.02) 4px),
+    repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(249, 115, 22, 0.02) 2px, rgba(249, 115, 22, 0.02) 4px);
   pointer-events: none;
   z-index: -1;
 }
@@ -173,18 +173,18 @@ body::before {
 
 ::-webkit-scrollbar-track {
   background: #0d1620;
-  border-left: 1px solid rgba(0, 212, 255, 0.1);
+  border-left: 1px solid rgba(16, 185, 129, 0.1);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #00d4ff 0%, #0099ff 100%);
+  background: linear-gradient(180deg, #10b981 0%, #14b8a6 100%);
   border-radius: 6px;
   border: 2px solid #0d1620;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #00e5ff 0%, #00aaff 100%);
-  box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+  background: linear-gradient(180deg, #34d399 0%, #2dd4bf 100%);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.5);
 }
 
 /* Neumorphic utility classes */
@@ -201,7 +201,7 @@ body::before {
 .glass-effect {
   background: rgba(13, 22, 32, 0.6);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 212, 255, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.15);
 }
 
 /* Geometric decoration elements */
@@ -220,14 +220,14 @@ body::before {
 
 /* Gradient text */
 .gradient-text-cyan {
-  background: linear-gradient(145deg, #00d4ff, #00ffb9);
+  background: linear-gradient(145deg, #10b981, #34d399);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .gradient-text-orange {
-  background: linear-gradient(145deg, #ff6b35, #f7931e);
+  background: linear-gradient(145deg, #f97316, #fb923c);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
