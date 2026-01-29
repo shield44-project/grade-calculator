@@ -62,7 +62,7 @@ export default function Home() {
           <div className="hexagon w-full h-full bg-gradient-to-br from-emerald-400 to-teal-500 animate-morphBlob"></div>
         </div>
         <div className="absolute bottom-20 right-10 w-80 h-80 opacity-10 animate-float" style={{animationDelay: '3s'}}>
-          <div className="hexagon w-full h-full bg-gradient-to-br from-amber-400 to-orange-500 animate-morphBlob" style={{animationDelay: '2s'}}></div>
+          <div className="hexagon w-full h-full bg-gradient-to-br from-amber-400 to-amber-500 animate-morphBlob" style={{animationDelay: '2s'}}></div>
         </div>
         <div className="absolute top-1/2 left-1/3 w-48 h-48 opacity-5 animate-float" style={{animationDelay: '5s'}}>
           <div className="parallelogram w-full h-full bg-gradient-to-br from-teal-400 to-emerald-500"></div>
@@ -241,7 +241,7 @@ export default function Home() {
                       id="issueTitle"
                       value={reportForm.title}
                       onChange={(e) => setReportForm({ ...reportForm, title: e.target.value })}
-                      className="w-full px-4 py-3 neumorphic-inset rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 text-white transition-all"
+                      className="w-full px-4 py-3 neumorphic-inset rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white transition-all"
                       placeholder="Brief description of the issue"
                       required
                       maxLength={100}
@@ -274,7 +274,7 @@ export default function Home() {
                       id="issueEmail"
                       value={reportForm.email}
                       onChange={(e) => setReportForm({ ...reportForm, email: e.target.value })}
-                      className="w-full px-4 py-3 neumorphic-inset rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-500 text-white transition-all"
+                      className="w-full px-4 py-3 neumorphic-inset rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-white transition-all"
                       placeholder="your.email@example.com (if you want a response)"
                     />
                   </div>
