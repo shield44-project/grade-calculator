@@ -1,15 +1,15 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <!-- Gradient definitions -->
+  <!-- Gradient definitions with orange and cyan -->
   <defs>
     <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1"/>
-      <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1"/>
-      <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:1"/>
+      <stop offset="0%" style="stop-color:#06b6d4;stop-opacity:1"/>
+      <stop offset="50%" style="stop-color:#14b8a6;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#f97316;stop-opacity:1"/>
     </linearGradient>
     
     <linearGradient id="calcGrad" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" style="stop-color:#fff;stop-opacity:1"/>
-      <stop offset="100%" style="stop-color:#e0e7ff;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#e0f2fe;stop-opacity:1"/>
     </linearGradient>
     
     <linearGradient id="aGrad" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -30,7 +30,7 @@
     </filter>
   </defs>
   
-  <!-- Rounded background with gradient -->
+  <!-- Rounded background with orange-cyan gradient -->
   <rect width="100" height="100" rx="22" fill="url(#bgGrad)"/>
   
   <!-- Calculator body - neumorphic style -->
@@ -42,27 +42,27 @@
   <!-- A+ grade display -->
   <text x="35" y="37" font-family="'Courier New', monospace" font-size="14" font-weight="bold" fill="url(#aGrad)" filter="url(#glow)">A+</text>
   
-  <!-- Calculator buttons grid (static) -->
+  <!-- Calculator buttons grid with orange/cyan colors -->
   <!-- Row 1 -->
-  <circle cx="32" cy="52" r="3.5" fill="#6366f1" opacity="0.8"/>
-  <circle cx="44" cy="52" r="3.5" fill="#8b5cf6" opacity="0.8"/>
-  <circle cx="56" cy="52" r="3.5" fill="#06b6d4" opacity="0.8"/>
+  <circle cx="32" cy="52" r="3.5" fill="#06b6d4" opacity="0.8"/>
+  <circle cx="44" cy="52" r="3.5" fill="#14b8a6" opacity="0.8"/>
+  <circle cx="56" cy="52" r="3.5" fill="#0891b2" opacity="0.8"/>
   <circle cx="68" cy="52" r="3.5" fill="#10b981" opacity="0.8"/>
   
   <!-- Row 2 -->
-  <circle cx="32" cy="62" r="3.5" fill="#ec4899" opacity="0.8"/>
+  <circle cx="32" cy="62" r="3.5" fill="#fbbf24" opacity="0.8"/>
   <circle cx="44" cy="62" r="3.5" fill="#f59e0b" opacity="0.8"/>
-  <circle cx="56" cy="62" r="3.5" fill="#ef4444" opacity="0.8"/>
-  <circle cx="68" cy="62" r="3.5" fill="#8b5cf6" opacity="0.8"/>
+  <circle cx="56" cy="62" r="3.5" fill="#f97316" opacity="0.8"/>
+  <circle cx="68" cy="62" r="3.5" fill="#14b8a6" opacity="0.8"/>
   
   <!-- Row 3 -->
-  <circle cx="32" cy="72" r="3.5" fill="#06b6d4" opacity="0.8"/>
+  <circle cx="32" cy="72" r="3.5" fill="#0891b2" opacity="0.8"/>
   <circle cx="44" cy="72" r="3.5" fill="#10b981" opacity="0.8"/>
-  <circle cx="56" cy="72" r="3.5" fill="#6366f1" opacity="0.8"/>
-  <circle cx="68" cy="72" r="3.5" fill="#ec4899" opacity="0.8"/>
+  <circle cx="56" cy="72" r="3.5" fill="#06b6d4" opacity="0.8"/>
+  <circle cx="68" cy="72" r="3.5" fill="#fb923c" opacity="0.8"/>
   
-  <!-- Subtle sparkle accents (static) -->
+  <!-- Subtle sparkle accents with orange/cyan -->
   <circle cx="15" cy="20" r="1.5" fill="#fbbf24" opacity="0.6"/>
   <circle cx="85" cy="30" r="1.5" fill="#06b6d4" opacity="0.6"/>
-  <circle cx="12" cy="80" r="1.5" fill="#8b5cf6" opacity="0.6"/>
+  <circle cx="12" cy="80" r="1.5" fill="#14b8a6" opacity="0.6"/>
 </svg>
