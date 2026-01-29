@@ -406,16 +406,16 @@ const RequiredSEEIntegratedDisplay = ({ cieMarks, courseDetails, seeMarks, resul
                                 
                                 {/* Theory Required */}
                                 <div className="mb-2">
-                                    <p className="text-xs text-blue-400 mb-1">Theory</p>
-                                    <p className={`font-semibold text-sm ${info.achievable ? 'text-blue-300' : 'text-red-300'}`}>
+                                    <p className="text-xs text-teal-400 mb-1">Theory</p>
+                                    <p className={`font-semibold text-sm ${info.achievable ? 'text-teal-300' : 'text-red-300'}`}>
                                         {info.requiredTheory} / {info.theoryMax}
                                     </p>
                                 </div>
                                 
                                 {/* Lab Required */}
                                 <div className="mb-2">
-                                    <p className="text-xs text-purple-400 mb-1">Lab</p>
-                                    <p className={`font-semibold text-sm ${info.achievable ? 'text-purple-300' : 'text-red-300'}`}>
+                                    <p className="text-xs text-pink-400 mb-1">Lab</p>
+                                    <p className={`font-semibold text-sm ${info.achievable ? 'text-pink-300' : 'text-red-300'}`}>
                                         {info.requiredLab} / {info.labMax}
                                     </p>
                                 </div>
