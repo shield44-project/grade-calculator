@@ -291,7 +291,7 @@ export default function AdminPage() {
   const getCycleBadgeColor = (cycle) => {
     const colorMap = {
       'C': 'bg-green-500/20 text-green-300',
-      'P': 'bg-blue-500/20 text-blue-300'
+      'P': 'bg-teal-500/20 text-teal-300'
     };
     return colorMap[cycle] || 'bg-gray-500/20 text-gray-300';
   };
@@ -427,7 +427,7 @@ export default function AdminPage() {
 
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-gray-900 via-pink-900 to-gray-900 flex items-center justify-center p-4">
         <Head>
           <title>Admin Login - RVCE Grade Calculator</title>
         </Head>
@@ -451,7 +451,7 @@ export default function AdminPage() {
                 id="adminPassword"
                 value={adminPassword}
                 onChange={(e) => setAdminPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 text-white"
+                className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 text-white"
                 placeholder="Enter admin password"
                 required
               />
@@ -460,7 +460,7 @@ export default function AdminPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full px-4 py-3 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white font-semibold rounded-lg transition-all duration-200 disabled:opacity-50"
+              className="w-full px-4 py-3 bg-gradient-to-r from-pink-500 to-teal-500 hover:from-pink-600 hover:to-teal-600 text-white font-semibold rounded-lg transition-all duration-200 disabled:opacity-50"
             >
               {loading ? 'Authenticating...' : 'Login'}
             </button>
@@ -471,7 +471,7 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 text-white p-4 sm:p-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-pink-900 to-gray-900 text-white p-4 sm:p-8">
       <Head>
         <title>Admin Dashboard - RVCE Grade Calculator</title>
       </Head>
@@ -488,7 +488,7 @@ export default function AdminPage() {
           <div className="flex gap-3">
             <button
               onClick={loadData}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition-colors"
+              className="px-4 py-2 bg-teal-600 hover:bg-teal-700 rounded-lg font-medium transition-colors"
             >
               Refresh
             </button>
@@ -515,7 +515,7 @@ export default function AdminPage() {
             onClick={() => setActiveTab('submissions')}
             className={`px-6 py-3 font-semibold transition-all ${
               activeTab === 'submissions'
-                ? 'text-purple-400 border-b-2 border-purple-400'
+                ? 'text-pink-400 border-b-2 border-pink-400'
                 : 'text-gray-400 hover:text-gray-300'
             }`}
           >
@@ -525,7 +525,7 @@ export default function AdminPage() {
             onClick={() => setActiveTab('issues')}
             className={`px-6 py-3 font-semibold transition-all ${
               activeTab === 'issues'
-                ? 'text-purple-400 border-b-2 border-purple-400'
+                ? 'text-pink-400 border-b-2 border-pink-400'
                 : 'text-gray-400 hover:text-gray-300'
             }`}
           >
@@ -536,7 +536,7 @@ export default function AdminPage() {
         {/* Loading State */}
         {loading && (
           <div className="text-center py-12">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-500"></div>
             <p className="mt-4 text-gray-400">Loading data...</p>
           </div>
         )}
@@ -586,7 +586,7 @@ export default function AdminPage() {
                                     idx === 0 ? 'bg-yellow-500/20 text-yellow-300' :
                                     idx === 1 ? 'bg-gray-400/20 text-gray-300' :
                                     idx === 2 ? 'bg-orange-600/20 text-orange-400' :
-                                    'bg-purple-500/20 text-purple-300'
+                                    'bg-pink-500/20 text-pink-300'
                                   }`}>
                                     {idx + 1}
                                   </div>
@@ -645,12 +645,12 @@ export default function AdminPage() {
                 <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
                   <button
                     onClick={() => setExpandedTopSGPA(!expandedTopSGPA)}
-                    className="w-full bg-gradient-to-r from-purple-900/40 to-gray-900 px-4 py-3 border-b border-gray-700 hover:from-purple-900/60 hover:to-gray-900 transition-colors cursor-pointer"
+                    className="w-full bg-gradient-to-r from-pink-900/40 to-gray-900 px-4 py-3 border-b border-gray-700 hover:from-pink-900/60 hover:to-gray-900 transition-colors cursor-pointer"
                   >
                     <div className="flex items-center justify-between">
                       <h3 className="text-lg font-semibold text-white flex items-center gap-2">
                         <svg 
-                          className={`w-5 h-5 text-purple-400 transform transition-transform duration-200 ${expandedTopSGPA ? 'rotate-90' : ''}`}
+                          className={`w-5 h-5 text-pink-400 transform transition-transform duration-200 ${expandedTopSGPA ? 'rotate-90' : ''}`}
                           fill="none" 
                           stroke="currentColor" 
                           viewBox="0 0 24 24"
@@ -658,7 +658,7 @@ export default function AdminPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                         🏆 Top Scorers - SGPA
-                        <span className="ml-2 px-2 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
+                        <span className="ml-2 px-2 py-1 bg-pink-500/20 text-pink-300 rounded-full text-sm">
                           Top {Math.min(10, getTopSGPAScorers.length)}
                         </span>
                       </h3>
@@ -680,7 +680,7 @@ export default function AdminPage() {
                                     idx === 0 ? 'bg-yellow-500/20 text-yellow-300' :
                                     idx === 1 ? 'bg-gray-400/20 text-gray-300' :
                                     idx === 2 ? 'bg-orange-600/20 text-orange-400' :
-                                    'bg-purple-500/20 text-purple-300'
+                                    'bg-pink-500/20 text-pink-300'
                                   }`}>
                                     {idx + 1}
                                   </div>
@@ -706,7 +706,7 @@ export default function AdminPage() {
                                   </div>
                                 </div>
                                 <div className="text-right">
-                                  <div className="text-2xl font-bold text-purple-400">{scorer.sgpa}</div>
+                                  <div className="text-2xl font-bold text-pink-400">{scorer.sgpa}</div>
                                   <div className="text-xs text-gray-400">SGPA</div>
                                 </div>
                               </div>
@@ -734,7 +734,7 @@ export default function AdminPage() {
                                         {course.results?.see !== undefined && (
                                           <div className="flex justify-between text-xs">
                                             <span className="text-gray-400">SEE Marks:</span>
-                                            <span className="text-blue-300 font-semibold">
+                                            <span className="text-teal-300 font-semibold">
                                               {course.results.see}/{course.courseDetails?.seeMax || 'N/A'}
                                             </span>
                                           </div>
@@ -753,14 +753,14 @@ export default function AdminPage() {
                                       <div className="flex justify-between items-center pt-2 border-t border-gray-700">
                                         <span className={`px-2 py-1 rounded text-xs font-bold ${
                                           course.results?.grade === 'O' ? 'bg-green-500/20 text-green-300' :
-                                          course.results?.grade === 'A+' ? 'bg-blue-500/20 text-blue-300' :
-                                          course.results?.grade === 'A' ? 'bg-purple-500/20 text-purple-300' :
+                                          course.results?.grade === 'A+' ? 'bg-teal-500/20 text-teal-300' :
+                                          course.results?.grade === 'A' ? 'bg-pink-500/20 text-pink-300' :
                                           course.results?.grade === 'F' ? 'bg-red-500/20 text-red-300' :
                                           'bg-yellow-500/20 text-yellow-300'
                                         }`}>
                                           {course.results?.grade || 'N/A'}
                                         </span>
-                                        <span className="text-purple-300 font-semibold">{course.results?.points || 0} pts</span>
+                                        <span className="text-pink-300 font-semibold">{course.results?.points || 0} pts</span>
                                       </div>
                                     </div>
                                   ))}
@@ -783,7 +783,7 @@ export default function AdminPage() {
                   type="checkbox"
                   checked={sortByIP}
                   onChange={(e) => setSortByIP(e.target.checked)}
-                  className="w-5 h-5 rounded bg-gray-700 border-gray-600 text-purple-500 focus:ring-2 focus:ring-purple-500"
+                  className="w-5 h-5 rounded bg-gray-700 border-gray-600 text-pink-500 focus:ring-2 focus:ring-pink-500"
                 />
                 <span className="text-gray-300 font-medium">Group by IP Address</span>
               </label>
@@ -842,23 +842,23 @@ export default function AdminPage() {
                           >
                             <h3 className="text-lg font-semibold text-white flex items-center gap-2 flex-wrap">
                               <svg 
-                                className={`w-5 h-5 text-purple-400 transform transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}
+                                className={`w-5 h-5 text-pink-400 transform transition-transform duration-200 ${isExpanded ? 'rotate-90' : ''}`}
                                 fill="none" 
                                 stroke="currentColor" 
                                 viewBox="0 0 24 24"
                               >
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                               </svg>
-                              <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <svg className="w-5 h-5 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
                               </svg>
-                              IP: <span className="font-mono text-purple-300">{ip}</span>
+                              IP: <span className="font-mono text-pink-300">{ip}</span>
                               {location !== 'Loading...' && location !== 'Unknown' && (
                                 <span className="text-sm text-gray-400 font-normal">
                                   📍 {location}
                                 </span>
                               )}
-                              <span className="ml-2 px-2 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm">
+                              <span className="ml-2 px-2 py-1 bg-pink-500/20 text-pink-300 rounded-full text-sm">
                                 {ipSubmissions.length} submission{ipSubmissions.length !== 1 ? 's' : ''}
                               </span>
                               {cCycleCount > 0 && (
@@ -867,7 +867,7 @@ export default function AdminPage() {
                                 </span>
                               )}
                               {pCycleCount > 0 && (
-                                <span className="px-2 py-1 bg-blue-500/20 text-blue-300 rounded-full text-xs">
+                                <span className="px-2 py-1 bg-teal-500/20 text-teal-300 rounded-full text-xs">
                                   P: {pCycleCount}
                                 </span>
                               )}
@@ -1035,7 +1035,7 @@ export default function AdminPage() {
                     <td className="px-4 py-3 whitespace-nowrap">
                       <button
                         onClick={() => toggleRowExpansion(index)}
-                        className="text-purple-400 hover:text-purple-300 focus:outline-none"
+                        className="text-pink-400 hover:text-pink-300 focus:outline-none"
                         title="View course details"
                       >
                         <svg
@@ -1077,7 +1077,7 @@ export default function AdminPage() {
                       )}
                     </td>
                     <td className="px-4 py-3 whitespace-nowrap">
-                      <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded-full text-sm font-semibold">
+                      <span className="px-2 py-1 bg-pink-500/20 text-pink-300 rounded-full text-sm font-semibold">
                         {submission.data?.sgpa || 'N/A'}
                       </span>
                     </td>
@@ -1181,7 +1181,7 @@ export default function AdminPage() {
                               </div>
                               <div className="bg-gray-900/50 rounded p-3">
                                 <p className="text-xs text-gray-400 mb-1">SGPA</p>
-                                <p className="text-sm text-white font-semibold text-purple-400 text-lg">{submission.data?.sgpa || 'N/A'}</p>
+                                <p className="text-sm text-white font-semibold text-pink-400 text-lg">{submission.data?.sgpa || 'N/A'}</p>
                               </div>
                               <div className="bg-gray-900/50 rounded p-3">
                                 <p className="text-xs text-gray-400 mb-1">Total Courses</p>
@@ -1222,8 +1222,8 @@ export default function AdminPage() {
                                     {course.results?.grade && (
                                       <span className={`px-3 py-1 rounded-full text-sm font-bold ${
                                         course.results.grade === 'O' ? 'bg-green-500/20 text-green-300' :
-                                        course.results.grade === 'A+' ? 'bg-blue-500/20 text-blue-300' :
-                                        course.results.grade === 'A' ? 'bg-purple-500/20 text-purple-300' :
+                                        course.results.grade === 'A+' ? 'bg-teal-500/20 text-teal-300' :
+                                        course.results.grade === 'A' ? 'bg-pink-500/20 text-pink-300' :
                                         course.results.grade === 'F' ? 'bg-red-500/20 text-red-300' :
                                         'bg-yellow-500/20 text-yellow-300'
                                       }`}>

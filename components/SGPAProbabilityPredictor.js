@@ -15,7 +15,7 @@ export default function SGPAProbabilityPredictor({ courses }) {
     return (
       <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6 mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
           </svg>
           <h3 className="text-xl font-bold text-white">SGPA Probability Predictor</h3>
@@ -33,7 +33,7 @@ export default function SGPAProbabilityPredictor({ courses }) {
       <div className={`relative overflow-hidden rounded-2xl shadow-lg ${
         recommendation.type === 'success' ? 'bg-gradient-to-br from-green-600/20 to-emerald-600/20 border border-green-500/30' :
         recommendation.type === 'warning' ? 'bg-gradient-to-br from-yellow-600/20 to-orange-600/20 border border-yellow-500/30' :
-        'bg-gradient-to-br from-blue-600/20 to-purple-600/20 border border-blue-500/30'
+        'bg-gradient-to-br from-teal-600/20 to-pink-600/20 border border-teal-500/30'
       }`}>
         <div className="p-6">
           <div className="flex items-start gap-4">
@@ -47,7 +47,7 @@ export default function SGPAProbabilityPredictor({ courses }) {
                   <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                 </svg>
               ) : (
-                <svg className="w-8 h-8 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-8 h-8 text-teal-400" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                 </svg>
               )}
@@ -64,7 +64,7 @@ export default function SGPAProbabilityPredictor({ courses }) {
       <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-3">
-            <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-6 h-6 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
             </svg>
             <h3 className="text-xl font-bold text-white">SGPA Probability Analysis</h3>
@@ -78,7 +78,7 @@ export default function SGPAProbabilityPredictor({ courses }) {
           {probabilityData.targets.map((target, index) => (
             <div
               key={index}
-              className="relative overflow-hidden bg-gray-800/50 rounded-xl p-4 border border-gray-700/50 hover:border-purple-500/50 transition-colors"
+              className="relative overflow-hidden bg-gray-800/50 rounded-xl p-4 border border-gray-700/50 hover:border-pink-500/50 transition-colors"
             >
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 {/* Left side - Target info */}
@@ -94,7 +94,7 @@ export default function SGPAProbabilityPredictor({ courses }) {
                         {target.label}
                       </span>
                       {index === 0 && (
-                        <span className="px-2 py-1 bg-purple-500/20 text-purple-300 rounded-full text-xs font-semibold">
+                        <span className="px-2 py-1 bg-pink-500/20 text-pink-300 rounded-full text-xs font-semibold">
                           Most Likely
                         </span>
                       )}
@@ -127,7 +127,7 @@ export default function SGPAProbabilityPredictor({ courses }) {
                   </div>
                   
                   <div className="flex flex-col items-center bg-gray-900/50 rounded-lg px-3 py-2">
-                    <svg className="w-5 h-5 text-purple-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 text-pink-400 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <span className="text-sm font-semibold text-white">{target.studyHoursEstimate}h</span>
@@ -176,32 +176,32 @@ export default function SGPAProbabilityPredictor({ courses }) {
       </div>
 
       {/* Study Tips */}
-      <div className="bg-gradient-to-br from-purple-600/10 to-blue-600/10 backdrop-blur-xl border border-purple-500/30 rounded-2xl p-6">
+      <div className="bg-gradient-to-br from-pink-600/10 to-teal-600/10 backdrop-blur-xl border border-pink-500/30 rounded-2xl p-6">
         <h4 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-          <svg className="w-5 h-5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-5 h-5 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
           </svg>
           Study Tips
         </h4>
         <ul className="space-y-2 text-sm text-gray-300">
           <li className="flex items-start gap-2">
-            <span className="text-purple-400 flex-shrink-0 mt-1">•</span>
+            <span className="text-pink-400 flex-shrink-0 mt-1">•</span>
             <span>Focus on understanding concepts rather than rote memorization</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-purple-400 flex-shrink-0 mt-1">•</span>
+            <span className="text-pink-400 flex-shrink-0 mt-1">•</span>
             <span>Practice previous year questions and sample papers</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-purple-400 flex-shrink-0 mt-1">•</span>
+            <span className="text-pink-400 flex-shrink-0 mt-1">•</span>
             <span>Create a study schedule and stick to it consistently</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-purple-400 flex-shrink-0 mt-1">•</span>
+            <span className="text-pink-400 flex-shrink-0 mt-1">•</span>
             <span>Take regular breaks to maintain focus and avoid burnout</span>
           </li>
           <li className="flex items-start gap-2">
-            <span className="text-purple-400 flex-shrink-0 mt-1">•</span>
+            <span className="text-pink-400 flex-shrink-0 mt-1">•</span>
             <span>Form study groups to discuss and clarify doubts</span>
           </li>
         </ul>
