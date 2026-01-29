@@ -206,8 +206,9 @@ export default function Home() {
                     setReportSuccess(false);
                   }}
                   className="text-gray-400 hover:text-cyan-400 transition-colors p-2 rounded-lg glass-effect"
+                  aria-label="Close modal"
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
@@ -233,7 +234,7 @@ export default function Home() {
 
                   <div className="mb-6">
                     <label htmlFor="issueTitle" className="block text-gray-300 text-sm font-semibold mb-2">
-                      Issue Title <span className="text-cyan-400">*</span>
+                      Issue Title <span className="text-red-400">*</span>
                     </label>
                     <input
                       type="text"
@@ -249,7 +250,7 @@ export default function Home() {
 
                   <div className="mb-6">
                     <label htmlFor="issueDescription" className="block text-gray-300 text-sm font-semibold mb-2">
-                      Description <span className="text-cyan-400">*</span>
+                      Description <span className="text-red-400">*</span>
                     </label>
                     <textarea
                       id="issueDescription"
