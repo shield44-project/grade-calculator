@@ -241,7 +241,7 @@ export default function SgpaCalculator() {
             onClick={() => handleCycleChange('C')}
             className={`group relative px-8 py-4 rounded-xl font-bold transition-all duration-300 ${
               selectedCycle === 'C'
-                ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-[0_0_30px_rgba(16,185,129,0.4)] scale-105'
+                ? 'bg-gradient-to-r from-cyan-500 via-teal-500 to-orange-500 text-white shadow-[0_0_30px_rgba(6,182,212,0.5)] scale-105'
                 : 'text-gray-400 hover:text-white hover:scale-105'
             }`}
           >
@@ -256,7 +256,7 @@ export default function SgpaCalculator() {
             onClick={() => handleCycleChange('P')}
             className={`group relative px-8 py-4 rounded-xl font-bold transition-all duration-300 ${
               selectedCycle === 'P'
-                ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-[0_0_30px_rgba(16,185,129,0.4)] scale-105'
+                ? 'bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 text-white shadow-[0_0_30px_rgba(139,92,246,0.5)] scale-105'
                 : 'text-gray-400 hover:text-white hover:scale-105'
             }`}
           >
@@ -276,7 +276,7 @@ export default function SgpaCalculator() {
       <div className="sticky top-4 z-20 mb-12">
         <div className="relative overflow-hidden rounded-3xl animate-scaleIn">
           {/* Glowing border effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 via-teal-500 to-amber-500 opacity-30 blur-xl animate-pulse"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-teal-500 to-orange-500 opacity-30 blur-xl animate-pulse"></div>
           
           {/* Main card with neumorphic effect */}
           <div className="relative neumorphic p-8 sm:p-10">
@@ -284,18 +284,18 @@ export default function SgpaCalculator() {
               // Show CGPA when both cycles have data
               <div className="space-y-8">
                 {/* CGPA Display */}
-                <div className="flex flex-col md:flex-row justify-between items-center gap-8 pb-8 border-b border-emerald-500/20">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-8 pb-8 border-b border-cyan-500/20">
                   <div className="text-center md:text-left">
-                    <p className="text-emerald-400 text-sm font-bold uppercase tracking-wider mb-2 flex items-center gap-2">
-                      <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                    <div className="text-cyan-400 text-sm font-bold uppercase tracking-wider mb-2 flex items-center gap-2">
+                      <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
                       Your Overall
-                    </p>
+                    </div>
                     <h2 className="text-4xl font-black gradient-text-cyan">CGPA Score</h2>
                   </div>
                   
                   <div className="relative group">
-                    <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full blur-2xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
-                    <div className="relative neumorphic-inset rounded-full p-10 border-4 border-emerald-500/30">
+                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500 to-teal-500 rounded-full blur-2xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                    <div className="relative neumorphic-inset rounded-full p-10 border-4 border-cyan-500/30">
                       <div className="text-6xl sm:text-7xl font-black gradient-text-cyan">
                         {cgpa}
                       </div>
@@ -314,7 +314,7 @@ export default function SgpaCalculator() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-white text-sm font-bold mb-1">C Cycle SGPA</p>
-                        <div className="w-12 h-1 bg-gradient-to-r from-emerald-400 to-transparent rounded-full"></div>
+                        <div className="w-12 h-1 bg-gradient-to-r from-cyan-400 to-transparent rounded-full"></div>
                       </div>
                       <div className="text-4xl font-black gradient-text-cyan">{cCycleSGPA}</div>
                     </div>
@@ -334,18 +334,18 @@ export default function SgpaCalculator() {
               // Show only SGPA when only one cycle has data
               <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                 <div className="text-center md:text-left">
-                  <p className="text-emerald-400 text-sm font-bold uppercase tracking-wider mb-2 flex items-center gap-2">
-                    <div className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                  <div className="text-cyan-400 text-sm font-bold uppercase tracking-wider mb-2 flex items-center gap-2">
+                    <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
                     Your Current
-                  </p>
+                  </div>
                   <h2 className="text-4xl font-black gradient-text-cyan">SGPA Score</h2>
                   <p className="text-amber-400 text-xs font-bold mt-2">({selectedCycle === 'C' ? 'C Cycle' : 'P Cycle'})</p>
                 </div>
                 
                 <div className="relative group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full blur-2xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
-                  <div className="relative neumorphic-inset rounded-full p-10 border-4 border-emerald-500/30">
-                    <div className="text-6xl sm:text-7xl font-black gradient-text-cyan">
+                  <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-amber-500 rounded-full blur-2xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
+                  <div className="relative neumorphic-inset rounded-full p-10 border-4 border-orange-500/30">
+                    <div className="text-6xl sm:text-7xl font-black gradient-text-orange">
                       {sgpa}
                     </div>
                   </div>
