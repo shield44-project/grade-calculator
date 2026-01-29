@@ -1,5 +1,111 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <rect width="100" height="100" rx="15" fill="#1e293b"/>
-  <text x="50" y="70" font-family="Arial, sans-serif" font-size="60" font-weight="bold" fill="#60a5fa" text-anchor="middle">A</text>
-  <text x="85" y="35" font-family="Arial, sans-serif" font-size="30" font-weight="bold" fill="#a78bfa" text-anchor="middle">+</text>
+  <!-- Animated gradient background -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1">
+        <animate attributeName="stop-color" values="#6366f1;#8b5cf6;#ec4899;#6366f1" dur="4s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="50%" style="stop-color:#8b5cf6;stop-opacity:1">
+        <animate attributeName="stop-color" values="#8b5cf6;#ec4899;#f59e0b;#8b5cf6" dur="4s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" style="stop-color:#06b6d4;stop-opacity:1">
+        <animate attributeName="stop-color" values="#06b6d4;#10b981;#6366f1;#06b6d4" dur="4s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+    
+    <linearGradient id="calcGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fff;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#e0e7ff;stop-opacity:1"/>
+    </linearGradient>
+    
+    <linearGradient id="aGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fbbf24;stop-opacity:1">
+        <animate attributeName="stop-color" values="#fbbf24;#f59e0b;#fbbf24" dur="2s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" style="stop-color:#f59e0b;stop-opacity:1">
+        <animate attributeName="stop-color" values="#f59e0b;#f97316;#f59e0b" dur="2s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+    
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+  
+  <!-- Rounded background with animated gradient -->
+  <rect width="100" height="100" rx="22" fill="url(#bgGrad)"/>
+  
+  <!-- Calculator body - neumorphic style -->
+  <rect x="20" y="15" width="60" height="70" rx="8" fill="url(#calcGrad)" opacity="0.95" filter="url(#shadow)"/>
+  
+  <!-- Calculator screen with gradient A+ -->
+  <rect x="26" y="21" width="48" height="20" rx="4" fill="#1e293b" opacity="0.8"/>
+  
+  <!-- A+ grade display -->
+  <text x="35" y="37" font-family="'Courier New', monospace" font-size="14" font-weight="bold" fill="url(#aGrad)" filter="url(#glow)">A+</text>
+  
+  <!-- Calculator buttons grid -->
+  <!-- Row 1 -->
+  <circle cx="32" cy="52" r="3.5" fill="#6366f1" opacity="0.7">
+    <animate attributeName="opacity" values="0.7;0.9;0.7" dur="3s" repeatCount="indefinite" begin="0s"/>
+  </circle>
+  <circle cx="44" cy="52" r="3.5" fill="#8b5cf6" opacity="0.7">
+    <animate attributeName="opacity" values="0.7;0.9;0.7" dur="3s" repeatCount="indefinite" begin="0.5s"/>
+  </circle>
+  <circle cx="56" cy="52" r="3.5" fill="#06b6d4" opacity="0.7">
+    <animate attributeName="opacity" values="0.7;0.9;0.7" dur="3s" repeatCount="indefinite" begin="1s"/>
+  </circle>
+  <circle cx="68" cy="52" r="3.5" fill="#10b981" opacity="0.7">
+    <animate attributeName="opacity" values="0.7;0.9;0.7" dur="3s" repeatCount="indefinite" begin="1.5s"/>
+  </circle>
+  
+  <!-- Row 2 -->
+  <circle cx="32" cy="62" r="3.5" fill="#ec4899" opacity="0.7">
+    <animate attributeName="opacity" values="0.7;0.9;0.7" dur="3s" repeatCount="indefinite" begin="2s"/>
+  </circle>
+  <circle cx="44" cy="62" r="3.5" fill="#f59e0b" opacity="0.7">
+    <animate attributeName="opacity" values="0.7;0.9;0.7" dur="3s" repeatCount="indefinite" begin="2.5s"/>
+  </circle>
+  <circle cx="56" cy="62" r="3.5" fill="#ef4444" opacity="0.7">
+    <animate attributeName="opacity" values="0.7;0.9;0.7" dur="3s" repeatCount="indefinite" begin="0s"/>
+  </circle>
+  <circle cx="68" cy="62" r="3.5" fill="#8b5cf6" opacity="0.7">
+    <animate attributeName="opacity" values="0.7;0.9;0.7" dur="3s" repeatCount="indefinite" begin="0.5s"/>
+  </circle>
+  
+  <!-- Row 3 -->
+  <circle cx="32" cy="72" r="3.5" fill="#06b6d4" opacity="0.7">
+    <animate attributeName="opacity" values="0.7;0.9;0.7" dur="3s" repeatCount="indefinite" begin="1s"/>
+  </circle>
+  <circle cx="44" cy="72" r="3.5" fill="#10b981" opacity="0.7">
+    <animate attributeName="opacity" values="0.7;0.9;0.7" dur="3s" repeatCount="indefinite" begin="1.5s"/>
+  </circle>
+  <circle cx="56" cy="72" r="3.5" fill="#6366f1" opacity="0.7">
+    <animate attributeName="opacity" values="0.7;0.9;0.7" dur="3s" repeatCount="indefinite" begin="2s"/>
+  </circle>
+  <circle cx="68" cy="72" r="3.5" fill="#ec4899" opacity="0.7">
+    <animate attributeName="opacity" values="0.7;0.9;0.7" dur="3s" repeatCount="indefinite" begin="2.5s"/>
+  </circle>
+  
+  <!-- Sparkle effects around the icon -->
+  <circle cx="15" cy="20" r="1.5" fill="#fbbf24" opacity="0.8">
+    <animate attributeName="opacity" values="0;0.8;0" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="r" values="1;2;1" dur="2s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="85" cy="30" r="1.5" fill="#06b6d4" opacity="0.8">
+    <animate attributeName="opacity" values="0;0.8;0" dur="2s" repeatCount="indefinite" begin="1s"/>
+    <animate attributeName="r" values="1;2;1" dur="2s" repeatCount="indefinite" begin="1s"/>
+  </circle>
+  <circle cx="12" cy="80" r="1.5" fill="#8b5cf6" opacity="0.8">
+    <animate attributeName="opacity" values="0;0.8;0" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+    <animate attributeName="r" values="1;2;1" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+  </circle>
 </svg>
