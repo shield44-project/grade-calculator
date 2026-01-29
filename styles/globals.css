@@ -2,14 +2,17 @@
 @import "tailwindcss";
 
 :root {
-  --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --gradient-secondary: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-  --gradient-success: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  --gradient-dark: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.3);
-  --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.4);
+  --gradient-primary: linear-gradient(145deg, #00d4ff 0%, #0099ff 100%);
+  --gradient-secondary: linear-gradient(145deg, #ff6b35 0%, #f7931e 100%);
+  --gradient-success: linear-gradient(145deg, #00ffb9 0%, #00d4aa 100%);
+  --gradient-dark: linear-gradient(145deg, #0a1929 0%, #1a2332 100%);
+  --shadow-neumorphic-inset: inset 8px 8px 16px #070d15, inset -8px -8px 16px #151f2d;
+  --shadow-neumorphic: 8px 8px 16px #070d15, -8px -8px 16px #151f2d;
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.4);
+  --shadow-glow-cyan: 0 0 30px rgba(0, 212, 255, 0.3);
+  --shadow-glow-orange: 0 0 30px rgba(255, 107, 53, 0.3);
 }
 
 * {
@@ -19,8 +22,27 @@
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: radial-gradient(ellipse at top, #1a1f36 0%, #0f1419 100%);
+  background: #0d1620;
+  background-image: 
+    radial-gradient(at 20% 30%, rgba(0, 212, 255, 0.08) 0px, transparent 50%),
+    radial-gradient(at 80% 70%, rgba(255, 107, 53, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(0, 153, 255, 0.05) 0px, transparent 50%);
   min-height: 100vh;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(0, 212, 255, 0.02) 2px, rgba(0, 212, 255, 0.02) 4px),
+    repeating-linear-gradient(-45deg, transparent, transparent 2px, rgba(255, 107, 53, 0.02) 2px, rgba(255, 107, 53, 0.02) 4px);
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* Custom animations */
@@ -57,10 +79,13 @@ body {
 
 @keyframes float {
   0%, 100% {
-    transform: translateY(0px);
+    transform: translateY(0px) rotate(0deg);
   }
-  50% {
-    transform: translateY(-10px);
+  33% {
+    transform: translateY(-15px) rotate(2deg);
+  }
+  66% {
+    transform: translateY(-5px) rotate(-2deg);
   }
 }
 
@@ -75,6 +100,44 @@ body {
   }
 }
 
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+@keyframes morphBlob {
+  0%, 100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+  50% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+  }
+}
+
+@keyframes rotateHue {
+  0% {
+    filter: hue-rotate(0deg);
+  }
+  100% {
+    filter: hue-rotate(360deg);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .animate-fadeIn {
   animation: fadeIn 0.6s ease-out;
 }
@@ -84,27 +147,88 @@ body {
 }
 
 .animate-float {
-  animation: float 3s ease-in-out infinite;
+  animation: float 6s ease-in-out infinite;
 }
 
 .animate-slideUp {
   animation: slideUp 0.4s ease-out;
 }
 
+.animate-shimmer {
+  animation: shimmer 3s linear infinite;
+}
+
+.animate-morphBlob {
+  animation: morphBlob 8s ease-in-out infinite;
+}
+
+.animate-scaleIn {
+  animation: scaleIn 0.5s ease-out;
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 10px;
+  width: 12px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1f36;
+  background: #0d1620;
+  border-left: 1px solid rgba(0, 212, 255, 0.1);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 5px;
+  background: linear-gradient(180deg, #00d4ff 0%, #0099ff 100%);
+  border-radius: 6px;
+  border: 2px solid #0d1620;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+  background: linear-gradient(180deg, #00e5ff 0%, #00aaff 100%);
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+}
+
+/* Neumorphic utility classes */
+.neumorphic {
+  background: #0d1620;
+  box-shadow: var(--shadow-neumorphic);
+}
+
+.neumorphic-inset {
+  background: #0d1620;
+  box-shadow: var(--shadow-neumorphic-inset);
+}
+
+.glass-effect {
+  background: rgba(13, 22, 32, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 212, 255, 0.1);
+}
+
+/* Geometric decoration elements */
+.geometric-shape {
+  position: absolute;
+  pointer-events: none;
+}
+
+.hexagon {
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.parallelogram {
+  transform: skew(-10deg);
+}
+
+/* Gradient text */
+.gradient-text-cyan {
+  background: linear-gradient(145deg, #00d4ff, #00ffb9);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-orange {
+  background: linear-gradient(145deg, #ff6b35, #f7931e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
