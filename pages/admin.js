@@ -437,7 +437,7 @@ export default function AdminPage() {
   };
 
   // Get all unique courses from submissions
-  const getAllCourses = useMemo(() => {
+  const allCourses = useMemo(() => {
     const coursesSet = new Set();
     submissions.forEach(sub => {
       sub.data?.courses?.forEach(course => {
@@ -1118,7 +1118,7 @@ export default function AdminPage() {
                         className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
                       >
                         <option value="">-- Select a course --</option>
-                        {getAllCourses.map(course => (
+                        {allCourses.map(course => (
                           <option key={course.code} value={course.code}>
                             {course.code} - {course.title}
                           </option>
