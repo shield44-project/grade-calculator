@@ -25,6 +25,8 @@ export default function AdminPage() {
   // User Search/Filter states
   const [searchMarks, setSearchMarks] = useState('');
   const [searchCourse, setSearchCourse] = useState('');
+  const [searchCourse2, setSearchCourse2] = useState(''); // Second course for multi-subject search
+  const [searchCourse3, setSearchCourse3] = useState(''); // Third course for multi-subject search
   const [searchMarksType, setSearchMarksType] = useState('cie'); // 'cie', 'see', or 'final'
   const [filterCycle, setFilterCycle] = useState(''); // '', 'C', or 'P'
   const [filterDeviceType, setFilterDeviceType] = useState(''); // '', 'Desktop', 'Mobile', 'Tablet'
@@ -32,6 +34,7 @@ export default function AdminPage() {
   const [filterDateFrom, setFilterDateFrom] = useState('');
   const [filterDateTo, setFilterDateTo] = useState('');
   const [searchResults, setSearchResults] = useState([]);
+  const [searchPerformed, setSearchPerformed] = useState(false); // Track if search was performed
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -456,22 +459,40 @@ export default function AdminPage() {
   const performSearch = () => {
     let results = [...submissions];
 
-    // Filter by marks
-    if (searchMarks && searchCourse) {
+    // Filter by marks - support multiple subjects
+    if (searchMarks) {
       const targetMarks = parseFloat(searchMarks);
       if (!isNaN(targetMarks)) {
-        results = results.filter(sub => {
-          const course = sub.data?.courses?.find(c => c.courseDetails?.code === searchCourse);
-          if (!course) return false;
+        // Collect all selected courses
+        const selectedCourses = [searchCourse, searchCourse2, searchCourse3].filter(c => c);
+        
+        if (selectedCourses.length > 0) {
+          // User must have the marks in ANY of the selected subjects
+          results = results.filter(sub => {
+            return selectedCourses.some(courseCode => {
+              const course = sub.data?.courses?.find(c => c.courseDetails?.code === courseCode);
+              if (!course) return false;
 
-          if (searchMarksType === 'cie') {
-            return course.results?.totalCie === targetMarks;
-          } else if (searchMarksType === 'see') {
-            return course.results?.see === targetMarks;
-          } else if (searchMarksType === 'final') {
-            return Math.abs((course.results?.finalScore || 0) - targetMarks) < 0.01;
-          }
-          return false;
+              if (searchMarksType === 'cie') {
+                return course.results?.totalCie === targetMarks;
+              } else if (searchMarksType === 'see') {
+                return course.results?.see === targetMarks;
+              } else if (searchMarksType === 'final') {
+                return Math.abs((course.results?.finalScore || 0) - targetMarks) < 0.01;
+              }
+              return false;
+            });
+          });
+        }
+      }
+    } else if (searchCourse || searchCourse2 || searchCourse3) {
+      // If no marks specified but courses are selected, filter by those who have taken these courses
+      const selectedCourses = [searchCourse, searchCourse2, searchCourse3].filter(c => c);
+      if (selectedCourses.length > 0) {
+        results = results.filter(sub => {
+          return selectedCourses.some(courseCode => {
+            return sub.data?.courses?.some(c => c.courseDetails?.code === courseCode);
+          });
         });
       }
     }
@@ -503,12 +524,15 @@ export default function AdminPage() {
     }
 
     setSearchResults(results);
+    setSearchPerformed(true); // Mark that search has been performed
   };
 
   // Clear all filters
   const clearFilters = () => {
     setSearchMarks('');
     setSearchCourse('');
+    setSearchCourse2('');
+    setSearchCourse3('');
     setSearchMarksType('cie');
     setFilterCycle('');
     setFilterDeviceType('');
@@ -516,6 +540,7 @@ export default function AdminPage() {
     setFilterDateFrom('');
     setFilterDateTo('');
     setSearchResults([]);
+    setSearchPerformed(false); // Reset search performed flag
   };
 
   if (!isAuthenticated) {
@@ -1105,52 +1130,95 @@ export default function AdminPage() {
                 <div className="bg-gray-900/50 rounded-lg p-4 border border-gray-700">
                   <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
                     <span className="text-green-400">📊</span>
-                    Search by Marks
+                    Search by Marks (Multi-Subject Support)
                   </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-gray-300 text-sm font-medium mb-2">
-                        Select Course
-                      </label>
-                      <select
-                        value={searchCourse}
-                        onChange={(e) => setSearchCourse(e.target.value)}
-                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
-                      >
-                        <option value="">-- Select a course --</option>
-                        {allCourses.map(course => (
-                          <option key={course.code} value={course.code}>
-                            {course.code} - {course.title}
-                          </option>
-                        ))}
-                      </select>
+                  <div className="space-y-4">
+                    {/* First Row: Course selections */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <label className="block text-gray-300 text-sm font-medium mb-2">
+                          Subject 1
+                        </label>
+                        <select
+                          value={searchCourse}
+                          onChange={(e) => setSearchCourse(e.target.value)}
+                          className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+                        >
+                          <option value="">-- Select subject 1 --</option>
+                          {allCourses.map(course => (
+                            <option key={course.code} value={course.code}>
+                              {course.code} - {course.title}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-gray-300 text-sm font-medium mb-2">
+                          Subject 2 (Optional)
+                        </label>
+                        <select
+                          value={searchCourse2}
+                          onChange={(e) => setSearchCourse2(e.target.value)}
+                          className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+                        >
+                          <option value="">-- Select subject 2 --</option>
+                          {allCourses.map(course => (
+                            <option key={course.code} value={course.code}>
+                              {course.code} - {course.title}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-gray-300 text-sm font-medium mb-2">
+                          Subject 3 (Optional)
+                        </label>
+                        <select
+                          value={searchCourse3}
+                          onChange={(e) => setSearchCourse3(e.target.value)}
+                          className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+                        >
+                          <option value="">-- Select subject 3 --</option>
+                          {allCourses.map(course => (
+                            <option key={course.code} value={course.code}>
+                              {course.code} - {course.title}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
                     </div>
-                    <div>
-                      <label className="block text-gray-300 text-sm font-medium mb-2">
-                        Marks Type
-                      </label>
-                      <select
-                        value={searchMarksType}
-                        onChange={(e) => setSearchMarksType(e.target.value)}
-                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
-                      >
-                        <option value="cie">CIE Marks</option>
-                        <option value="see">SEE Marks</option>
-                        <option value="final">Final Score</option>
-                      </select>
+                    {/* Second Row: Marks Type and Value */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-gray-300 text-sm font-medium mb-2">
+                          Marks Type
+                        </label>
+                        <select
+                          value={searchMarksType}
+                          onChange={(e) => setSearchMarksType(e.target.value)}
+                          className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+                        >
+                          <option value="cie">CIE Marks</option>
+                          <option value="see">SEE Marks</option>
+                          <option value="final">Final Score</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-gray-300 text-sm font-medium mb-2">
+                          Marks Value (Optional)
+                        </label>
+                        <input
+                          type="number"
+                          value={searchMarks}
+                          onChange={(e) => setSearchMarks(e.target.value)}
+                          placeholder="Enter marks (e.g., 92)"
+                          className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+                        />
+                      </div>
                     </div>
-                    <div>
-                      <label className="block text-gray-300 text-sm font-medium mb-2">
-                        Marks Value
-                      </label>
-                      <input
-                        type="number"
-                        value={searchMarks}
-                        onChange={(e) => setSearchMarks(e.target.value)}
-                        placeholder="Enter marks (e.g., 92)"
-                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
-                      />
-                    </div>
+                    <p className="text-sm text-gray-400 italic">
+                      💡 Tip: Select 1-3 subjects to search. If marks value is provided, users with matching marks in ANY of the selected subjects will be shown.
+                    </p>
                   </div>
                 </div>
 
@@ -1354,7 +1422,7 @@ export default function AdminPage() {
             )}
 
             {/* No Results Message */}
-            {searchResults.length === 0 && (searchMarks || filterCycle || filterDeviceType || filterOS || filterDateFrom || filterDateTo) && (
+            {searchPerformed && searchResults.length === 0 && (
               <div className="text-center py-12 bg-gray-800 rounded-xl border border-gray-700">
                 <svg className="w-16 h-16 text-gray-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
