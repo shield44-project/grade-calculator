@@ -14,13 +14,24 @@ export default function AdminPage() {
   const [issuesCount, setIssuesCount] = useState(0);
   const [expandedRow, setExpandedRow] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
-  const [activeTab, setActiveTab] = useState('submissions'); // 'submissions' or 'issues'
+  const [activeTab, setActiveTab] = useState('submissions'); // 'submissions', 'issues', or 'search'
   const [sortByIP, setSortByIP] = useState(true); // Enable IP sorting by default
   const [expandedIPs, setExpandedIPs] = useState({}); // Track which IP sections are expanded
   const [ipLocations, setIpLocations] = useState({}); // Cache for IP location data
   const [expandedTopCIE, setExpandedTopCIE] = useState(false); // Track if top CIE scorers section is expanded
   const [expandedTopSGPA, setExpandedTopSGPA] = useState(false); // Track if top SGPA section is expanded
   const [deleteIPConfirm, setDeleteIPConfirm] = useState(null); // Track which IP is being confirmed for deletion
+  
+  // User Search/Filter states
+  const [searchMarks, setSearchMarks] = useState('');
+  const [searchCourse, setSearchCourse] = useState('');
+  const [searchMarksType, setSearchMarksType] = useState('cie'); // 'cie', 'see', or 'final'
+  const [filterCycle, setFilterCycle] = useState(''); // '', 'C', or 'P'
+  const [filterDeviceType, setFilterDeviceType] = useState(''); // '', 'Desktop', 'Mobile', 'Tablet'
+  const [filterOS, setFilterOS] = useState(''); // '', 'Windows', 'macOS', 'Linux', 'Android', 'iOS'
+  const [filterDateFrom, setFilterDateFrom] = useState('');
+  const [filterDateTo, setFilterDateTo] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -425,6 +436,88 @@ export default function AdminPage() {
     window.URL.revokeObjectURL(url);
   };
 
+  // Get all unique courses from submissions
+  const allCourses = useMemo(() => {
+    const coursesSet = new Set();
+    submissions.forEach(sub => {
+      sub.data?.courses?.forEach(course => {
+        if (course.courseDetails?.code && course.courseDetails?.title) {
+          coursesSet.add(JSON.stringify({
+            code: course.courseDetails.code,
+            title: course.courseDetails.title
+          }));
+        }
+      });
+    });
+    return Array.from(coursesSet).map(c => JSON.parse(c)).sort((a, b) => a.code.localeCompare(b.code));
+  }, [submissions]);
+
+  // Search and filter function
+  const performSearch = () => {
+    let results = [...submissions];
+
+    // Filter by marks
+    if (searchMarks && searchCourse) {
+      const targetMarks = parseFloat(searchMarks);
+      if (!isNaN(targetMarks)) {
+        results = results.filter(sub => {
+          const course = sub.data?.courses?.find(c => c.courseDetails?.code === searchCourse);
+          if (!course) return false;
+
+          if (searchMarksType === 'cie') {
+            return course.results?.totalCie === targetMarks;
+          } else if (searchMarksType === 'see') {
+            return course.results?.see === targetMarks;
+          } else if (searchMarksType === 'final') {
+            return Math.abs((course.results?.finalScore || 0) - targetMarks) < 0.01;
+          }
+          return false;
+        });
+      }
+    }
+
+    // Filter by cycle
+    if (filterCycle) {
+      results = results.filter(sub => sub.cycle === filterCycle);
+    }
+
+    // Filter by device type
+    if (filterDeviceType) {
+      results = results.filter(sub => sub.deviceInfo?.device === filterDeviceType);
+    }
+
+    // Filter by OS
+    if (filterOS) {
+      results = results.filter(sub => sub.deviceInfo?.os === filterOS);
+    }
+
+    // Filter by date range
+    if (filterDateFrom) {
+      const fromDate = new Date(filterDateFrom);
+      results = results.filter(sub => new Date(sub.timestamp) >= fromDate);
+    }
+    if (filterDateTo) {
+      const toDate = new Date(filterDateTo);
+      toDate.setHours(23, 59, 59, 999); // Include the entire day
+      results = results.filter(sub => new Date(sub.timestamp) <= toDate);
+    }
+
+    setSearchResults(results);
+  };
+
+  // Clear all filters
+  const clearFilters = () => {
+    setSearchMarks('');
+    setSearchCourse('');
+    setSearchMarksType('cie');
+    setFilterCycle('');
+    setFilterDeviceType('');
+    setFilterOS('');
+    setFilterDateFrom('');
+    setFilterDateTo('');
+    setSearchResults([]);
+  };
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-pink-900 to-gray-900 flex items-center justify-center p-4">
@@ -530,6 +623,16 @@ export default function AdminPage() {
             }`}
           >
             Issues ({issuesCount})
+          </button>
+          <button
+            onClick={() => setActiveTab('search')}
+            className={`px-6 py-3 font-semibold transition-all ${
+              activeTab === 'search'
+                ? 'text-pink-400 border-b-2 border-pink-400'
+                : 'text-gray-400 hover:text-gray-300'
+            }`}
+          >
+            🔍 User Search
           </button>
         </div>
 
@@ -983,6 +1086,284 @@ export default function AdminPage() {
               </div>
             )}
           </>
+        )}
+
+        {/* User Search Tab */}
+        {!loading && activeTab === 'search' && (
+          <div className="space-y-6">
+            {/* Search Filters Card */}
+            <div className="bg-gray-800 rounded-xl border border-gray-700 p-6">
+              <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+                <svg className="w-6 h-6 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                Advanced User Search & Filters
+              </h2>
+
+              <div className="space-y-6">
+                {/* Marks Search Section */}
+                <div className="bg-gray-900/50 rounded-lg p-4 border border-gray-700">
+                  <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                    <span className="text-green-400">📊</span>
+                    Search by Marks
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-gray-300 text-sm font-medium mb-2">
+                        Select Course
+                      </label>
+                      <select
+                        value={searchCourse}
+                        onChange={(e) => setSearchCourse(e.target.value)}
+                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+                      >
+                        <option value="">-- Select a course --</option>
+                        {allCourses.map(course => (
+                          <option key={course.code} value={course.code}>
+                            {course.code} - {course.title}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-gray-300 text-sm font-medium mb-2">
+                        Marks Type
+                      </label>
+                      <select
+                        value={searchMarksType}
+                        onChange={(e) => setSearchMarksType(e.target.value)}
+                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+                      >
+                        <option value="cie">CIE Marks</option>
+                        <option value="see">SEE Marks</option>
+                        <option value="final">Final Score</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-gray-300 text-sm font-medium mb-2">
+                        Marks Value
+                      </label>
+                      <input
+                        type="number"
+                        value={searchMarks}
+                        onChange={(e) => setSearchMarks(e.target.value)}
+                        placeholder="Enter marks (e.g., 92)"
+                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Additional Filters Section */}
+                <div className="bg-gray-900/50 rounded-lg p-4 border border-gray-700">
+                  <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                    <span className="text-teal-400">🎯</span>
+                    Additional Filters
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div>
+                      <label className="block text-gray-300 text-sm font-medium mb-2">
+                        Cycle Type
+                      </label>
+                      <select
+                        value={filterCycle}
+                        onChange={(e) => setFilterCycle(e.target.value)}
+                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+                      >
+                        <option value="">All Cycles</option>
+                        <option value="C">C Cycle (Chemistry)</option>
+                        <option value="P">P Cycle (Physics)</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-gray-300 text-sm font-medium mb-2">
+                        Device Type
+                      </label>
+                      <select
+                        value={filterDeviceType}
+                        onChange={(e) => setFilterDeviceType(e.target.value)}
+                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+                      >
+                        <option value="">All Devices</option>
+                        <option value="Desktop">Desktop</option>
+                        <option value="Mobile">Mobile</option>
+                        <option value="Tablet">Tablet</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-gray-300 text-sm font-medium mb-2">
+                        Operating System
+                      </label>
+                      <select
+                        value={filterOS}
+                        onChange={(e) => setFilterOS(e.target.value)}
+                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+                      >
+                        <option value="">All OS</option>
+                        <option value="Windows">Windows</option>
+                        <option value="macOS">macOS</option>
+                        <option value="Linux">Linux</option>
+                        <option value="Android">Android</option>
+                        <option value="iOS">iOS</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Date Range Filter */}
+                <div className="bg-gray-900/50 rounded-lg p-4 border border-gray-700">
+                  <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                    <span className="text-yellow-400">📅</span>
+                    Date Range
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-gray-300 text-sm font-medium mb-2">
+                        From Date
+                      </label>
+                      <input
+                        type="date"
+                        value={filterDateFrom}
+                        onChange={(e) => setFilterDateFrom(e.target.value)}
+                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-gray-300 text-sm font-medium mb-2">
+                        To Date
+                      </label>
+                      <input
+                        type="date"
+                        value={filterDateTo}
+                        onChange={(e) => setFilterDateTo(e.target.value)}
+                        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-pink-500"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-4 justify-end">
+                  <button
+                    onClick={clearFilters}
+                    className="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition-colors"
+                  >
+                    Clear All Filters
+                  </button>
+                  <button
+                    onClick={performSearch}
+                    className="px-6 py-3 bg-gradient-to-r from-pink-500 to-teal-500 hover:from-pink-600 hover:to-teal-600 text-white font-semibold rounded-lg transition-all duration-200"
+                  >
+                    🔍 Search Users
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Search Results */}
+            {searchResults.length > 0 && (
+              <div className="bg-gray-800 rounded-xl border border-gray-700 overflow-hidden">
+                <div className="bg-gradient-to-r from-green-900/40 to-gray-900 px-6 py-4 border-b border-gray-700">
+                  <h3 className="text-xl font-semibold text-white flex items-center gap-2">
+                    <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                    </svg>
+                    Search Results
+                    <span className="ml-2 px-3 py-1 bg-green-500/20 text-green-300 rounded-full text-sm">
+                      {searchResults.length} user{searchResults.length !== 1 ? 's' : ''} found
+                    </span>
+                  </h3>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-900">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase">#</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase">Username</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase">IP Address</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase">Cycle</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase">SGPA</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase">Device</th>
+                        <th className="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase">Date</th>
+                        {searchCourse && (
+                          <th className="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase">
+                            {searchCourse} - {searchMarksType.toUpperCase()}
+                          </th>
+                        )}
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-700">
+                      {searchResults.map((result, idx) => {
+                        const location = ipLocations[result.ipAddress] || 'Loading...';
+                        const course = searchCourse ? result.data?.courses?.find(c => c.courseDetails?.code === searchCourse) : null;
+                        let marksValue = 'N/A';
+                        if (course) {
+                          if (searchMarksType === 'cie') {
+                            marksValue = course.results?.totalCie || 'N/A';
+                          } else if (searchMarksType === 'see') {
+                            marksValue = course.results?.see || 'N/A';
+                          } else if (searchMarksType === 'final') {
+                            marksValue = course.results?.finalScore?.toFixed(2) || 'N/A';
+                          }
+                        }
+                        
+                        return (
+                          <tr key={idx} className="hover:bg-gray-700/50 transition-colors">
+                            <td className="px-4 py-3 text-gray-300">{idx + 1}</td>
+                            <td className="px-4 py-3">
+                              <div className="text-white font-medium">{result.username || 'Guest'}</div>
+                              {result.loginTime && (
+                                <div className="text-xs text-gray-400">
+                                  Login: {formatDate(result.loginTime)}
+                                </div>
+                              )}
+                            </td>
+                            <td className="px-4 py-3">
+                              <div className="font-mono text-pink-300 text-sm">{result.ipAddress || 'Unknown'}</div>
+                              {location !== 'Loading...' && location !== 'Unknown' && (
+                                <div className="text-xs text-gray-400">{location}</div>
+                              )}
+                            </td>
+                            <td className="px-4 py-3">
+                              {result.cycle ? (
+                                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getCycleBadgeColor(result.cycle)}`}>
+                                  {result.cycle}
+                                </span>
+                              ) : (
+                                <span className="text-gray-500">N/A</span>
+                              )}
+                            </td>
+                            <td className="px-4 py-3 text-white font-semibold">{result.data?.sgpa || 'N/A'}</td>
+                            <td className="px-4 py-3">
+                              <div className="text-gray-300 text-sm">{result.deviceInfo?.device || 'Unknown'}</div>
+                              <div className="text-xs text-gray-400">{result.deviceInfo?.os || 'Unknown'}</div>
+                            </td>
+                            <td className="px-4 py-3 text-gray-300 text-sm">{formatDate(result.timestamp)}</td>
+                            {searchCourse && (
+                              <td className="px-4 py-3">
+                                <span className="text-green-400 font-semibold">{marksValue}</span>
+                              </td>
+                            )}
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* No Results Message */}
+            {searchResults.length === 0 && (searchMarks || filterCycle || filterDeviceType || filterOS || filterDateFrom || filterDateTo) && (
+              <div className="text-center py-12 bg-gray-800 rounded-xl border border-gray-700">
+                <svg className="w-16 h-16 text-gray-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <p className="text-gray-400 text-lg">No users found matching your search criteria</p>
+                <p className="text-gray-500 text-sm mt-2">Try adjusting your filters or search parameters</p>
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>
