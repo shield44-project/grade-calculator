@@ -49,7 +49,6 @@ const RESOURCES = [
       { title: 'cppreference.com', url: 'https://en.cppreference.com', description: 'Official C++ language and standard library reference' },
       { title: 'MDN Web Docs', url: 'https://developer.mozilla.org', description: 'Authoritative reference for HTML, CSS, and JavaScript' },
       { title: 'Striver (takeUforward)', url: 'https://youtube.com/@takeUforward', description: 'Best DSA & CP YouTube channel — A-Z DSA sheet by Striver' },
-      { title: 'Apna College (YouTube)', url: 'https://youtube.com/@ApnaCollegeOfficial', description: 'C++, Java, DSA & placement prep in Hindi/English' },
       { title: 'CodeWithHarry (YouTube)', url: 'https://youtube.com/@CodeWithHarry', description: 'Programming tutorials in Hindi — C, Python, web dev & more' },
     ],
   },
