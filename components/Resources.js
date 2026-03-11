@@ -45,6 +45,11 @@ const RESOURCES = [
       { title: 'GeeksforGeeks', url: 'https://geeksforgeeks.org', description: 'Data structures, algorithms, C/C++/Python' },
       { title: 'LeetCode', url: 'https://leetcode.com', description: 'Coding practice and interview prep' },
       { title: 'W3Schools', url: 'https://w3schools.com', description: 'Quick reference for web and programming basics' },
+      { title: 'LearnCpp.com', url: 'https://learncpp.com', description: 'Free, comprehensive C++ tutorials for beginners to advanced' },
+      { title: 'cppreference.com', url: 'https://en.cppreference.com', description: 'Official C++ language and standard library reference' },
+      { title: 'MDN Web Docs', url: 'https://developer.mozilla.org', description: 'Authoritative reference for HTML, CSS, and JavaScript' },
+      { title: 'Striver (takeUforward)', url: 'https://youtube.com/@takeUforward', description: 'Best DSA & CP YouTube channel — A-Z DSA sheet by Striver' },
+      { title: 'CodeWithHarry (YouTube)', url: 'https://youtube.com/@CodeWithHarry', description: 'Programming tutorials in Hindi — C, Python, web dev & more' },
     ],
   },
   {
