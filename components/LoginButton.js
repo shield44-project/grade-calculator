@@ -2,30 +2,24 @@
 import { useState, useEffect } from 'react';
 
 export default function LoginButton() {
-  // Initialize state from localStorage
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return !!localStorage.getItem('rvce-calculator-username');
-    }
-    return false;
-  });
-  
-  const [username, setUsername] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('rvce-calculator-username') || '';
-    }
-    return '';
-  });
-  
-  const [showModal, setShowModal] = useState(() => {
-    // Show modal by default if user is not logged in
-    if (typeof window !== 'undefined') {
-      return !localStorage.getItem('rvce-calculator-username');
-    }
-    return false;
-  });
+  // Always start with safe server-side defaults to avoid hydration mismatch.
+  // The real values are loaded from localStorage in a useEffect after mount.
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState('');
+  const [showModal, setShowModal] = useState(false);
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
   const [error, setError] = useState('');
+
+  // Hydrate from localStorage after first render (client only)
+  useEffect(() => {
+    const saved = localStorage.getItem('rvce-calculator-username');
+    if (saved) {
+      setIsLoggedIn(true);
+      setUsername(saved);
+    } else {
+      setShowModal(true);
+    }
+  }, []);
 
   // Handle opening modal and scrolling to top
   const handleOpenModal = () => {
