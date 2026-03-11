@@ -2,25 +2,25 @@
 import { useState, useEffect, useCallback } from 'react';
 
 const ATTENDANCE_STORAGE_KEY = 'rvce-attendance-data';
-const MIN_ATTENDANCE = 75;
+const MIN_ATTENDANCE = 85;
 
 function getAttendanceColor(pct) {
-  if (pct >= 85) return { text: 'text-green-400', bg: 'bg-green-500', badge: 'bg-green-500/15 text-green-300 border-green-700/30' };
+  if (pct >= MIN_ATTENDANCE) return { text: 'text-green-400', bg: 'bg-green-500', badge: 'bg-green-500/15 text-green-300 border-green-700/30' };
   if (pct >= 75) return { text: 'text-yellow-400', bg: 'bg-yellow-500', badge: 'bg-yellow-500/15 text-yellow-300 border-yellow-700/30' };
   return { text: 'text-red-400', bg: 'bg-red-500', badge: 'bg-red-500/15 text-red-300 border-red-700/30' };
 }
 
 function calcClassesNeeded(held, attended) {
   if (attended / held >= MIN_ATTENDANCE / 100 || held === 0) return 0;
-  // x = extra classes to attend to reach 75%: (attended+x)/(held+x) >= 0.75
-  // attended + x >= 0.75 * held + 0.75 * x  =>  0.25x >= 0.75*held - attended
+  // x = extra classes to attend to reach 85%: (attended+x)/(held+x) >= 0.85
+  // attended + x >= 0.85 * held + 0.85 * x  =>  0.15x >= 0.85*held - attended
   const needed = Math.ceil((MIN_ATTENDANCE / 100 * held - attended) / (1 - MIN_ATTENDANCE / 100));
   return Math.max(0, needed);
 }
 
 function calcSafeSkips(held, attended) {
   if (held === 0) return 0;
-  // (attended) / (held + x) >= 0.75  =>  held + x <= attended / 0.75
+  // (attended) / (held + x) >= 0.85  =>  held + x <= attended / 0.85
   const maxHeld = Math.floor(attended / (MIN_ATTENDANCE / 100));
   return Math.max(0, maxHeld - held);
 }
@@ -123,7 +123,7 @@ export default function AttendanceChecker() {
               <div>
                 <h2 className="text-2xl font-bold text-white mb-1">Attendance Tracker</h2>
                 <p className="text-sm text-gray-400">
-                  RVCE requires <span className="text-orange-400 font-semibold">≥ 75%</span> attendance to be eligible for SEE
+                  RVCE requires <span className="text-orange-400 font-semibold">≥ 85%</span> attendance to be eligible for SEE
                 </p>
               </div>
               {overallPct !== null && (
@@ -179,7 +179,7 @@ export default function AttendanceChecker() {
                       <h3 className="font-bold text-white text-base truncate">{subject.name}</h3>
                       {pct !== null ? (
                         <span className={`inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-lg border mt-1 ${colors.badge}`}>
-                          {pct >= 85 ? '✓ Good' : pct >= 75 ? '⚠ Borderline' : '✗ Low'} — {pct}%
+                          {pct >= MIN_ATTENDANCE ? '✓ Good' : pct >= 75 ? '⚠ At Risk' : '✗ Low'} — {pct}%
                         </span>
                       ) : (
                         <span className="text-xs text-gray-500">No classes recorded</span>
@@ -296,10 +296,10 @@ export default function AttendanceChecker() {
                             : 'bg-yellow-500/10 border border-yellow-700/30 text-yellow-300'
                         }`}>
                           {pct < MIN_ATTENDANCE
-                            ? `⚠ Attend next ${needed} class${needed !== 1 ? 'es' : ''} consecutively to reach 75%`
+                            ? `⚠ Attend next ${needed} class${needed !== 1 ? 'es' : ''} consecutively to reach 85%`
                             : canSkip > 0
                             ? `✓ You can safely miss up to ${canSkip} more class${canSkip !== 1 ? 'es' : ''}`
-                            : '⚠ Don\'t miss any more classes — right at 75%'}
+                            : '⚠ Don\'t miss any more classes — right at 85%'}
                         </div>
                       )}
 
@@ -417,7 +417,7 @@ export default function AttendanceChecker() {
             </svg>
           </div>
           <div className="text-sm text-gray-400">
-            <span className="font-semibold text-white">Note:</span> Attendance data is saved locally in your browser. RVCE mandates a minimum of 75% attendance per subject to be eligible for SEE (end-semester exams).
+            <span className="font-semibold text-white">Note:</span> Attendance data is saved locally in your browser. RVCE mandates a minimum of 85% attendance per subject to be eligible for SEE (end-semester exams).
           </div>
         </div>
       </div>
