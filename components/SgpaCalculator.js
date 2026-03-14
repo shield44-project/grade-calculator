@@ -234,19 +234,29 @@ export default function SgpaCalculator() {
 
   return (
     <div className="w-full mx-auto animate-fadeIn">
-      {/* Cycle Selector with neumorphic design */}
-      <div className="mb-12 flex justify-center">
-        <div className="inline-flex neumorphic rounded-2xl p-2 shadow-2xl">
+      {/* Cycle Selector */}
+      <div className="mb-10 flex justify-center">
+        <div
+          className="inline-flex rounded-2xl p-1.5"
+          style={{
+            background: 'rgba(255,255,255,0.04)',
+            border: '1px solid rgba(124,58,237,0.2)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+          }}
+        >
           <button
             onClick={() => handleCycleChange('C')}
-            className={`group relative px-8 py-4 rounded-xl font-bold transition-all duration-300 ${
-              selectedCycle === 'C'
-                ? 'bg-gradient-to-r from-cyan-500 via-teal-500 to-orange-500 text-white shadow-[0_0_30px_rgba(6,182,212,0.5)] scale-105'
-                : 'text-gray-400 hover:text-white hover:scale-105'
+            className={`group relative px-6 py-3 rounded-xl font-bold transition-all duration-300 text-sm ${
+              selectedCycle === 'C' ? 'text-white scale-[1.02]' : 'text-gray-400 hover:text-white hover:scale-[1.02]'
             }`}
+            style={
+              selectedCycle === 'C'
+                ? { background: 'linear-gradient(135deg,#06b6d4,#3b82f6,#7c3aed)', boxShadow: '0 0 20px rgba(6,182,212,0.4)' }
+                : {}
+            }
           >
             <span className="relative z-10 flex items-center gap-2">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2-.712V17a1 1 0 001 1z" />
               </svg>
               C Cycle (Chemistry)
@@ -254,14 +264,17 @@ export default function SgpaCalculator() {
           </button>
           <button
             onClick={() => handleCycleChange('P')}
-            className={`group relative px-8 py-4 rounded-xl font-bold transition-all duration-300 ${
-              selectedCycle === 'P'
-                ? 'bg-gradient-to-r from-indigo-500 via-purple-500 to-cyan-500 text-white shadow-[0_0_30px_rgba(139,92,246,0.5)] scale-105'
-                : 'text-gray-400 hover:text-white hover:scale-105'
+            className={`group relative px-6 py-3 rounded-xl font-bold transition-all duration-300 text-sm ${
+              selectedCycle === 'P' ? 'text-white scale-[1.02]' : 'text-gray-400 hover:text-white hover:scale-[1.02]'
             }`}
+            style={
+              selectedCycle === 'P'
+                ? { background: 'linear-gradient(135deg,#7c3aed,#a855f7,#ec4899)', boxShadow: '0 0 20px rgba(124,58,237,0.5)' }
+                : {}
+            }
           >
             <span className="relative z-10 flex items-center gap-2">
-              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
               </svg>
               P Cycle (Physics)
@@ -270,90 +283,146 @@ export default function SgpaCalculator() {
         </div>
       </div>
 
-
-
-      {/* SGPA/CGPA Display Card - Neumorphic Design */}
-      <div className="sticky top-4 z-20 mb-12">
+      {/* SGPA/CGPA Display Card */}
+      <div className="sticky top-4 z-20 mb-10">
         <div className="relative overflow-hidden rounded-3xl animate-scaleIn">
-          {/* Glowing border effect */}
-          <div className="absolute inset-0 bg-gradient-to-r from-cyan-500 via-teal-500 to-orange-500 opacity-30 blur-xl animate-pulse"></div>
-          
-          {/* Main card with neumorphic effect */}
-          <div className="relative neumorphic p-8 sm:p-10">
+          {/* Ambient glow */}
+          <div
+            className="absolute inset-0 blur-2xl"
+            style={{ background: 'linear-gradient(135deg,rgba(124,58,237,0.25),rgba(59,130,246,0.2),rgba(6,182,212,0.15))', borderRadius: '24px' }}
+          />
+          {/* Card */}
+          <div
+            className="relative p-8 sm:p-10 rounded-3xl"
+            style={{
+              background: 'rgba(255,255,255,0.05)',
+              backdropFilter: 'blur(30px)',
+              WebkitBackdropFilter: 'blur(30px)',
+              border: '1px solid rgba(124,58,237,0.3)',
+              boxShadow: '0 24px 64px rgba(0,0,0,0.5)',
+            }}
+          >
             {cgpa ? (
-              // Show CGPA when both cycles have data
               <div className="space-y-8">
-                {/* CGPA Display */}
-                <div className="flex flex-col md:flex-row justify-between items-center gap-8 pb-8 border-b border-cyan-500/20">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-8 pb-8" style={{ borderBottom: '1px solid rgba(124,58,237,0.2)' }}>
                   <div className="text-center md:text-left">
-                    <div className="text-cyan-400 text-sm font-bold uppercase tracking-wider mb-2 flex items-center gap-2">
-                      <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
+                    <div className="text-violet-400 text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
                       Your Overall
                     </div>
-                    <h2 className="text-4xl font-black gradient-text-cyan">CGPA Score</h2>
+                    <h2
+                      className="text-4xl font-black"
+                      style={{ background: 'linear-gradient(135deg,#a855f7,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                    >
+                      CGPA Score
+                    </h2>
                   </div>
-                  
                   <div className="relative group">
-                    <div className="absolute inset-0 bg-gradient-to-br from-cyan-500 to-teal-500 rounded-full blur-2xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
-                    <div className="relative neumorphic-inset rounded-full p-10 border-4 border-cyan-500/30">
-                      <div className="text-6xl sm:text-7xl font-black gradient-text-cyan">
+                    <div
+                      className="absolute inset-0 rounded-full blur-3xl opacity-60 group-hover:opacity-80 transition-opacity"
+                      style={{ background: 'linear-gradient(135deg,#7c3aed,#3b82f6)' }}
+                    />
+                    <div
+                      className="relative rounded-full p-10"
+                      style={{ background: 'rgba(0,0,0,0.5)', border: '2px solid rgba(124,58,237,0.4)' }}
+                    >
+                      <div
+                        className="text-6xl sm:text-7xl font-black"
+                        style={{ background: 'linear-gradient(135deg,#a855f7,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                      >
                         {cgpa}
                       </div>
                     </div>
                   </div>
-                  
                   <div className="text-center md:text-right">
                     <p className="text-sm text-gray-400 mb-2 font-semibold">Out of</p>
-                    <p className="text-5xl font-black gradient-text-orange">10.0</p>
+                    <p
+                      className="text-5xl font-black"
+                      style={{ background: 'linear-gradient(135deg,#f97316,#fbbf24)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                    >
+                      10.0
+                    </p>
                   </div>
                 </div>
-                
-                {/* Individual Semester SGPAs */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="glass-effect rounded-2xl p-6 hover:shadow-[0_0_30px_rgba(16,185,129,0.2)] transition-all transform hover:scale-105">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div
+                    className="rounded-2xl p-5 transition-all hover:scale-[1.02]"
+                    style={{ background: 'rgba(6,182,212,0.06)', border: '1px solid rgba(6,182,212,0.2)' }}
+                  >
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-white text-sm font-bold mb-1">C Cycle SGPA</p>
-                        <div className="w-12 h-1 bg-gradient-to-r from-cyan-400 to-transparent rounded-full"></div>
+                        <div className="w-8 h-0.5 rounded-full" style={{ background: 'linear-gradient(90deg,#06b6d4,transparent)' }} />
                       </div>
-                      <div className="text-4xl font-black gradient-text-cyan">{cCycleSGPA}</div>
+                      <div
+                        className="text-4xl font-black"
+                        style={{ background: 'linear-gradient(135deg,#06b6d4,#22d3ee)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                      >
+                        {cCycleSGPA}
+                      </div>
                     </div>
                   </div>
-                  <div className="glass-effect rounded-2xl p-6 hover:shadow-[0_0_30px_rgba(251,146,60,0.2)] transition-all transform hover:scale-105">
+                  <div
+                    className="rounded-2xl p-5 transition-all hover:scale-[1.02]"
+                    style={{ background: 'rgba(168,85,247,0.06)', border: '1px solid rgba(168,85,247,0.2)' }}
+                  >
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-white text-sm font-bold mb-1">P Cycle SGPA</p>
-                        <div className="w-12 h-1 bg-gradient-to-r from-amber-400 to-transparent rounded-full"></div>
+                        <div className="w-8 h-0.5 rounded-full" style={{ background: 'linear-gradient(90deg,#a855f7,transparent)' }} />
                       </div>
-                      <div className="text-4xl font-black gradient-text-orange">{pCycleSGPA}</div>
+                      <div
+                        className="text-4xl font-black"
+                        style={{ background: 'linear-gradient(135deg,#a855f7,#ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                      >
+                        {pCycleSGPA}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             ) : (
-              // Show only SGPA when only one cycle has data
               <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                 <div className="text-center md:text-left">
-                  <div className="text-cyan-400 text-sm font-bold uppercase tracking-wider mb-2 flex items-center gap-2">
-                    <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
+                  <div className="text-violet-400 text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
                     Your Current
                   </div>
-                  <h2 className="text-4xl font-black gradient-text-cyan">SGPA Score</h2>
-                  <p className="text-amber-400 text-xs font-bold mt-2">({selectedCycle === 'C' ? 'C Cycle' : 'P Cycle'})</p>
+                  <h2
+                    className="text-4xl font-black"
+                    style={{ background: 'linear-gradient(135deg,#a855f7,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                  >
+                    SGPA Score
+                  </h2>
+                  <p className="text-violet-300 text-xs font-bold mt-1 opacity-70">
+                    ({selectedCycle === 'C' ? 'C Cycle' : 'P Cycle'})
+                  </p>
                 </div>
-                
                 <div className="relative group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-amber-500 rounded-full blur-2xl opacity-50 group-hover:opacity-75 transition-opacity"></div>
-                  <div className="relative neumorphic-inset rounded-full p-10 border-4 border-orange-500/30">
-                    <div className="text-6xl sm:text-7xl font-black gradient-text-orange">
+                  <div
+                    className="absolute inset-0 rounded-full blur-3xl opacity-50 group-hover:opacity-70 transition-opacity"
+                    style={{ background: 'linear-gradient(135deg,#7c3aed,#ec4899)' }}
+                  />
+                  <div
+                    className="relative rounded-full p-10"
+                    style={{ background: 'rgba(0,0,0,0.5)', border: '2px solid rgba(168,85,247,0.4)' }}
+                  >
+                    <div
+                      className="text-6xl sm:text-7xl font-black"
+                      style={{ background: 'linear-gradient(135deg,#a855f7,#ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                    >
                       {sgpa}
                     </div>
                   </div>
                 </div>
-                
                 <div className="text-center md:text-right">
                   <p className="text-sm text-gray-400 mb-2 font-semibold">Out of</p>
-                  <p className="text-5xl font-black gradient-text-orange">10.0</p>
+                  <p
+                    className="text-5xl font-black"
+                    style={{ background: 'linear-gradient(135deg,#f97316,#fbbf24)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                  >
+                    10.0
+                  </p>
                 </div>
               </div>
             )}
@@ -365,23 +434,30 @@ export default function SgpaCalculator() {
       <SGPAProbabilityPredictor courses={courses} />
       
       {/* Courses Section */}
-      <div className="space-y-6">
+      <div className="space-y-5">
         {courses.map((course, index) => (
-          <div key={course.id} className="animate-slideInLeft" style={{animationDelay: `${index * 0.1}s`}}>
+          <div key={course.id} className="animate-slideInLeft" style={{animationDelay: `${index * 0.07}s`}}>
             <CourseCard id={course.id} initialCourseData={course} onUpdate={updateCourse} />
           </div>
         ))}
       </div>
 
-      {/* Action Buttons - Redesigned */}
-      <div className="mt-12 flex flex-col sm:flex-row gap-4 justify-center">
+      {/* Action Buttons */}
+      <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
         <button 
           onClick={clearAllData} 
-          className="group relative overflow-hidden neumorphic px-8 py-4 rounded-2xl transition-all duration-300 transform hover:scale-105"
+          className="group relative overflow-hidden px-8 py-3.5 rounded-2xl transition-all duration-300 hover:scale-[1.03] text-sm font-bold text-gray-300 hover:text-white"
+          style={{
+            background: 'rgba(255,255,255,0.04)',
+            border: '1px solid rgba(255,255,255,0.1)',
+          }}
         >
-          <div className="absolute inset-0 bg-gradient-to-r from-red-500/20 to-orange-500/20 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <span className="relative z-10 flex items-center justify-center gap-2 text-gray-300 group-hover:text-white font-bold">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl"
+            style={{ background: 'linear-gradient(135deg,rgba(239,68,68,0.15),rgba(249,115,22,0.1))' }}
+          />
+          <span className="relative z-10 flex items-center justify-center gap-2">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
             </svg>
             Clear All Data
@@ -389,32 +465,45 @@ export default function SgpaCalculator() {
         </button>
       </div>
 
-      {/* Disclaimer Section - Redesigned */}
-      <div className="mt-16 relative overflow-hidden rounded-2xl animate-fadeIn">
-        <div className="neumorphic p-8">
+      {/* Disclaimer Section */}
+      <div className="mt-14 animate-fadeIn">
+        <div
+          className="rounded-2xl p-7"
+          style={{
+            background: 'rgba(255,255,255,0.03)',
+            border: '1px solid rgba(124,58,237,0.15)',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+          }}
+        >
           <div className="flex items-start gap-4">
-            <div className="flex-shrink-0 mt-1">
-              <div className="p-3 rounded-xl glass-effect">
-                <svg className="w-6 h-6 text-orange-400" fill="currentColor" viewBox="0 0 20 20">
+            <div className="flex-shrink-0 mt-0.5">
+              <div
+                className="p-2.5 rounded-xl"
+                style={{ background: 'rgba(249,115,22,0.1)', border: '1px solid rgba(249,115,22,0.25)' }}
+              >
+                <svg className="w-5 h-5 text-orange-400" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
                 </svg>
               </div>
             </div>
             <div className="flex-1">
-              <h4 className="font-black text-white text-xl mb-4 gradient-text-cyan">
-                Disclaimer & Assumptions
+              <h4
+                className="font-black text-lg mb-3"
+                style={{ background: 'linear-gradient(135deg,#a855f7,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+              >
+                Disclaimer &amp; Assumptions
               </h4>
-              <ul className="space-y-3 text-gray-400 text-sm">
+              <ul className="space-y-2.5 text-gray-400 text-sm">
                 <li className="flex items-start gap-3">
-                  <span className="gradient-text-cyan flex-shrink-0 mt-1 font-bold">▸</span>
+                  <span className="text-violet-400 flex-shrink-0 mt-0.5">▸</span>
                   <span>Course data and CIE rubrics are based on the provided &quot;Dean-First-year-scheme-syllabus-updated-as-on-16-10-2025.pdf&quot;.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="gradient-text-cyan flex-shrink-0 mt-1 font-bold">▸</span>
+                  <span className="text-violet-400 flex-shrink-0 mt-0.5">▸</span>
                   <span><strong className="text-white">Passing Standards:</strong> The minimum passing percentages (e.g., CIE &gt;= 40%, SEE &gt;= 35%) are based on standard autonomous college practices.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="gradient-text-cyan flex-shrink-0 mt-1 font-bold">▸</span>
+                  <span className="text-violet-400 flex-shrink-0 mt-0.5">▸</span>
                   <span>This is an unofficial tool. Always confirm with official results from the university.</span>
                 </li>
               </ul>

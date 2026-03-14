@@ -93,15 +93,18 @@ export default function LoginButton() {
     <>
       {isLoggedIn ? (
         <div className="flex items-center gap-3">
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500/20 to-orange-500/20 border border-cyan-500/30">
-            <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div
+            className="flex items-center gap-2 px-3 py-1.5 rounded-full"
+            style={{ background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.3)' }}
+          >
+            <svg className="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
-            <span className="text-sm font-medium text-cyan-300">{username}</span>
+            <span className="text-sm font-medium text-violet-300">{username}</span>
           </div>
           <button
             onClick={handleLogout}
-            className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-cyan-400 transition-colors duration-200"
+            className="px-3 py-1.5 text-sm font-medium text-gray-400 hover:text-violet-300 transition-colors duration-200"
           >
             Logout
           </button>
@@ -109,7 +112,8 @@ export default function LoginButton() {
       ) : (
         <button
           onClick={handleOpenModal}
-          className="px-6 py-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-orange-500 hover:from-cyan-600 hover:to-orange-600 text-white font-semibold text-sm transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl border border-cyan-400/30"
+          className="px-5 py-2 rounded-full text-white font-semibold text-sm transition-all duration-200 hover:scale-105"
+          style={{ background: 'linear-gradient(135deg,#7c3aed,#3b82f6)', boxShadow: '0 0 16px rgba(124,58,237,0.4)' }}
         >
           Login
         </button>
@@ -117,12 +121,29 @@ export default function LoginButton() {
 
       {/* Login Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-[9999] flex items-start justify-center p-4 bg-black/70 backdrop-blur-sm animate-fadeIn overflow-y-auto" onClick={(e) => {
-          if (e.target === e.currentTarget) setShowModal(false);
-        }}>
-          <div className="relative bg-gray-900 rounded-xl shadow-2xl border border-gray-800 p-5 max-w-sm w-full animate-slideUp mt-12 sm:mt-20 mb-8" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="fixed inset-0 z-[9999] flex items-start justify-center p-4 backdrop-blur-sm animate-fadeIn overflow-y-auto"
+          style={{ background: 'rgba(0,0,0,0.8)' }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setShowModal(false);
+          }}
+        >
+          <div
+            className="relative rounded-2xl shadow-2xl p-5 max-w-sm w-full animate-slideUp mt-12 sm:mt-20 mb-8"
+            style={{
+              background: 'rgba(255,255,255,0.05)',
+              backdropFilter: 'blur(30px)',
+              WebkitBackdropFilter: 'blur(30px)',
+              border: '1px solid rgba(124,58,237,0.3)',
+              boxShadow: '0 24px 64px rgba(0,0,0,0.6)',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-orange-400">
+              <h2
+                className="text-xl font-bold"
+                style={{ background: 'linear-gradient(135deg,#a855f7,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+              >
                 Login
               </h2>
               <button
@@ -140,7 +161,10 @@ export default function LoginButton() {
             </p>
 
             {error && (
-              <div className="mb-3 p-2 bg-red-500/10 border border-red-500/30 rounded-lg">
+              <div
+                className="mb-3 p-2 rounded-lg"
+                style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)' }}
+              >
                 <p className="text-red-400 text-xs">{error}</p>
               </div>
             )}
@@ -155,7 +179,8 @@ export default function LoginButton() {
                   id="username"
                   value={loginForm.username}
                   onChange={(e) => setLoginForm({ ...loginForm, username: e.target.value })}
-                  className="w-full px-3 py-2 text-sm bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-transparent text-white placeholder-gray-500"
+                  className="w-full px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 text-white placeholder-gray-500 transition-all"
+                  style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)' }}
                   placeholder="Enter your username"
                   required
                 />
@@ -170,7 +195,8 @@ export default function LoginButton() {
                   id="password"
                   value={loginForm.password}
                   onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
-                  className="w-full px-3 py-2 text-sm bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-white placeholder-gray-500"
+                  className="w-full px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 text-white placeholder-gray-500 transition-all"
+                  style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)' }}
                   placeholder="Enter your password"
                   required
                 />
@@ -179,14 +205,16 @@ export default function LoginButton() {
               <div className="flex gap-2 pt-3">
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 text-sm rounded-lg bg-gradient-to-r from-cyan-500 to-orange-500 hover:from-cyan-600 hover:to-orange-600 text-white font-medium transition-all duration-200 transform hover:scale-105"
+                  className="flex-1 px-4 py-2 text-sm rounded-lg text-white font-medium transition-all duration-200 hover:scale-105"
+                  style={{ background: 'linear-gradient(135deg,#7c3aed,#3b82f6)', boxShadow: '0 0 16px rgba(124,58,237,0.3)' }}
                 >
                   Login
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="px-4 py-2 text-sm rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-medium transition-colors duration-200"
+                  className="px-4 py-2 text-sm rounded-lg text-gray-300 font-medium transition-colors duration-200 hover:text-white"
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
                 >
                   Cancel
                 </button>
