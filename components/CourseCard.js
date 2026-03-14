@@ -164,7 +164,7 @@ export default function CourseCard({ id, onUpdate, initialCourseData }) {
       {/* Glow halo on hover */}
       <div
         className="absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-400"
-        style={{ background: 'linear-gradient(135deg,rgba(124,58,237,0.18),rgba(59,130,246,0.12))' }}
+        style={{ background: 'linear-gradient(135deg,rgba(0,229,255,0.18),rgba(8,145,178,0.12))' }}
       />
 
       <div
@@ -182,11 +182,11 @@ export default function CourseCard({ id, onUpdate, initialCourseData }) {
               <div className="flex items-center gap-3 mb-1.5">
                 <h3
                   className="text-xl font-black"
-                  style={{ background: 'linear-gradient(135deg,#a855f7,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                  style={{ background: 'linear-gradient(135deg,#00e5ff,#67e8f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
                 >
                   {courseDetails.code}
                 </h3>
-                <div className="flex-grow h-px" style={{ background: 'linear-gradient(90deg,rgba(124,58,237,0.4),transparent)' }} />
+                <div className="flex-grow h-px" style={{ background: 'linear-gradient(90deg,rgba(0,229,255,0.4),transparent)' }} />
               </div>
               <p className="text-gray-400 mb-3 text-sm">{courseDetails.title}</p>
               <div className="flex gap-2 flex-wrap">
@@ -200,8 +200,8 @@ export default function CourseCard({ id, onUpdate, initialCourseData }) {
                   Credits: {courseDetails.credits}
                 </span>
                 <span
-                  className="px-3 py-1 rounded-full text-xs font-bold text-violet-300 inline-flex items-center gap-1"
-                  style={{ background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.25)' }}
+                  className="px-3 py-1 rounded-full text-xs font-bold text-cyan-300 inline-flex items-center gap-1"
+                  style={{ background: 'rgba(0,229,255,0.1)', border: '1px solid rgba(0,229,255,0.25)' }}
                 >
                   {courseDetails.type}
                 </span>
@@ -239,13 +239,13 @@ export default function CourseCard({ id, onUpdate, initialCourseData }) {
           >
             <h3
               className="text-base font-bold mb-4 flex items-center gap-2"
-              style={{ background: 'linear-gradient(135deg,#a855f7,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+              style={{ background: 'linear-gradient(135deg,#00e5ff,#67e8f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
             >
               <div
                 className="p-1.5 rounded-lg"
-                style={{ background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.2)' }}
+                style={{ background: 'rgba(0,229,255,0.1)', border: '1px solid rgba(0,229,255,0.2)' }}
               >
-                <svg className="w-4 h-4 text-violet-400" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
                   <path fillRule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
                 </svg>
@@ -270,19 +270,19 @@ export default function CourseCard({ id, onUpdate, initialCourseData }) {
               className="p-5"
               style={{
                 background: 'rgba(0,0,0,0.3)',
-                border: '1px solid rgba(124,58,237,0.2)',
+                border: '1px solid rgba(0,229,255,0.2)',
                 boxShadow: 'inset 0 2px 8px rgba(0,0,0,0.3)',
               }}
             >
               <h3
                 className="text-base font-bold mb-4 flex items-center gap-2"
-                style={{ background: 'linear-gradient(135deg,#a855f7,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                style={{ background: 'linear-gradient(135deg,#00e5ff,#67e8f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
               >
                 <div
                   className="p-1.5 rounded-lg"
-                  style={{ background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.2)' }}
+                  style={{ background: 'rgba(0,229,255,0.1)', border: '1px solid rgba(0,229,255,0.2)' }}
                 >
-                  <svg className="w-4 h-4 text-violet-400" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                   </svg>
                 </div>
@@ -290,7 +290,7 @@ export default function CourseCard({ id, onUpdate, initialCourseData }) {
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                 <ResultDisplay label="Status" value={results.isPass ? 'Pass ✓' : 'Fail ✗'} color={results.isPass ? 'text-emerald-400' : 'text-red-400'} />
-                <ResultDisplay label="Total CIE" value={results.totalCie || '0.00'} color="text-violet-400" />
+                <ResultDisplay label="Total CIE" value={results.totalCie || '0.00'} color="text-cyan-400" />
                 <ResultDisplay label="Final Score" value={results.score + '%'} color="text-blue-400" />
                 <ResultDisplay label="Grade" value={results.grade} color="text-pink-400" />
                 <ResultDisplay label="Points" value={results.points} color="text-amber-400" />
@@ -305,14 +305,14 @@ export default function CourseCard({ id, onUpdate, initialCourseData }) {
 
 const InputField = ({ name, label, placeholder, value, onChange }) => (
     <div className="group">
-        <label className="block text-xs font-semibold text-gray-400 mb-1.5 group-focus-within:text-violet-400 transition-colors duration-200">{label}</label>
+        <label className="block text-xs font-semibold text-gray-400 mb-1.5 group-focus-within:text-cyan-400 transition-colors duration-200">{label}</label>
         <input 
             type="number" 
             name={name} 
             placeholder={placeholder} 
             value={value || ''} 
             onChange={onChange} 
-            className="w-full p-3 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all duration-200 text-sm" 
+            className="w-full p-3 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-200 text-sm" 
             style={{ background: 'rgba(0,0,0,0.35)', border: '1px solid rgba(255,255,255,0.08)' }}
         />
     </div>
@@ -337,17 +337,17 @@ const RequiredSEEDisplay = ({ totalCie, cieMax, seeMax, hasSeeMarks }) => {
     return (
         <div
           className="p-5 mt-4 relative overflow-hidden rounded-xl"
-          style={{ background: 'rgba(124,58,237,0.05)', border: '1px solid rgba(124,58,237,0.18)' }}
+          style={{ background: 'rgba(0,229,255,0.05)', border: '1px solid rgba(0,229,255,0.18)' }}
         >
             <h3
               className="text-sm font-bold mb-4 flex items-center gap-2"
-              style={{ background: 'linear-gradient(135deg,#a855f7,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+              style={{ background: 'linear-gradient(135deg,#00e5ff,#67e8f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
             >
                 <div
                   className="p-1.5 rounded-lg"
-                  style={{ background: 'rgba(124,58,237,0.1)', border: '1px solid rgba(124,58,237,0.2)' }}
+                  style={{ background: 'rgba(0,229,255,0.1)', border: '1px solid rgba(0,229,255,0.2)' }}
                 >
-                    <svg className="w-4 h-4 text-violet-400" fill="currentColor" viewBox="0 0 20 20">
+                    <svg className="w-4 h-4 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
                     </svg>
                 </div>

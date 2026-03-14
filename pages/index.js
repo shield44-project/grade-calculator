@@ -1,7 +1,6 @@
 // pages/index.js
 import Head from 'next/head';
 import SgpaCalculator from '../components/SgpaCalculator';
-import LoginButton from '../components/LoginButton';
 import AttendanceChecker from '../components/AttendanceChecker';
 import Resources from '../components/Resources';
 import ParticleBackground from '../components/ParticleBackground';
@@ -87,56 +86,71 @@ export default function Home() {
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </Head>
 
-      {/* 3D interactive particle network background */}
+      {/* 3D mesh-wave background */}
       <ParticleBackground />
 
-      {/* Top navigation bar */}
+      {/* ── Top navigation bar ────────────────────────────────── */}
       <header className="sticky top-0 z-40 w-full">
         <div
           style={{
-            background: 'rgba(4,4,15,0.75)',
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            borderBottom: '1px solid rgba(124,58,237,0.2)',
+            background: 'rgba(3,3,10,0.82)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            borderBottom: '1px solid rgba(0,229,255,0.12)',
+            boxShadow: '0 1px 0 rgba(0,229,255,0.06)',
           }}
         >
           <div className="max-w-5xl mx-auto px-4 sm:px-6">
-            <div className="flex items-center justify-between h-16 gap-4">
+            <div className="flex items-center justify-between h-14 gap-4">
+
               {/* Brand */}
-              <div className="flex items-center gap-2 flex-shrink-0">
+              <div className="flex items-center gap-2.5 flex-shrink-0">
                 <div
-                  className="w-8 h-8 rounded-xl flex items-center justify-center"
-                  style={{ background: 'linear-gradient(135deg,#7c3aed,#3b82f6,#06b6d4)', boxShadow: '0 0 16px rgba(124,58,237,0.5)' }}
+                  className="w-7 h-7 rounded-lg flex items-center justify-center"
+                  style={{
+                    background: 'linear-gradient(135deg,#00e5ff,#0891b2)',
+                    boxShadow: '0 0 14px rgba(0,229,255,0.45)',
+                  }}
                 >
-                  <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <svg className="w-3.5 h-3.5 text-black" fill="currentColor" viewBox="0 0 20 20">
                     <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3z" />
                   </svg>
                 </div>
                 <span
-                  className="font-black text-sm hidden sm:block"
-                  style={{ background: 'linear-gradient(135deg,#a855f7,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                  className="font-black text-sm tracking-wide hidden sm:block"
+                  style={{
+                    background: 'linear-gradient(135deg,#00e5ff,#67e8f9)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                  }}
                 >
                   RVCE Tools
                 </span>
               </div>
 
-              {/* Tab navigation */}
-              <nav className="flex items-center gap-1 flex-1 justify-center">
+              {/* ── Tab navigation panel ────────────────────────── */}
+              <nav
+                className="flex items-center gap-0.5 p-1 rounded-xl flex-1 max-w-sm mx-auto"
+                style={{
+                  background: 'rgba(0,0,0,0.55)',
+                  border: '1px solid rgba(0,229,255,0.12)',
+                }}
+              >
                 {NAV_TABS.map((tab) => (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-200 ${
-                      activeTab === tab.id ? 'text-white' : 'text-gray-400 hover:text-gray-200'
+                    className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 flex-1 justify-center ${
+                      activeTab === tab.id ? 'text-black' : 'text-gray-500 hover:text-gray-300'
                     }`}
                     style={
                       activeTab === tab.id
                         ? {
-                            background: 'linear-gradient(135deg,rgba(124,58,237,0.5),rgba(59,130,246,0.5))',
-                            border: '1px solid rgba(124,58,237,0.4)',
-                            boxShadow: '0 0 12px rgba(124,58,237,0.3)',
+                            background: 'linear-gradient(135deg,#00e5ff,#0891b2)',
+                            boxShadow: '0 0 10px rgba(0,229,255,0.4)',
                           }
-                        : { background: 'transparent', border: '1px solid transparent' }
+                        : {}
                     }
                   >
                     {tab.icon}
@@ -146,32 +160,41 @@ export default function Home() {
                 ))}
               </nav>
 
-              {/* Login */}
-              <div className="flex-shrink-0">
-                <LoginButton />
+              {/* Version badge */}
+              <div
+                className="flex-shrink-0 hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg"
+                style={{
+                  background: 'rgba(0,229,255,0.06)',
+                  border: '1px solid rgba(0,229,255,0.15)',
+                }}
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="text-xs font-semibold text-gray-400">2025 Scheme</span>
               </div>
+
             </div>
           </div>
         </div>
       </header>
 
-      {/* Page hero — only on calculator tab */}
+      {/* ── Hero (calculator tab only) ────────────────────────── */}
       {activeTab === 'calculator' && (
-        <div className="relative z-10 pt-14 pb-8 px-4 sm:px-6 text-center animate-fadeIn">
+        <div className="relative z-10 pt-12 pb-8 px-4 sm:px-6 text-center animate-fadeIn">
           <div className="max-w-2xl mx-auto">
-            {/* Badge */}
+
+            {/* Eyebrow badge */}
             <div
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold mb-6"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold mb-6 tracking-wide uppercase"
               style={{
-                background: 'rgba(124,58,237,0.12)',
-                border: '1px solid rgba(124,58,237,0.35)',
-                color: '#a855f7',
+                background: 'rgba(0,229,255,0.07)',
+                border: '1px solid rgba(0,229,255,0.25)',
+                color: '#00e5ff',
               }}
             >
-              <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
               </svg>
-              2025 Scheme · First Year
+              First Year · 2025 Scheme
             </div>
 
             {/* Heading */}
@@ -179,7 +202,7 @@ export default function Home() {
               RVCE Grade &amp;{' '}
               <span
                 style={{
-                  background: 'linear-gradient(135deg,#7c3aed,#a855f7,#60a5fa,#22d3ee)',
+                  background: 'linear-gradient(135deg,#00e5ff,#67e8f9,#14b8a6)',
                   WebkitBackgroundClip: 'text',
                   WebkitTextFillColor: 'transparent',
                   backgroundClip: 'text',
@@ -190,32 +213,45 @@ export default function Home() {
             </h1>
 
             <p className="text-slate-400 text-base sm:text-lg max-w-xl mx-auto">
-              Calculate grades and SGPA for the 2025 scheme. Data stays in your browser — no sign-in required.
+              Calculate grades and SGPA instantly. Data stays in your browser — no sign-in required.
             </p>
 
             {/* Decorative glow blobs */}
             <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
-              <div className="absolute -top-20 left-1/4 w-72 h-72 rounded-full blur-[100px]" style={{ background: 'rgba(124,58,237,0.18)' }} />
-              <div className="absolute -top-10 right-1/4 w-64 h-64 rounded-full blur-[80px]" style={{ background: 'rgba(59,130,246,0.14)' }} />
+              <div
+                className="absolute -top-20 left-1/4 w-80 h-80 rounded-full blur-[120px]"
+                style={{ background: 'rgba(0,229,255,0.08)' }}
+              />
+              <div
+                className="absolute top-0 right-1/4 w-64 h-64 rounded-full blur-[90px]"
+                style={{ background: 'rgba(20,184,166,0.06)' }}
+              />
             </div>
           </div>
         </div>
       )}
 
-      {/* Tab content header for non-calculator tabs */}
+      {/* ── Breadcrumb for non-calculator tabs ────────────────── */}
       {activeTab !== 'calculator' && (
-        <div className="relative z-10 pt-8 pb-4 px-4 sm:px-6 animate-fadeIn">
+        <div className="relative z-10 pt-7 pb-4 px-4 sm:px-6 animate-fadeIn">
           <div className="max-w-5xl mx-auto">
-            <div className="flex items-center gap-2 text-gray-500 text-sm mb-1">
-              <button onClick={() => setActiveTab('calculator')} className="hover:text-gray-300 transition-colors">SGPA Calculator</button>
+            <div className="flex items-center gap-2 text-gray-600 text-sm mb-1">
+              <button
+                onClick={() => setActiveTab('calculator')}
+                className="hover:text-gray-300 transition-colors"
+              >
+                SGPA Calculator
+              </button>
               <span>›</span>
-              <span className="text-gray-300">{NAV_TABS.find(t => t.id === activeTab)?.label}</span>
+              <span className="text-gray-300">
+                {NAV_TABS.find((t) => t.id === activeTab)?.label}
+              </span>
             </div>
           </div>
         </div>
       )}
 
-      {/* Main content */}
+      {/* ── Main content ──────────────────────────────────────── */}
       <main className="relative z-10 pb-16 px-4 sm:px-6">
         <div className="max-w-5xl mx-auto">
           {activeTab === 'calculator' && <SgpaCalculator />}
@@ -224,11 +260,14 @@ export default function Home() {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="relative z-10 py-10 px-4 sm:px-6" style={{ borderTop: '1px solid rgba(124,58,237,0.15)' }}>
+      {/* ── Footer ────────────────────────────────────────────── */}
+      <footer
+        className="relative z-10 py-8 px-4 sm:px-6"
+        style={{ borderTop: '1px solid rgba(0,229,255,0.08)' }}
+      >
         <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-            <p className="text-slate-500 text-sm text-center sm:text-left">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-5">
+            <p className="text-slate-600 text-sm text-center sm:text-left">
               Made for RVCE students · Unofficial tool for educational purposes
             </p>
 
@@ -237,7 +276,7 @@ export default function Home() {
                 href="https://github.com/shield44"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 text-slate-500 hover:text-violet-400 transition-colors text-sm"
+                className="flex items-center gap-1.5 text-slate-600 hover:text-cyan-400 transition-colors text-sm"
               >
                 <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                   <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
@@ -247,7 +286,7 @@ export default function Home() {
 
               <button
                 onClick={() => setShowReportModal(true)}
-                className="flex items-center gap-1.5 text-slate-500 hover:text-pink-400 transition-colors text-sm"
+                className="flex items-center gap-1.5 text-slate-600 hover:text-cyan-400 transition-colors text-sm"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -259,34 +298,41 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Report Issue Modal */}
+      {/* ── Report Issue Modal ────────────────────────────────── */}
       {showReportModal && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm animate-fadeIn"
-          style={{ background: 'rgba(0,0,0,0.8)' }}
-          onClick={(e) => { if (e.target === e.currentTarget) { setShowReportModal(false); setReportError(''); } }}
+          style={{ background: 'rgba(0,0,0,0.85)' }}
+          onClick={(e) => {
+            if (e.target === e.currentTarget) { setShowReportModal(false); setReportError(''); }
+          }}
         >
           <div
             className="rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto animate-scaleIn"
             style={{
-              background: 'rgba(255,255,255,0.05)',
+              background: 'rgba(3,3,10,0.95)',
               backdropFilter: 'blur(30px)',
               WebkitBackdropFilter: 'blur(30px)',
-              border: '1px solid rgba(124,58,237,0.3)',
-              boxShadow: '0 24px 64px rgba(0,0,0,0.6), 0 0 0 1px rgba(124,58,237,0.1)',
+              border: '1px solid rgba(0,229,255,0.2)',
+              boxShadow: '0 24px 64px rgba(0,0,0,0.7), 0 0 40px rgba(0,229,255,0.06)',
             }}
           >
             <div className="p-6">
               <div className="flex justify-between items-center mb-5">
                 <h2
                   className="text-lg font-bold"
-                  style={{ background: 'linear-gradient(135deg,#a855f7,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                  style={{
+                    background: 'linear-gradient(135deg,#00e5ff,#67e8f9)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text',
+                  }}
                 >
                   Report an Issue
                 </h2>
                 <button
                   onClick={() => { setShowReportModal(false); setReportError(''); setReportSuccess(false); }}
-                  className="text-gray-400 hover:text-white transition-colors p-1.5 rounded-lg hover:bg-white/5"
+                  className="text-gray-500 hover:text-white transition-colors p-1.5 rounded-lg hover:bg-white/5"
                   aria-label="Close modal"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -299,7 +345,7 @@ export default function Home() {
                 <div className="py-10 text-center animate-scaleIn">
                   <div
                     className="mb-4 inline-flex items-center justify-center w-16 h-16 rounded-2xl"
-                    style={{ background: 'rgba(16,185,129,0.12)', border: '1px solid rgba(16,185,129,0.3)' }}
+                    style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)' }}
                   >
                     <svg className="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -311,13 +357,16 @@ export default function Home() {
               ) : (
                 <form onSubmit={handleReportSubmit} className="space-y-4">
                   {reportError && (
-                    <div className="p-3 rounded-xl text-red-300 text-sm" style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.25)' }}>
+                    <div
+                      className="p-3 rounded-xl text-red-300 text-sm"
+                      style={{ background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.22)' }}
+                    >
                       {reportError}
                     </div>
                   )}
 
                   <div>
-                    <label htmlFor="issueTitle" className="block text-gray-300 text-xs font-semibold mb-1.5">
+                    <label htmlFor="issueTitle" className="block text-gray-400 text-xs font-semibold mb-1.5">
                       Issue Title <span className="text-red-400">*</span>
                     </label>
                     <input
@@ -325,8 +374,11 @@ export default function Home() {
                       id="issueTitle"
                       value={reportForm.title}
                       onChange={(e) => setReportForm({ ...reportForm, title: e.target.value })}
-                      className="w-full px-3 py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 text-white text-sm transition-all"
-                      style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)' }}
+                      className="w-full px-3 py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-cyan-400 text-white text-sm transition-all"
+                      style={{
+                        background: 'rgba(0,0,0,0.5)',
+                        border: '1px solid rgba(0,229,255,0.12)',
+                      }}
                       placeholder="Brief description of the issue"
                       required
                       maxLength={100}
@@ -334,16 +386,16 @@ export default function Home() {
                   </div>
 
                   <div>
-                    <label htmlFor="issueDescription" className="block text-gray-300 text-xs font-semibold mb-1.5">
+                    <label htmlFor="issueDescription" className="block text-gray-400 text-xs font-semibold mb-1.5">
                       Description <span className="text-red-400">*</span>
                     </label>
                     <textarea
                       id="issueDescription"
                       value={reportForm.description}
                       onChange={(e) => setReportForm({ ...reportForm, description: e.target.value })}
-                      className="w-full px-3 py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 text-white resize-none text-sm transition-all"
-                      style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)' }}
-                      placeholder="Please describe the issue in detail..."
+                      className="w-full px-3 py-2.5 rounded-xl focus:outline-none focus:ring-2 text-white resize-none text-sm transition-all"
+                      style={{ background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(0,229,255,0.12)' }}
+                      placeholder="Describe the issue in detail…"
                       required
                       rows={4}
                       maxLength={1000}
@@ -352,7 +404,7 @@ export default function Home() {
                   </div>
 
                   <div>
-                    <label htmlFor="issueEmail" className="block text-gray-300 text-xs font-semibold mb-1.5">
+                    <label htmlFor="issueEmail" className="block text-gray-400 text-xs font-semibold mb-1.5">
                       Email (optional)
                     </label>
                     <input
@@ -360,8 +412,8 @@ export default function Home() {
                       id="issueEmail"
                       value={reportForm.email}
                       onChange={(e) => setReportForm({ ...reportForm, email: e.target.value })}
-                      className="w-full px-3 py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500 text-white text-sm transition-all"
-                      style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)' }}
+                      className="w-full px-3 py-2.5 rounded-xl focus:outline-none focus:ring-2 text-white text-sm transition-all"
+                      style={{ background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(0,229,255,0.12)' }}
                       placeholder="your.email@example.com"
                     />
                   </div>
@@ -370,16 +422,19 @@ export default function Home() {
                     <button
                       type="button"
                       onClick={() => { setShowReportModal(false); setReportError(''); }}
-                      className="flex-1 px-4 py-2.5 text-gray-300 hover:text-white font-semibold rounded-xl transition-all text-sm"
-                      style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)' }}
+                      className="flex-1 px-4 py-2.5 text-gray-400 hover:text-white font-semibold rounded-xl transition-all text-sm"
+                      style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
                     >
                       Cancel
                     </button>
                     <button
                       type="submit"
                       disabled={reportSubmitting}
-                      className="flex-1 px-4 py-2.5 text-white font-bold rounded-xl transition-all disabled:opacity-50 text-sm"
-                      style={{ background: 'linear-gradient(135deg,#7c3aed,#3b82f6)', boxShadow: '0 0 20px rgba(124,58,237,0.4)' }}
+                      className="flex-1 px-4 py-2.5 text-black font-bold rounded-xl transition-all disabled:opacity-50 text-sm"
+                      style={{
+                        background: 'linear-gradient(135deg,#00e5ff,#0891b2)',
+                        boxShadow: '0 0 18px rgba(0,229,255,0.35)',
+                      }}
                     >
                       {reportSubmitting ? 'Submitting…' : 'Submit'}
                     </button>
@@ -393,3 +448,4 @@ export default function Home() {
     </div>
   );
 }
+

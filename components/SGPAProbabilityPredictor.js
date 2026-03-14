@@ -23,8 +23,8 @@ export default function SGPAProbabilityPredictor({ courses }) {
         className="w-full text-left rounded-2xl p-5 transition-all duration-200 group"
         style={{
           background: 'rgba(255,255,255,0.04)',
-          border: isExpanded ? '1px solid rgba(124,58,237,0.35)' : '1px solid rgba(255,255,255,0.08)',
-          boxShadow: isExpanded ? '0 0 20px rgba(124,58,237,0.15)' : 'none',
+          border: isExpanded ? '1px solid rgba(0,229,255,0.35)' : '1px solid rgba(255,255,255,0.08)',
+          boxShadow: isExpanded ? '0 0 20px rgba(0,229,255,0.15)' : 'none',
         }}
         aria-expanded={isExpanded}
       >
@@ -32,9 +32,9 @@ export default function SGPAProbabilityPredictor({ courses }) {
           <div className="flex items-center gap-3">
             <div
               className="p-2 rounded-xl"
-              style={{ background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.25)' }}
+              style={{ background: 'rgba(0,229,255,0.12)', border: '1px solid rgba(0,229,255,0.25)' }}
             >
-              <svg className="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
@@ -69,10 +69,10 @@ export default function SGPAProbabilityPredictor({ courses }) {
               </span>
             )}
             <div
-              className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${isExpanded ? 'text-violet-400' : 'text-gray-400 group-hover:text-violet-400'}`}
+              className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${isExpanded ? 'text-cyan-400' : 'text-gray-400 group-hover:text-cyan-400'}`}
               style={{
-                background: isExpanded ? 'rgba(124,58,237,0.15)' : 'rgba(255,255,255,0.05)',
-                border: isExpanded ? '1px solid rgba(124,58,237,0.35)' : '1px solid rgba(255,255,255,0.1)',
+                background: isExpanded ? 'rgba(0,229,255,0.15)' : 'rgba(255,255,255,0.05)',
+                border: isExpanded ? '1px solid rgba(0,229,255,0.35)' : '1px solid rgba(255,255,255,0.1)',
               }}
             >
               <svg
@@ -170,8 +170,8 @@ export default function SGPAProbabilityPredictor({ courses }) {
                           }`}>{target.label}</span>
                           {index === 0 && (
                             <span
-                              className="px-1.5 py-0.5 text-violet-300 rounded text-xs"
-                              style={{ background: 'rgba(124,58,237,0.15)', border: '1px solid rgba(124,58,237,0.2)' }}
+                              className="px-1.5 py-0.5 text-cyan-300 rounded text-xs"
+                              style={{ background: 'rgba(0,229,255,0.15)', border: '1px solid rgba(0,229,255,0.2)' }}
                             >
                               Top
                             </span>
@@ -230,7 +230,7 @@ export default function SGPAProbabilityPredictor({ courses }) {
                 style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
               >
                 <h4 className="font-bold text-white text-sm mb-3 flex items-center gap-2">
-                  <svg className="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
                   </svg>
                   Quick Study Tips
@@ -243,7 +243,7 @@ export default function SGPAProbabilityPredictor({ courses }) {
                     'Form study groups to discuss and clarify doubts',
                   ].map((tip, i) => (
                     <li key={i} className="flex items-start gap-2">
-                      <span className="text-violet-400 flex-shrink-0 mt-0.5">›</span>
+                      <span className="text-cyan-400 flex-shrink-0 mt-0.5">›</span>
                       <span>{tip}</span>
                     </li>
                   ))}

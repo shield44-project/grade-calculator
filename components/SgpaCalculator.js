@@ -240,7 +240,7 @@ export default function SgpaCalculator() {
           className="inline-flex rounded-2xl p-1.5"
           style={{
             background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(124,58,237,0.2)',
+            border: '1px solid rgba(0,229,255,0.2)',
             boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
           }}
         >
@@ -251,7 +251,7 @@ export default function SgpaCalculator() {
             }`}
             style={
               selectedCycle === 'C'
-                ? { background: 'linear-gradient(135deg,#06b6d4,#3b82f6,#7c3aed)', boxShadow: '0 0 20px rgba(6,182,212,0.4)' }
+                ? { background: 'linear-gradient(135deg,#06b6d4,#0891b2,#00b4d8)', boxShadow: '0 0 20px rgba(6,182,212,0.4)' }
                 : {}
             }
           >
@@ -269,7 +269,7 @@ export default function SgpaCalculator() {
             }`}
             style={
               selectedCycle === 'P'
-                ? { background: 'linear-gradient(135deg,#7c3aed,#a855f7,#ec4899)', boxShadow: '0 0 20px rgba(124,58,237,0.5)' }
+                ? { background: 'linear-gradient(135deg,#00b4d8,#00e5ff,#ec4899)', boxShadow: '0 0 20px rgba(0,229,255,0.5)' }
                 : {}
             }
           >
@@ -289,7 +289,7 @@ export default function SgpaCalculator() {
           {/* Ambient glow */}
           <div
             className="absolute inset-0 blur-2xl"
-            style={{ background: 'linear-gradient(135deg,rgba(124,58,237,0.25),rgba(59,130,246,0.2),rgba(6,182,212,0.15))', borderRadius: '24px' }}
+            style={{ background: 'linear-gradient(135deg,rgba(0,229,255,0.25),rgba(8,145,178,0.2),rgba(6,182,212,0.15))', borderRadius: '24px' }}
           />
           {/* Card */}
           <div
@@ -298,21 +298,21 @@ export default function SgpaCalculator() {
               background: 'rgba(255,255,255,0.05)',
               backdropFilter: 'blur(30px)',
               WebkitBackdropFilter: 'blur(30px)',
-              border: '1px solid rgba(124,58,237,0.3)',
+              border: '1px solid rgba(0,229,255,0.3)',
               boxShadow: '0 24px 64px rgba(0,0,0,0.5)',
             }}
           >
             {cgpa ? (
               <div className="space-y-8">
-                <div className="flex flex-col md:flex-row justify-between items-center gap-8 pb-8" style={{ borderBottom: '1px solid rgba(124,58,237,0.2)' }}>
+                <div className="flex flex-col md:flex-row justify-between items-center gap-8 pb-8" style={{ borderBottom: '1px solid rgba(0,229,255,0.2)' }}>
                   <div className="text-center md:text-left">
-                    <div className="text-violet-400 text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
-                      <div className="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
+                    <div className="text-cyan-400 text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
                       Your Overall
                     </div>
                     <h2
                       className="text-4xl font-black"
-                      style={{ background: 'linear-gradient(135deg,#a855f7,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                      style={{ background: 'linear-gradient(135deg,#00e5ff,#67e8f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
                     >
                       CGPA Score
                     </h2>
@@ -320,15 +320,15 @@ export default function SgpaCalculator() {
                   <div className="relative group">
                     <div
                       className="absolute inset-0 rounded-full blur-3xl opacity-60 group-hover:opacity-80 transition-opacity"
-                      style={{ background: 'linear-gradient(135deg,#7c3aed,#3b82f6)' }}
+                      style={{ background: 'linear-gradient(135deg,#00b4d8,#0891b2)' }}
                     />
                     <div
                       className="relative rounded-full p-10"
-                      style={{ background: 'rgba(0,0,0,0.5)', border: '2px solid rgba(124,58,237,0.4)' }}
+                      style={{ background: 'rgba(0,0,0,0.5)', border: '2px solid rgba(0,229,255,0.4)' }}
                     >
                       <div
                         className="text-6xl sm:text-7xl font-black"
-                        style={{ background: 'linear-gradient(135deg,#a855f7,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                        style={{ background: 'linear-gradient(135deg,#00e5ff,#67e8f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
                       >
                         {cgpa}
                       </div>
@@ -369,11 +369,11 @@ export default function SgpaCalculator() {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-white text-sm font-bold mb-1">P Cycle SGPA</p>
-                        <div className="w-8 h-0.5 rounded-full" style={{ background: 'linear-gradient(90deg,#a855f7,transparent)' }} />
+                        <div className="w-8 h-0.5 rounded-full" style={{ background: 'linear-gradient(90deg,#00e5ff,transparent)' }} />
                       </div>
                       <div
                         className="text-4xl font-black"
-                        style={{ background: 'linear-gradient(135deg,#a855f7,#ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                        style={{ background: 'linear-gradient(135deg,#00e5ff,#ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
                       >
                         {pCycleSGPA}
                       </div>
@@ -384,24 +384,24 @@ export default function SgpaCalculator() {
             ) : (
               <div className="flex flex-col md:flex-row justify-between items-center gap-8">
                 <div className="text-center md:text-left">
-                  <div className="text-violet-400 text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-violet-400 animate-pulse" />
+                  <div className="text-cyan-400 text-xs font-bold uppercase tracking-widest mb-2 flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
                     Your Current
                   </div>
                   <h2
                     className="text-4xl font-black"
-                    style={{ background: 'linear-gradient(135deg,#a855f7,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                    style={{ background: 'linear-gradient(135deg,#00e5ff,#67e8f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
                   >
                     SGPA Score
                   </h2>
-                  <p className="text-violet-300 text-xs font-bold mt-1 opacity-70">
+                  <p className="text-cyan-300 text-xs font-bold mt-1 opacity-70">
                     ({selectedCycle === 'C' ? 'C Cycle' : 'P Cycle'})
                   </p>
                 </div>
                 <div className="relative group">
                   <div
                     className="absolute inset-0 rounded-full blur-3xl opacity-50 group-hover:opacity-70 transition-opacity"
-                    style={{ background: 'linear-gradient(135deg,#7c3aed,#ec4899)' }}
+                    style={{ background: 'linear-gradient(135deg,#00b4d8,#ec4899)' }}
                   />
                   <div
                     className="relative rounded-full p-10"
@@ -409,7 +409,7 @@ export default function SgpaCalculator() {
                   >
                     <div
                       className="text-6xl sm:text-7xl font-black"
-                      style={{ background: 'linear-gradient(135deg,#a855f7,#ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                      style={{ background: 'linear-gradient(135deg,#00e5ff,#ec4899)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
                     >
                       {sgpa}
                     </div>
@@ -471,7 +471,7 @@ export default function SgpaCalculator() {
           className="rounded-2xl p-7"
           style={{
             background: 'rgba(255,255,255,0.03)',
-            border: '1px solid rgba(124,58,237,0.15)',
+            border: '1px solid rgba(0,229,255,0.15)',
             boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
           }}
         >
@@ -489,21 +489,21 @@ export default function SgpaCalculator() {
             <div className="flex-1">
               <h4
                 className="font-black text-lg mb-3"
-                style={{ background: 'linear-gradient(135deg,#a855f7,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                style={{ background: 'linear-gradient(135deg,#00e5ff,#67e8f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
               >
                 Disclaimer &amp; Assumptions
               </h4>
               <ul className="space-y-2.5 text-gray-400 text-sm">
                 <li className="flex items-start gap-3">
-                  <span className="text-violet-400 flex-shrink-0 mt-0.5">▸</span>
+                  <span className="text-cyan-400 flex-shrink-0 mt-0.5">▸</span>
                   <span>Course data and CIE rubrics are based on the provided &quot;Dean-First-year-scheme-syllabus-updated-as-on-16-10-2025.pdf&quot;.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-violet-400 flex-shrink-0 mt-0.5">▸</span>
+                  <span className="text-cyan-400 flex-shrink-0 mt-0.5">▸</span>
                   <span><strong className="text-white">Passing Standards:</strong> The minimum passing percentages (e.g., CIE &gt;= 40%, SEE &gt;= 35%) are based on standard autonomous college practices.</span>
                 </li>
                 <li className="flex items-start gap-3">
-                  <span className="text-violet-400 flex-shrink-0 mt-0.5">▸</span>
+                  <span className="text-cyan-400 flex-shrink-0 mt-0.5">▸</span>
                   <span>This is an unofficial tool. Always confirm with official results from the university.</span>
                 </li>
               </ul>
