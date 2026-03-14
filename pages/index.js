@@ -93,7 +93,7 @@ export default function Home() {
       <header className="sticky top-0 z-40 w-full">
         <div
           style={{
-            background: 'rgba(3,3,10,0.82)',
+            background: 'rgba(0,0,0,0.92)',
             backdropFilter: 'blur(24px)',
             WebkitBackdropFilter: 'blur(24px)',
             borderBottom: '1px solid rgba(0,229,255,0.12)',
@@ -133,7 +133,7 @@ export default function Home() {
               <nav
                 className="flex items-center gap-0.5 p-1 rounded-xl flex-1 max-w-sm mx-auto"
                 style={{
-                  background: 'rgba(0,0,0,0.55)',
+                  background: 'rgba(0,0,0,0.8)',
                   border: '1px solid rgba(0,229,255,0.12)',
                 }}
               >
@@ -216,17 +216,6 @@ export default function Home() {
               Calculate grades and SGPA instantly. Data stays in your browser — no sign-in required.
             </p>
 
-            {/* Decorative glow blobs */}
-            <div className="absolute inset-0 -z-10 pointer-events-none overflow-hidden">
-              <div
-                className="absolute -top-20 left-1/4 w-80 h-80 rounded-full blur-[120px]"
-                style={{ background: 'rgba(0,229,255,0.08)' }}
-              />
-              <div
-                className="absolute top-0 right-1/4 w-64 h-64 rounded-full blur-[90px]"
-                style={{ background: 'rgba(20,184,166,0.06)' }}
-              />
-            </div>
           </div>
         </div>
       )}
@@ -310,7 +299,7 @@ export default function Home() {
           <div
             className="rounded-2xl max-w-md w-full max-h-[90vh] overflow-y-auto animate-scaleIn"
             style={{
-              background: 'rgba(3,3,10,0.95)',
+              background: 'rgba(0,0,0,1)',
               backdropFilter: 'blur(30px)',
               WebkitBackdropFilter: 'blur(30px)',
               border: '1px solid rgba(0,229,255,0.2)',

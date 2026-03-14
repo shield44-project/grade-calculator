@@ -164,14 +164,14 @@ export default function CourseCard({ id, onUpdate, initialCourseData }) {
       {/* Glow halo on hover */}
       <div
         className="absolute inset-0 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-400"
-        style={{ background: 'linear-gradient(135deg,rgba(0,229,255,0.18),rgba(8,145,178,0.12))' }}
+        style={{ background: 'linear-gradient(135deg,rgba(0,229,255,0.1),rgba(8,145,178,0.12))' }}
       />
 
       <div
         className="relative p-5 sm:p-7 rounded-2xl"
         style={{
-          background: 'rgba(255,255,255,0.04)',
-          border: '1px solid rgba(255,255,255,0.08)',
+          background: 'rgba(255,255,255,0.02)',
+          border: '1px solid rgba(255,255,255,0.04)',
           boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
         }}
       >
@@ -201,7 +201,7 @@ export default function CourseCard({ id, onUpdate, initialCourseData }) {
                 </span>
                 <span
                   className="px-3 py-1 rounded-full text-xs font-bold text-cyan-300 inline-flex items-center gap-1"
-                  style={{ background: 'rgba(0,229,255,0.1)', border: '1px solid rgba(0,229,255,0.25)' }}
+                  style={{ background: 'rgba(0,229,255,0.1)', border: '1px solid rgba(0,229,255,0.12)' }}
                 >
                   {courseDetails.type}
                 </span>
@@ -235,7 +235,7 @@ export default function CourseCard({ id, onUpdate, initialCourseData }) {
           
           <div
             className="p-5 mt-4 rounded-xl"
-            style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
+            style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)' }}
           >
             <h3
               className="text-base font-bold mb-4 flex items-center gap-2"
@@ -313,7 +313,7 @@ const InputField = ({ name, label, placeholder, value, onChange }) => (
             value={value || ''} 
             onChange={onChange} 
             className="w-full p-3 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-cyan-500 transition-all duration-200 text-sm" 
-            style={{ background: 'rgba(0,0,0,0.35)', border: '1px solid rgba(255,255,255,0.08)' }}
+            style={{ background: 'rgba(0,0,0,0.35)', border: '1px solid rgba(255,255,255,0.04)' }}
         />
     </div>
 );
@@ -321,7 +321,7 @@ const InputField = ({ name, label, placeholder, value, onChange }) => (
 const ResultDisplay = ({ label, value, color }) => (
     <div
       className="text-center p-3 rounded-xl transition-all duration-200 hover:scale-[1.03]"
-      style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}
+      style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)' }}
     >
         <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-1.5">{label}</p>
         <p className={`font-black text-xl ${color}`}>{value ?? '-'}</p>
@@ -337,7 +337,7 @@ const RequiredSEEDisplay = ({ totalCie, cieMax, seeMax, hasSeeMarks }) => {
     return (
         <div
           className="p-5 mt-4 relative overflow-hidden rounded-xl"
-          style={{ background: 'rgba(0,229,255,0.05)', border: '1px solid rgba(0,229,255,0.18)' }}
+          style={{ background: 'rgba(0,229,255,0.05)', border: '1px solid rgba(0,229,255,0.1)' }}
         >
             <h3
               className="text-sm font-bold mb-4 flex items-center gap-2"
@@ -448,7 +448,7 @@ const RequiredSEEIntegratedDisplay = ({ cieMarks, courseDetails, seeMarks, resul
                     >
                         <div className="text-center">
                             <p className="text-xs text-gray-400 uppercase tracking-wider mb-2 font-semibold">Grade {grade}</p>
-                            <div className="mb-3 pb-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                            <div className="mb-3 pb-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
                                 <p className="text-xs text-gray-500 mb-1">Total SEE</p>
                                 <p className={`font-bold text-xl ${info.achievable ? 'text-green-400' : 'text-red-400'}`}>
                                     {info.required}

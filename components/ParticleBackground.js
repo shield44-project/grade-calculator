@@ -39,7 +39,7 @@ export default function ParticleBackground() {
     // Electric-cyan palette
     const COLOR_NEAR = '#00e5ff';
     const COLOR_MID  = '#0891b2';
-    const COLOR_FAR  = '#011a22';
+    const COLOR_FAR  = '#000000';
 
     // ── Helpers ──────────────────────────────────────────────
     function lerpColor(hex1, hex2, t) {

@@ -22,8 +22,8 @@ export default function SGPAProbabilityPredictor({ courses }) {
         onClick={() => setIsExpanded(prev => !prev)}
         className="w-full text-left rounded-2xl p-5 transition-all duration-200 group"
         style={{
-          background: 'rgba(255,255,255,0.04)',
-          border: isExpanded ? '1px solid rgba(0,229,255,0.35)' : '1px solid rgba(255,255,255,0.08)',
+          background: 'rgba(255,255,255,0.02)',
+          border: isExpanded ? '1px solid rgba(0,229,255,0.35)' : '1px solid rgba(255,255,255,0.04)',
           boxShadow: isExpanded ? '0 0 20px rgba(0,229,255,0.15)' : 'none',
         }}
         aria-expanded={isExpanded}
@@ -32,7 +32,7 @@ export default function SGPAProbabilityPredictor({ courses }) {
           <div className="flex items-center gap-3">
             <div
               className="p-2 rounded-xl"
-              style={{ background: 'rgba(0,229,255,0.12)', border: '1px solid rgba(0,229,255,0.25)' }}
+              style={{ background: 'rgba(0,229,255,0.12)', border: '1px solid rgba(0,229,255,0.12)' }}
             >
               <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
@@ -63,7 +63,7 @@ export default function SGPAProbabilityPredictor({ courses }) {
             {probabilityData && (
               <span
                 className="hidden sm:inline-flex text-xs text-gray-500 px-2 py-1 rounded-lg"
-                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}
+                style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)' }}
               >
                 {probabilityData.coursesAnalyzed}/{probabilityData.totalCourses} analyzed
               </span>
@@ -71,7 +71,7 @@ export default function SGPAProbabilityPredictor({ courses }) {
             <div
               className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${isExpanded ? 'text-cyan-400' : 'text-gray-400 group-hover:text-cyan-400'}`}
               style={{
-                background: isExpanded ? 'rgba(0,229,255,0.15)' : 'rgba(255,255,255,0.05)',
+                background: isExpanded ? 'rgba(0,229,255,0.15)' : 'rgba(255,255,255,0.02)',
                 border: isExpanded ? '1px solid rgba(0,229,255,0.35)' : '1px solid rgba(255,255,255,0.1)',
               }}
             >
@@ -94,7 +94,7 @@ export default function SGPAProbabilityPredictor({ courses }) {
           {!probabilityData ? (
             <div
               className="rounded-2xl p-6"
-              style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)' }}
+              style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)' }}
             >
               <p className="text-gray-400 text-sm text-center">
                 Enter your CIE marks in the courses above to see your SGPA predictions and study recommendations.
@@ -146,7 +146,7 @@ export default function SGPAProbabilityPredictor({ courses }) {
               {/* Probability Distribution */}
               <div
                 className="rounded-2xl p-5"
-                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+                style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)' }}
               >
                 <div className="flex items-center justify-between mb-4">
                   <h4 className="font-bold text-white text-sm">SGPA Probability Breakdown</h4>
@@ -158,7 +158,7 @@ export default function SGPAProbabilityPredictor({ courses }) {
                     <div
                       key={index}
                       className="rounded-xl p-3"
-                      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}
+                      style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.03)' }}
                     >
                       <div className="flex items-center justify-between gap-3 mb-2">
                         <div className="flex items-center gap-2 min-w-0">
@@ -201,7 +201,7 @@ export default function SGPAProbabilityPredictor({ courses }) {
                         </div>
                       </div>
                       <p className="text-xs text-gray-500 mb-2">{target.effortLevel}</p>
-                      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.07)' }}>
+                      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.04)' }}>
                         <div
                           className={`h-full rounded-full transition-all duration-500 ${
                             target.probability >= 70 ? 'bg-gradient-to-r from-green-500 to-emerald-400' :
@@ -216,7 +216,7 @@ export default function SGPAProbabilityPredictor({ courses }) {
                   ))}
                 </div>
 
-                <div className="mt-4 pt-4 flex flex-wrap gap-3 text-xs text-gray-500" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+                <div className="mt-4 pt-4 flex flex-wrap gap-3 text-xs text-gray-500" style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
                   <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-green-500 inline-block"></span>70%+ High</span>
                   <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-yellow-500 inline-block"></span>50-70% Moderate</span>
                   <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-orange-500 inline-block"></span>30-50% Low</span>
@@ -227,7 +227,7 @@ export default function SGPAProbabilityPredictor({ courses }) {
               {/* Study Tips */}
               <div
                 className="rounded-2xl p-5"
-                style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}
+                style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.04)' }}
               >
                 <h4 className="font-bold text-white text-sm mb-3 flex items-center gap-2">
                   <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -239,7 +239,7 @@ export default function SgpaCalculator() {
         <div
           className="inline-flex rounded-2xl p-1.5"
           style={{
-            background: 'rgba(255,255,255,0.04)',
+            background: 'rgba(255,255,255,0.02)',
             border: '1px solid rgba(0,229,255,0.2)',
             boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
           }}
@@ -289,17 +289,17 @@ export default function SgpaCalculator() {
           {/* Ambient glow */}
           <div
             className="absolute inset-0 blur-2xl"
-            style={{ background: 'linear-gradient(135deg,rgba(0,229,255,0.25),rgba(8,145,178,0.2),rgba(6,182,212,0.15))', borderRadius: '24px' }}
+            style={{ background: 'linear-gradient(135deg,rgba(0,229,255,0.06),rgba(0,229,255,0.03),transparent)', borderRadius: '24px' }}
           />
           {/* Card */}
           <div
             className="relative p-8 sm:p-10 rounded-3xl"
             style={{
-              background: 'rgba(255,255,255,0.05)',
+              background: '#000',
               backdropFilter: 'blur(30px)',
               WebkitBackdropFilter: 'blur(30px)',
-              border: '1px solid rgba(0,229,255,0.3)',
-              boxShadow: '0 24px 64px rgba(0,0,0,0.5)',
+              border: '1px solid rgba(0,229,255,0.25)',
+              boxShadow: '0 24px 64px rgba(0,0,0,0.9)',
             }}
           >
             {cgpa ? (
@@ -364,7 +364,7 @@ export default function SgpaCalculator() {
                   </div>
                   <div
                     className="rounded-2xl p-5 transition-all hover:scale-[1.02]"
-                    style={{ background: 'rgba(168,85,247,0.06)', border: '1px solid rgba(168,85,247,0.2)' }}
+                    style={{ background: 'rgba(0,229,255,0.04)', border: '1px solid rgba(0,229,255,0.15)' }}
                   >
                     <div className="flex items-center justify-between">
                       <div>
@@ -405,7 +405,7 @@ export default function SgpaCalculator() {
                   />
                   <div
                     className="relative rounded-full p-10"
-                    style={{ background: 'rgba(0,0,0,0.5)', border: '2px solid rgba(168,85,247,0.4)' }}
+                    style={{ background: 'rgba(0,0,0,0.5)', border: '2px solid rgba(0,229,255,0.3)' }}
                   >
                     <div
                       className="text-6xl sm:text-7xl font-black"
@@ -448,7 +448,7 @@ export default function SgpaCalculator() {
           onClick={clearAllData} 
           className="group relative overflow-hidden px-8 py-3.5 rounded-2xl transition-all duration-300 hover:scale-[1.03] text-sm font-bold text-gray-300 hover:text-white"
           style={{
-            background: 'rgba(255,255,255,0.04)',
+            background: 'rgba(255,255,255,0.02)',
             border: '1px solid rgba(255,255,255,0.1)',
           }}
         >
@@ -470,7 +470,7 @@ export default function SgpaCalculator() {
         <div
           className="rounded-2xl p-7"
           style={{
-            background: 'rgba(255,255,255,0.03)',
+            background: 'rgba(255,255,255,0.02)',
             border: '1px solid rgba(0,229,255,0.15)',
             boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
           }}

@@ -95,16 +95,16 @@ export default function LoginButton() {
         <div className="flex items-center gap-3">
           <div
             className="flex items-center gap-2 px-3 py-1.5 rounded-full"
-            style={{ background: 'rgba(124,58,237,0.12)', border: '1px solid rgba(124,58,237,0.3)' }}
+            style={{ background: 'rgba(0,229,255,0.1)', border: '1px solid rgba(0,229,255,0.1)' }}
           >
-            <svg className="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
-            <span className="text-sm font-medium text-violet-300">{username}</span>
+            <span className="text-sm font-medium text-cyan-300">{username}</span>
           </div>
           <button
             onClick={handleLogout}
-            className="px-3 py-1.5 text-sm font-medium text-gray-400 hover:text-violet-300 transition-colors duration-200"
+            className="px-3 py-1.5 text-sm font-medium text-gray-400 hover:text-cyan-300 transition-colors duration-200"
           >
             Logout
           </button>
@@ -113,7 +113,7 @@ export default function LoginButton() {
         <button
           onClick={handleOpenModal}
           className="px-5 py-2 rounded-full text-white font-semibold text-sm transition-all duration-200 hover:scale-105"
-          style={{ background: 'linear-gradient(135deg,#7c3aed,#3b82f6)', boxShadow: '0 0 16px rgba(124,58,237,0.4)' }}
+          style={{ background: 'linear-gradient(135deg,#00e5ff,#0891b2)', boxShadow: '0 0 16px rgba(0,229,255,0.1)' }}
         >
           Login
         </button>
@@ -134,7 +134,7 @@ export default function LoginButton() {
               background: 'rgba(255,255,255,0.05)',
               backdropFilter: 'blur(30px)',
               WebkitBackdropFilter: 'blur(30px)',
-              border: '1px solid rgba(124,58,237,0.3)',
+              border: '1px solid rgba(0,229,255,0.1)',
               boxShadow: '0 24px 64px rgba(0,0,0,0.6)',
             }}
             onClick={(e) => e.stopPropagation()}
@@ -142,7 +142,7 @@ export default function LoginButton() {
             <div className="flex justify-between items-center mb-4">
               <h2
                 className="text-xl font-bold"
-                style={{ background: 'linear-gradient(135deg,#a855f7,#60a5fa)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
+                style={{ background: 'linear-gradient(135deg,#00e5ff,#67e8f9)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}
               >
                 Login
               </h2>
@@ -179,7 +179,7 @@ export default function LoginButton() {
                   id="username"
                   value={loginForm.username}
                   onChange={(e) => setLoginForm({ ...loginForm, username: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 text-white placeholder-gray-500 transition-all"
+                  className="w-full px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-white placeholder-gray-500 transition-all"
                   style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)' }}
                   placeholder="Enter your username"
                   required
@@ -195,7 +195,7 @@ export default function LoginButton() {
                   id="password"
                   value={loginForm.password}
                   onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
-                  className="w-full px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500 text-white placeholder-gray-500 transition-all"
+                  className="w-full px-3 py-2 text-sm rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-500 text-white placeholder-gray-500 transition-all"
                   style={{ background: 'rgba(0,0,0,0.4)', border: '1px solid rgba(255,255,255,0.1)' }}
                   placeholder="Enter your password"
                   required
@@ -206,7 +206,7 @@ export default function LoginButton() {
                 <button
                   type="submit"
                   className="flex-1 px-4 py-2 text-sm rounded-lg text-white font-medium transition-all duration-200 hover:scale-105"
-                  style={{ background: 'linear-gradient(135deg,#7c3aed,#3b82f6)', boxShadow: '0 0 16px rgba(124,58,237,0.3)' }}
+                  style={{ background: 'linear-gradient(135deg,#00e5ff,#0891b2)', boxShadow: '0 0 16px rgba(0,229,255,0.1)' }}
                 >
                   Login
                 </button>
