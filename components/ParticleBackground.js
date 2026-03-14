@@ -16,7 +16,11 @@ export default function ParticleBackground() {
     const mouse = { x: width / 2, y: height / 2 };
 
     // Colour palette — violet / blue / cyan / pink
-    const COLORS = ['#7c3aed', '#3b82f6', '#06b6d4', '#ec4899', '#a855f7', '#60a5fa'];
+    const PARTICLE_COLORS = ['#7c3aed', '#3b82f6', '#06b6d4', '#ec4899', '#a855f7', '#60a5fa'];
+    const MOUSE_REPEL_RADIUS = 120;
+    const CONNECTION_MAX_DISTANCE = 130;
+    const PARTICLE_DENSITY_FACTOR = 8000;
+    const MAX_PARTICLE_COUNT = 130;
 
     // ---------- Particle class ----------
     class Particle {
@@ -30,7 +34,7 @@ export default function ParticleBackground() {
         this.z = Math.random(); // 0 = far, 1 = near — depth illusion
         this.baseSize = 0.5 + this.z * 3;
         this.size = this.baseSize;
-        this.color = COLORS[Math.floor(Math.random() * COLORS.length)];
+        this.color = PARTICLE_COLORS[Math.floor(Math.random() * PARTICLE_COLORS.length)];
         this.alpha = 0.2 + this.z * 0.6;
         this.vx = (Math.random() - 0.5) * 0.4 * (0.3 + this.z);
         this.vy = (Math.random() - 0.5) * 0.4 * (0.3 + this.z);
@@ -43,7 +47,7 @@ export default function ParticleBackground() {
         const dx = this.x - mouse.x;
         const dy = this.y - mouse.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        const repelRadius = 120;
+        const repelRadius = MOUSE_REPEL_RADIUS;
         if (dist < repelRadius) {
           const force = ((repelRadius - dist) / repelRadius) * 1.5;
           this.x += (dx / dist) * force;
@@ -75,11 +79,11 @@ export default function ParticleBackground() {
     }
 
     // ---------- Create particles ----------
-    const PARTICLE_COUNT = Math.min(130, Math.floor((width * height) / 8000));
+    const PARTICLE_COUNT = Math.min(MAX_PARTICLE_COUNT, Math.floor((width * height) / PARTICLE_DENSITY_FACTOR));
     const particles = Array.from({ length: PARTICLE_COUNT }, () => new Particle());
 
     // ---------- Draw connections ----------
-    const MAX_DIST = 130;
+    const MAX_DIST = CONNECTION_MAX_DISTANCE;
     function drawConnections() {
       for (let i = 0; i < particles.length; i++) {
         for (let j = i + 1; j < particles.length; j++) {
