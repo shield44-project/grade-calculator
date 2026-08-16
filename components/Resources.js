@@ -61,7 +61,8 @@ const RESOURCES = [
     ),
     color: 'purple',
     items: [
-      { title: 'RVCE 1st Sem C-Cycle 2025 Resources', url: 'https://github.com/shield44-project/rvce-1st-sem-c-cycle-2025-scheme-resources', description: 'C-Cycle Sem 1 study materials for the 2025 scheme' },
+    { title: 'RVCE 1st Sem C-Cycle 2025 Resources', url: 'https://github.com/shield44-project/rvce-1st-sem-c-cycle-2025-scheme-resources', description: 'C-Cycle Sem 1 study materials for the 2025 scheme' },
+    { title: 'RVCE First Year Notes (2025 Scheme)', url: 'https://github.com/shield44-project/RVCE_FIRST_YEAR_NOTES', description: 'Notes for RVCE 1st year — latest 2025 scheme' },
       { title: 'First Years Archive (2022 Scheme)', url: 'https://github.com/aditya-bhandari-cd23/FIRST-YEARS-ARCHIVE', description: 'Archived first-year resources for the 2022 scheme' },
       { title: 'Second Years Archive (2022 Scheme)', url: 'https://github.com/aditya-bhandari-cd23/SECOND-YEARS-ARCHIVE', description: 'Archived second-year resources for the 2022 scheme' },
       { title: '1st Year Resources (2022 Scheme)', url: 'https://github.com/AnanthMAthreya/1st-year-resources-2022-scheme-rvce', description: 'Notes, assignments, and materials for RVCE 1st year' },
